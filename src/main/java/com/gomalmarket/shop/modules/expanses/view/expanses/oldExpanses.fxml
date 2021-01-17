@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.com.expanses.view.expanses.ExpansesPersenter">
+   <children>
+      <ScrollPane prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <VBox prefHeight="626.0" prefWidth="984.0">
+               <children>
+                  <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+                     <children>
+                        <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                           <children>
+                              <Pane prefHeight="80.0" prefWidth="50.0" style="-fx-background-color: #00A65A;" />
+                              <VBox layoutX="67.0" layoutY="29.0" />
+                              <Label id="totalAmount_label" fx:id="initailBalance_label" layoutX="60.0" layoutY="-2.0" prefHeight="36.0" prefWidth="127.0" style="-fx-font-size: 12;" text="Bookmarks">
+                                 <font>
+                                    <Font size="9.0" />
+                                 </font>
+                              </Label>
+                              <Label id="totalAmount_value" fx:id="initailBalanceValue_label" layoutX="64.0" layoutY="35.0" prefHeight="30.0" prefWidth="126.0" style="-fx-font-size: 12;" text="410">
+                                 <font>
+                                    <Font size="9.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                           <children>
+                              <Pane prefHeight="80.0" prefWidth="50.0" style="-fx-background-color: #DD4B39;" />
+                              <VBox layoutX="63.0" layoutY="26.0" />
+                              <Label id="totalVan_label" fx:id="currentBalance_label" layoutX="59.0" layoutY="3.0" prefHeight="26.0" prefWidth="130.0" style="-fx-font-size: 12;" text="Likes">
+                                 <font>
+                                    <Font size="9.0" />
+                                 </font>
+                              </Label>
+                              <Label id="totalVan_value" fx:id="currentBalanceValue_label" layoutX="61.0" layoutY="41.0" prefHeight="27.0" prefWidth="132.0" style="-fx-font-size: 12;" text="93,688">
+                                 <font>
+                                    <Font size="9.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" top="10.0" />
+                     </padding>
+                  </HBox>
+                  <AnchorPane maxHeight="1.7976931348623157E308" prefHeight="503.0" prefWidth="1000.0">
+                     <children>
+                        <SplitPane dividerPositions="0.6018329938900203" prefHeight="500.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <VBox fillWidth="false" prefHeight="250.0" prefWidth="100.0">
+                                       <children>
+                                          <Pane minHeight="-Infinity" prefHeight="209.0" prefWidth="550.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                                             <children>
+                                                <Pane prefHeight="210.0" prefWidth="50.0" style="-fx-background-color: #00A65A;" />
+                                                <GridPane layoutX="50.0" layoutY="14.0" prefHeight="160.0" prefWidth="320.0">
+                                                  <columnConstraints>
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="81.0" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="381.0" minWidth="10.0" prefWidth="209.0" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                   <children>
+                                                      <Label fx:id="incomeType_label" text="Label" />
+                                                      <Label fx:id="incomeAmount_label" text="Label" GridPane.rowIndex="1" />
+                                                      <Label fx:id="incomeNotes_label" text="Label" GridPane.rowIndex="3" />
+                                                      <JFXComboBox fx:id="incomeType_combo" prefHeight="25.0" prefWidth="250.0" GridPane.columnIndex="1" />
+                                                      <JFXTextField fx:id="incomeAmount_TF" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                      <JFXTextArea fx:id="incomeNotes_TA" focusColor="#365fda" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                      <JFXTextField fx:id="incomeName_TF" prefHeight="25.0" prefWidth="264.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                      <Label fx:id="incomeName_label" text="Label" GridPane.rowIndex="2" />
+                                                   </children>
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                </GridPane>
+                                                <JFXButton fx:id="income_btn" layoutX="434.0" layoutY="162.0" onAction="#saveIncome" text="save" />
+                                             </children>
+                                          </Pane>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                    </VBox>
+                                    <AnchorPane fx:id="incomeTable_loc" minHeight="-Infinity" prefHeight="295.0" />
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <VBox fillWidth="false" prefHeight="250.0" prefWidth="100.0">
+                                       <children>
+                                          <Pane minHeight="-Infinity" prefHeight="209.0" prefWidth="550.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                                             <children>
+                                                <Pane prefHeight="210.0" prefWidth="50.0" style="-fx-background-color: #DD4B39;" />
+                                                <GridPane layoutX="50.0" layoutY="14.0" prefHeight="160.0" prefWidth="320.0">
+                                                   <children>
+                                                      <Label fx:id="outcomeType_label" text="Label" />
+                                                      <Label fx:id="outcomeAmount_label" text="Label" GridPane.rowIndex="1" />
+                                                      <Label fx:id="outcomeNotes_label" text="Label" GridPane.rowIndex="3" />
+                                                      <JFXComboBox fx:id="outcomeType_combo" prefHeight="25.0" prefWidth="250.0" GridPane.columnIndex="1" />
+                                                      <JFXTextField fx:id="outcomeAmount_TF" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                      <JFXTextArea fx:id="outcomeNotes_TA" prefHeight="35.0" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                      <Label fx:id="outcomeName_label" text="Label" GridPane.rowIndex="2" />
+                                                      <JFXTextField fx:id="outcomeName_TF" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                   </children>
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="73.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="381.0" minWidth="10.0" prefWidth="237.0" />
+                                                   </columnConstraints>
+                                                   <padding>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </padding>
+                                                   <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                </GridPane>
+                                                <JFXButton fx:id="outcome_btn" layoutX="425.0" layoutY="162.0" onAction="#saveOutcome" text="save" />
+                                             </children>
+                                          </Pane>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                    </VBox>
+                                    <AnchorPane fx:id="outcomeTable_loc" minHeight="-Infinity" prefHeight="295.0" />
+                                 </children>
+                              </VBox>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import org.controlsfx.control.textfield.*?>
+<?import org.controlsfx.glyphfont.*?>
+<?import com.jfoenix.svg.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="182.0" style="-fx-background-color: #700b82;"  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <JFXComboBox prefHeight="25.0" prefWidth="220.0" />
+      <JFXButton prefHeight="36.0" prefWidth="244.0" styleClass="nav-button" text="Button" textFill="#a1aec4">
+         <graphic>
+            <Glyph textFill="#a1aec4" />
+         </graphic>
+      </JFXButton>
+      <JFXButton prefHeight="36.0" prefWidth="268.0" styleClass="nav-button" text="Button" textFill="#a1aec4">
+         <graphic>
+            <Glyph textFill="#a1aec4" />
+         </graphic>
+      </JFXButton>
+      <JFXButton prefHeight="36.0" prefWidth="268.0" styleClass="nav-button" text="Button" textFill="#a1aec4">
+         <graphic>
+            <Glyph textFill="#a1aec4" />
+         </graphic>
+      </JFXButton>
+      <JFXButton prefHeight="36.0" prefWidth="268.0" ripplerFill="#f4066a" styleClass="nav-button" text="Button" textFill="#ebeef1">
+         <graphic>
+            <Glyph textFill="#a1aec4" />
+         </graphic>
+      </JFXButton>
+      <JFXButton prefHeight="36.0" prefWidth="268.0" styleClass="nav-button" text="Button" textFill="#a1aec4">
+         <graphic>
+            <Glyph textFill="#a1aec4" />
+         </graphic>
+      </JFXButton>
+      <JFXButton prefHeight="36.0" prefWidth="268.0" styleClass="nav-button" text="Button" textFill="#a1aec4">
+         <graphic>
+            <Glyph textFill="#a1aec4" />
+         </graphic>
+      </JFXButton>
+      <JFXButton prefHeight="36.0" prefWidth="268.0" styleClass="nav-button" text="Button" textFill="#a1aec4">
+         <graphic>
+            <Glyph textFill="#a1aec4" />
+         </graphic>
+      </JFXButton>
+      <JFXButton prefHeight="36.0" prefWidth="268.0" styleClass="nav-button" text="Button" textFill="#a1aec4">
+         <graphic>
+            <Glyph textFill="#a1aec4" />
+         </graphic>
+      </JFXButton>
+   </children>
+</VBox>

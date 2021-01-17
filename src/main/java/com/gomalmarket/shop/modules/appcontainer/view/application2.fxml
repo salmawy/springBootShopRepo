@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="800.0" prefWidth="608.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.appcontainer.view.ApplicationPersenter">
+   <children>
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <BorderPane prefHeight="413.0" prefWidth="608.0">
+               <bottom>
+                  <HBox fx:id="buttom_box" prefHeight="31.0" prefWidth="608.0" style="-fx-min-height: 10; -fx-background-color: #005c99;" BorderPane.alignment="CENTER" />
+               </bottom>
+               <right>
+                  <VBox prefHeight="600.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Accordion fx:id="App_Components" nodeOrientation="RIGHT_TO_LEFT" prefHeight="400.0" prefWidth="250.0">
+                           <panes>
+                              <TitledPane fx:id="customersComp" text="customers">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="180.0" prefWidth="200.0">
+      							      <children>
+                 <JFXButton fx:id="dischargingBTN" layoutX="10.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="customers" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                     </font>
+                    
+                  </JFXButton>
+                  <JFXButton fx:id="transactionsBTN" layoutX="10.0" layoutY="42.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="transactions" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                     </font>
+                   
+                  </JFXButton>
+                  <JFXButton fx:id="purchasesBTN" layoutX="10.0" layoutY="84.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="purchases" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                     </font>
+                    
+                  </JFXButton>
+                
+      
+      
+      	   </children>
+      							  
+      							  </AnchorPane>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="sellerComp" text="sales">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="183.0">
+      							  					      <children>       <JFXButton fx:id="dailySelling_btn" layoutX="10.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="dailySales" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                     </font>
+                    
+                  </JFXButton>
+                  <JFXButton fx:id="sellerDebts_btn" layoutX="10.0" layoutY="42.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="debts" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                     </font>
+                   
+                  </JFXButton>
+                  <JFXButton fx:id="arcSellersLoan_btn" layoutX="10.0" layoutY="84.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="ArcDebts" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                     </font>
+                    
+                  </JFXButton>
+                                          <JFXButton fx:id="sellersLoanReport_btn" layoutX="20.0" layoutY="134.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="ArcDebts" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                
+      
+      	   </children>
+      							  
+      							  </AnchorPane>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="expansesComp" text="expanses">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <JFXButton fx:id="Expanses_btn" layoutX="19.6" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="expanses" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="shopDebts_btn" layoutY="42.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="shop Debts" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children></AnchorPane>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="contractorComp" text="contractors">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="195.0" prefWidth="248.0">
+                                       <children>
+                                          <JFXButton fx:id="labour_btn" layoutX="19.6" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="labours" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="suppliers_btn" layoutY="42.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="suppliers" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="varaities_btn" layoutX="15.0" layoutY="84.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="varaities" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="notes_btn" layoutX="-8.0" layoutY="126.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="notes" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="contractorPerdiocReport_btn" layoutX="17.0" layoutY="168.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="perdiocReport" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="invoicesComp" text="invoices">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <JFXButton fx:id="generateInvoice_btn" layoutX="19.6" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="generate Invoice" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="payInvoice_btn" layoutY="42.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="pay Invoice" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="payedInvoice_btn" layoutX="11.0" layoutY="84.0" onAction="#LoadPanel" prefHeight="42.0" prefWidth="139.0" style="-fx-alignment: center-left;" styleClass="nav-button" text="payed Invoice" textFill="#a1aec4" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Bold" size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane fx:id="inventoryComp" text="inventory">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                 </content>
+                              </TitledPane>
+                           </panes>
+                        </Accordion>
+                     </children>
+                  </VBox>
+               </right>
+               <center>
+                  <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+                     <children>
+                        <VBox prefHeight="50.0" prefWidth="100.0">
+                           <children>
+                              <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #ffffff;">
+                                 <children>
+                                    <Label fx:id="title_label" alignment="CENTER" contentDisplay="CENTER" minWidth="-Infinity" prefWidth="300.0" text="مرحبا" textAlignment="CENTER" textFill="#c30707">
+                                       <font>
+                                          <Font name="Arial Bold Italic" size="28.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <Separator prefWidth="200.0" />
+                           </children>
+                        </VBox>
+                        <AnchorPane fx:id="appPage" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <StackPane fx:id="mystackPane" prefHeight="315.0" prefWidth="356.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <HBox fx:id="spinnerPane" alignment="CENTER" opacity="0.51" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #ffffff;">
+                                       <children>
+                                          <JFXSpinner fx:id="spinner" radius="25.0" />
+                                       </children>
+                                    </HBox>
+                                    <AnchorPane fx:id="appContainer" prefHeight="315.0" prefWidth="356.0" style="-fx-background-color: #ffffff;" />
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+               </center>
+               <left>
+                  <VBox maxWidth="-Infinity" prefWidth="1.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER" />
+               </left>
+               <top>
+                  <VBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="54.0" prefWidth="606.0" style="-fx-background-color: #005c99;" BorderPane.alignment="CENTER">
+                     <children>
+                        <VBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="100.0">
+                           <children>
+                              <MenuBar fx:id="menuBar_mb" maxHeight="-Infinity" prefHeight="18.0" prefWidth="606.0" style="-fx-background-color: #004d80; -fx-max-height: 15;">
+                                <menus>
+                                  <Menu fx:id="settings_menu" mnemonicParsing="false" text="الإعدادت">
+                                    <items>
+                                      <MenuItem fx:id="saveDB_MI" mnemonicParsing="false" text="حفظ قاعدة البيانات" />
+                                          <MenuItem fx:id="settleDay_MI" mnemonicParsing="false" text="تسوية اليوم" />
+                                          <MenuItem fx:id="changePassword_MI" mnemonicParsing="false" text="تغيير كلمة المرور" />
+                                          <MenuItem fx:id="restoreDB_MI" mnemonicParsing="false" text="إسترجاع قاعدة البيانات" />
+                                    </items>
+                                  </Menu>
+                                  <Menu fx:id="show_menu" mnemonicParsing="false" text="عرض">
+                                    <items>
+                                          <MenuItem fx:id="archive_MI" mnemonicParsing="false" text="الأرشيف" />
+                                    </items>
+                                  </Menu>
+                                </menus>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </MenuBar>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </top>
+            </BorderPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

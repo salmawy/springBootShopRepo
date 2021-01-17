@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1000.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.com.sales.debt.view.DebtsPersenter">
+   <children>
+      <SplitPane dividerPositions="0.2391304347826087" prefHeight="540.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <items>
+            <VBox alignment="TOP_CENTER" maxHeight="-Infinity" prefHeight="300.0" prefWidth="236.0" spacing="10.0">
+               <children>
+                  <JFXComboBox fx:id="sellerType_CB" prefHeight="25.0" prefWidth="133.0" promptText="ksasd" />
+                  <JFXTextField fx:id="sellerName_TF" promptText="sdsdsd" />
+                  <Separator prefWidth="200.0" />
+                  <AnchorPane fx:id="sellersTable_Loc" maxHeight="-Infinity" prefHeight="444.0" prefWidth="226.0" />
+               </children>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+            </VBox>
+            <AnchorPane prefHeight="540.0" prefWidth="756.0">
+               <children>
+                  <VBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="398.0" prefWidth="756.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="70.0" prefWidth="600.0" spacing="16.0">
+                           <children>
+                              <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                                 <children>
+                                    <Pane prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #00A65A;" />
+                                    <VBox layoutX="50.0" layoutY="2.0" prefHeight="47.0" prefWidth="150.0">
+                                       <children>
+                                          <Label id="totalAmount_label" fx:id="currentDebt_label" prefHeight="27.0" prefWidth="153.0" style="-fx-font-size: 12;" text="Bookmarks">
+                                             <font>
+                                                <Font size="9.0" />
+                                             </font>
+                                          </Label>
+                                          <Label id="totalAmount_value" fx:id="currentDebtValue_label" alignment="CENTER" prefHeight="25.0" prefWidth="145.0" style="-fx-font-size: 12;" text="410">
+                                             <font>
+                                                <Font size="9.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </Pane>
+                              <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                                 <children>
+                                    <Pane prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #00C0EF;" />
+                                    <VBox layoutX="56.0" layoutY="2.0" prefHeight="47.0" prefWidth="142.0">
+                                       <children>
+                                          <Label id="totalCar_label" fx:id="collecteDebt_label" prefHeight="27.0" prefWidth="143.0" style="-fx-font-size: 12;" text="MESSAGES">
+                                             <font>
+                                                <Font size="9.0" />
+                                             </font>
+                                          </Label>
+                                          <Label id="totalCar_value" fx:id="collectedDebtValue_label" alignment="CENTER" prefHeight="25.0" prefWidth="133.0" style="-fx-font-size: 12;" text="1,414">
+                                             <font>
+                                                <Font size="9.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </Pane>
+                              <Pane prefHeight="58.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                                 <children>
+                                    <Pane prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #DD4B39;" />
+                                    <VBox layoutX="63.0" layoutY="2.0" prefHeight="47.0" prefWidth="136.0">
+                                       <children>
+                                          <Label id="totalVan_label" fx:id="initailDebt_label" prefHeight="19.0" prefWidth="133.0" style="-fx-font-size: 12;" text="Likes">
+                                             <font>
+                                                <Font size="9.0" />
+                                             </font>
+                                          </Label>
+                                          <Label id="totalVan_value" fx:id="intialDebtValue_label" alignment="CENTER" prefHeight="27.0" prefWidth="134.0" style="-fx-font-size: 12;" text="93,688">
+                                             <font>
+                                                <Font size="9.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </Pane>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                        <SplitPane dividerPositions="0.3948497854077253" orientation="VERTICAL" prefHeight="473.0" prefWidth="756.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="248.0" prefWidth="754.0">
+                                 <children>
+                                    <SplitPane dividerPositions="0.4589473684210526" prefHeight="200.0" prefWidth="294.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <items>
+                                        <AnchorPane fx:id="sellerInstallments_loc" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="280.0" />
+                                        <AnchorPane fx:id="sellerOders_loc" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="213.0" />
+                                      </items>
+                                    </SplitPane>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane fx:id="orderData_loc" minHeight="0.0" minWidth="0.0" prefHeight="148.0" prefWidth="754.0" />
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

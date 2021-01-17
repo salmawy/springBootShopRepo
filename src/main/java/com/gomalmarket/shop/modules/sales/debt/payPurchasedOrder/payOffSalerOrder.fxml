@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="420.0" prefWidth="350.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.com.sales.debt.payPurchasedOrder.PayOffSalerOrderPersenter">
+   <children>
+      <Pane layoutX="10.0" layoutY="10.0" prefHeight="350.0" prefWidth="300.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Pane fx:id="coloredPane" prefHeight="46.0" prefWidth="340.0" style="-fx-background-color: #00A65A;">
+               <children>
+                  <Label fx:id="title_label" contentDisplay="CENTER" layoutX="97.0" layoutY="13.0" prefHeight="20.0" prefWidth="139.0" text="Title" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <VBox layoutX="4.0" layoutY="58.0" prefHeight="320.0" prefWidth="300.0">
+               <children>
+                  <HBox prefHeight="30.0" prefWidth="300.0">
+                     <children>
+                        <Label fx:id="name_label" prefHeight="30.0" prefWidth="60.0" text="Label" />
+                        <JFXTextField fx:id="name_TF" editable="false" prefWidth="186.0" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="30.0" prefWidth="300.0">
+                     <children>
+                        <Label fx:id="amount_label" prefHeight="30.0" prefWidth="60.0" text="Label" />
+                        <JFXTextField fx:id="amount_TF" prefHeight="25.0" prefWidth="186.0" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="datePicker_loc" prefHeight="30.0" prefWidth="300.0">
+                     <children>
+                        <Label fx:id="date_label" prefHeight="30.0" prefWidth="60.0" text="Label" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="60.0" prefWidth="300.0">
+                     <children>
+                        <JFXTextArea fx:id="note_TA" prefHeight="60.0" prefWidth="267.0" promptText="notes" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="46.0" prefWidth="300.0" />
+                  <HBox alignment="CENTER" prefHeight="68.0" prefWidth="260.0" spacing="30.0">
+                     <children>
+                        <JFXButton fx:id="cancel_btn" text="cancel" />
+                        <JFXButton fx:id="saveBtn" alignment="CENTER" text="Save" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</AnchorPane>

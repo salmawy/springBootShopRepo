@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="priodicSellerLoans" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33509a65-3568-4a57-8466-2df9e372583a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter (3)"/>
+	<parameter name="fromDate" class="java.lang.String"/>
+	<parameter name="toDate" class="java.lang.String"/>
+	<parameter name="seasonId" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select 
+SLB.PRIOR_LOAN,
+
+nvl(( select sum( SO.TOTAL_COST )from seller_order  so 
+where SO.SELLER_LOAN_BAG_ID=slb.id 
+    and SO.ORDER_DATE between    to_date($P{fromDate},'YYYY-MM-DD)') 
+	  and  to_date($P{toDate},'YYYY-MM-DD)')),0)as TOTAL_COST ,
+    
+    
+nvl(( select sum(INST.AMOUNT )from INSTALMENT inst    where INST.SELLER_BAG_LOAN_ID=slb.id 
+    and INST.INSTALMENT_DATE
+	between  to_date($P{fromDate},'YYYY-MM-DD)')  and to_date ($P{toDate},'YYYY-MM-DD)')  ),0)as AMOUNT ,
+    SLB.CURRENT_LOAN ,S.NAME
+from seller_loan_bag slb , seller s 
+
+where SLB.SEASON_ID=$P{seasonId}
+ and s.id=SLB.SELLER_ID
+and SLB.CURRENT_LOAN>0
+group by SLB.SELLER_ID,slb.PRIOR_LOAN,slb.id,SLB.CURRENT_LOAN,S.NAME
+order by CURRENT_LOAN desc]]>
+	</queryString>
+	<field name="PRIOR_LOAN" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PRIOR_LOAN"/>
+	</field>
+	<field name="TOTAL_COST" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="TOTAL_COST"/>
+	</field>
+	<field name="AMOUNT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="AMOUNT"/>
+	</field>
+	<field name="CURRENT_LOAN" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="CURRENT_LOAN"/>
+	</field>
+	<field name="NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NAME"/>
+	</field>
+	<background>
+		<band height="70" splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="55" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="70" y="10" width="410" height="40" backcolor="#FFFFFF" uuid="5310eaf5-dc0a-432f-aace-d6d13cdc5986">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9f35e4aa-eaeb-4941-b4bb-11c0d1b5d9be"/>
+					<property name="net.sf.jasperreports.style.backcolor" value="#EDEBEB"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[بيان بالذمامات خلال فترة]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="44" splitType="Stretch">
+			<textField>
+				<reportElement x="310" y="0" width="160" height="29" uuid="7502c85f-34e4-46da-89a7-903b858c2111"/>
+				<textElement textAlignment="Right">
+					<font size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fromDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="2" width="160" height="30" uuid="d5df22ac-bb0b-4697-9056-3980f388fc52"/>
+				<textElement textAlignment="Right">
+					<font size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{toDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="470" y="2" width="80" height="30" uuid="625f6a71-a9a4-45b5-9063-914e045ef12b"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="19"/>
+				</textElement>
+				<text><![CDATA[من تاريخ:-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="2" width="80" height="30" uuid="86de7bcd-b15d-4748-81e6-0d59ec10116f"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="19"/>
+				</textElement>
+				<text><![CDATA[إلي تاريخ:-]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="311" y="0" width="99" height="30" backcolor="#B5B0B0" uuid="6cb25be4-be4b-4e7e-8693-3191fa64c089">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9f35e4aa-eaeb-4941-b4bb-11c0d1b5d9be"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[مديونية سابقة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="212" y="0" width="99" height="30" backcolor="#B5B0B0" uuid="8cc03f16-b0ae-40f6-b7cf-9ad68dbbccc4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9f35e4aa-eaeb-4941-b4bb-11c0d1b5d9be"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[إجمالي الموز]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="91" y="0" width="121" height="30" backcolor="#B5B0B0" uuid="b735d179-decf-4799-bc85-d9af6a86619a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9f35e4aa-eaeb-4941-b4bb-11c0d1b5d9be"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[إجمالي المبالغ المدفوعة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="90" height="30" backcolor="#B5B0B0" uuid="fa876913-895e-450d-bc6a-c1294d57f70c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9f35e4aa-eaeb-4941-b4bb-11c0d1b5d9be"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[المبلغ المستحق]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="410" y="0" width="99" height="30" backcolor="#B5B0B0" uuid="f50a489b-35c7-4300-bef2-175f859d7e2e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9f35e4aa-eaeb-4941-b4bb-11c0d1b5d9be"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[أسم البياع]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="509" y="0" width="46" height="30" backcolor="#B5B0B0" uuid="ba90a6a4-f0ad-4b58-8609-3f5724aec595">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9f35e4aa-eaeb-4941-b4bb-11c0d1b5d9be"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[م]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="-1" width="90" height="32" uuid="31ed370d-94f7-460c-ac40-536d49f967ca">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="70ff0c8b-b961-413f-8e47-23da20e7da6e"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CURRENT_LOAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="-1" width="121" height="32" uuid="7c4f5e9c-5ddf-49db-b750-dc8c3732504c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ee0f3107-386e-408b-8f4d-deb0257fed7c"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="212" y="-1" width="98" height="32" uuid="27f3fde8-da41-4ec1-abff-46dbb5423678">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9d993828-8f56-4b5b-90fa-e194be798b87"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TOTAL_COST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="-1" width="98" height="32" uuid="b4d3e25c-bd13-441f-b25d-3841158f3cda">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9f35e4aa-eaeb-4941-b4bb-11c0d1b5d9be"/>
+				</reportElement>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="-1" width="100" height="32" uuid="aa9eeb28-15cf-4f44-9b45-2b4c1753e387"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PRIOR_LOAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="508" y="-1" width="46" height="32" uuid="9a57f596-3d05-4823-a845-260eda16a3ef"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="460" y="0" width="100" height="19" uuid="46f4214e-da11-420f-a3e4-53f57ec341f9"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="32" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.sales.view.dialog.AddSellerOrderDetailPersenter">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="400.0" spacing="10.0" style="-fx-background-color: #cce0ff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane fx:id="inputFormLoc" prefHeight="300.0" prefWidth="200.0" style="-fx-background-color: #cce0ff;" />
+            <HBox fx:id="buttonsPane" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

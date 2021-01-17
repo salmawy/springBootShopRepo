@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.effect.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="309.0" prefWidth="466.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.login.view.LoginPersenter">
+   <children>
+      <Pane layoutX="19.0" layoutY="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="366.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <JFXTextField fx:id="usernameTF" focusColor="#12bfdd" layoutX="79.0" layoutY="98.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="25.0" prefWidth="250.0" promptText="UserName" />
+            <JFXPasswordField fx:id="passwordPass" focusColor="#12bfdd" layoutX="79.0" layoutY="153.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="25.0" prefWidth="250.0" promptText="Password" />
+            <JFXComboBox fx:id="fridage_CB" layoutX="73.0" layoutY="44.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="25.0" prefWidth="250.0" />
+            <JFXButton fx:id="close_btn" layoutX="116.0" layoutY="209.0" onAction="#close" prefHeight="25.0" prefWidth="60.0" ripplerFill="WHITE" text="close" textFill="WHITE" />
+           
+		   <JFXButton fx:id="loginBtn" layoutX="221.0" layoutY="208.0" onAction="#makeLogin" prefHeight="25.0" prefWidth="113.0" ripplerFill="WHITE" text="login" textFill="WHITE" />
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+   </children>
+</AnchorPane>

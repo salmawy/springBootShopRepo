@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans  
+    xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">  
+  
+
+      
+      
+    
+  
+    
+      <bean id="baseDao" class="App.core.dao.hibernate.BaseDaoImpl">  
+    <property name="sessionFactory" ref="mysessionFactory"></property>  
+    </bean> 
+    
+        
+      <bean id="baseService" class="App.core.service.spring.BaseService">  
+    <property name="baseDao" ref="baseDao"></property>  
+    </bean> 
+  
+  
+  
+  <!--     ====================================== Start Expanses Service ===============================================================-->    
+    
+      
+      	<bean id="expansesDao" class="App.com.expanses.dao.hibernate.ExpansesDao">  
+    <property name="sessionFactory" ref="mysessionFactory"></property>  
+    </bean> 
+    
+      <bean id="expansesService" class="App.com.expanses.services.spring.ExpansesServices">  
+    <property name="expansesDao" ref="expansesDao"></property> 
+     <property name="baseRetrievalService" ref="baseService"></property> 
+  <property name="baseService" ref="baseService"></property>  
+   </bean> 
+    
+    <!--     ====================================== End Expanses Service =================================================================--> 
+ 
+<!--     Start :-customer service Beans -->    
+ 
+ 
+ 	<bean id="customerDao" class="App.com.Customer.dao.hibernate.CustomerDao">  
+    <property name="sessionFactory" ref="mysessionFactory"></property>  
+    </bean> 
+    
+      <bean id="customerService" class="App.com.Customer.service.spring.CustomerService">  
+    <property name="customerDao" ref="customerDao"></property> 
+     <property name="baseRetrievalService" ref="baseService"></property>  
+  	<property name="baseService" ref="baseService"></property> 
+  	 <property name="expansesServices" ref="expansesService"></property>  
+  	 
+     
+    </bean> 
+ 
+    <!--     End :-sales service Beans -->    
+    
+    
+      	<bean id="salesDao" class="App.com.sales.dao.hibernate.SelesDao">  
+    <property name="sessionFactory" ref="mysessionFactory"></property>  
+    </bean> 
+    
+      <bean id="salesService" class="App.com.sales.spring.spring.SalesService">  
+    <property name="salesDao" ref="salesDao"></property> 
+     <property name="baseRetrievalService" ref="baseService"></property> 
+  <property name="baseService" ref="baseService"></property>  
+    <property name="expansesServices" ref="expansesService"></property>  
+      
+     
+    </bean> 
+
+    
+    
+
+ 
+    <!--     ====================================== Start contractor Service ===============================================================-->    
+    
+      
+      	<bean id="contractorDao" class="App.com.contractor.dao.hibernate.ContractorDao">  
+    <property name="sessionFactory" ref="mysessionFactory"></property>  
+    </bean> 
+    
+      <bean id="contractorService" class="App.com.contractor.services.spring.ContractorService">  
+    <property name="contractorDao" ref="contractorDao"></property> 
+     <property name="baseRetrievalService" ref="baseService"></property> 
+  <property name="baseService" ref="baseService"></property>
+      <property name="expansesService" ref="expansesService"></property> 
+    
+   </bean> 
+    
+    <!--     ====================================== End contractor Service =================================================================--> 
+    
+    <!--     ====================================== Start Billing Service =================================================================--> 
+ 
+ 
+ 	<bean id="billingDao" class="App.com.billing.dao.hibernate.BillingDao">  
+    <property name="sessionFactory" ref="mysessionFactory"></property>  
+    </bean> 
+    
+      <bean id="billingService" class="App.com.billing.services.spring.BillingService">  
+            <property name="billingDao" ref="billingDao"></property> 
+            <property name="baseRetrievalService" ref="baseService"></property>  
+         	<property name="baseService" ref="baseService"></property>  
+        	<property name="customerService" ref="customerService"></property>  
+    	    <property name="expansesService" ref="expansesService"></property> 
+  	
+  	
+     
+    </bean> 
+ 
+    <!--     ====================================== End Billing Service =================================================================--> 
+    </beans>  
