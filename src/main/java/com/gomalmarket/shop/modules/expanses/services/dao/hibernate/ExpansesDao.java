@@ -14,8 +14,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import com.gomalmarket.shop.core.entities.SafeOfDay;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
+import com.gomalmarket.shop.modules.expanses.enums.SafeTypeEnum;
 import com.gomalmarket.shop.modules.expanses.services.dao.IExpansesDao;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +35,7 @@ public class ExpansesDao  implements  IExpansesDao{
 	
 	public List getIncome(Date date) throws EmptyResultSetException, DataBaseException {
 		 
-
-			
-		 
 		  try { 
-			 
-			
-
 		  
 		  String query = "from Income "
 		  		+ "where  to_char(  incomeDate ,'dd/MM/YYYY')  = "
@@ -67,23 +63,39 @@ public class ExpansesDao  implements  IExpansesDao{
 		  
 		 
 		return null;
-		 
-		 
-		 
-	 } 
+		} 
 
 	
+	@Override
+	public double getSafeBalanceOfday(int seasonId,Date date,SafeTypeEnum type) {
+		double balance =0.0;
+		String queryString =" select sum(balance)  from  SafeOfDay sod where 1=1 "
+				+ " and sod.season.id = :seasonId ";
+				
+		
+		if(type==SafeTypeEnum.OPENNNING_BALANCE)
+			queryString+= " and to_char( sod.dayDate,'YYYYMMDD') <  to_char(:dayDate,'YYYYMMDD')  ";
+		if(type==SafeTypeEnum.CURRENT_BALANCE)
+			queryString+= " and  to_char( sod.dayDate,'YYYYMMDD') <=  to_char(:dayDate,'YYYYMMDD')  ";
+
+		
+		
+		Query query= entityManger.createQuery(queryString)
+		.setParameter("seasonId", seasonId)
+		.setParameter("dayDate", date,TemporalType.DATE);
+		
+			List result =query.getResultList();
+	if(result.size()>0) {
+		return (Double)result.get(0);
+	}
+		
+		return balance;
+		
+	}
 	 
 	 public List getIncomeDays(String month) throws EmptyResultSetException, DataBaseException {
 		 
-
-			
-	 
 		  try { 
-		 
-			
-
-		  
 		  String query = "from Income "
 		  		+ "where  to_char(  incomeDate ,'YYYY-MM')  = :month";
 
@@ -294,13 +306,13 @@ public class ExpansesDao  implements  IExpansesDao{
 		  List<Object> result =	 queryList.getResultList();
 		  
 		  if(result.size() == 0) {
-			  throw new  EmptyResultSetException("error.emptyRS"); }
+			  throw new  EmptyResultSetException("error.emptyRS.Outcome"); }
 		  
 		  if(result.size() > 0) 
 		  {return result;}
 		 } 
 		  catch(DataAccessException e) { throw new
-		  DataBaseException("error.dataBase.query,AgentFinancialStatus,"+e.getMessage()  );
+		  DataBaseException("error.dataBase.query,Outcome,"+e.getMessage()  );
 		  }
 		  finally { }
 		  
@@ -334,13 +346,13 @@ public class ExpansesDao  implements  IExpansesDao{
 		  List<Object> result =	 queryList.getResultList();
 		  
 		  if(result.size() == 0) {
-			  throw new  EmptyResultSetException("error.emptyRS,dailySafe"); }
+			  throw new  EmptyResultSetException("error.emptyRS,SafeOfDay"); }
 		  
 		  if(result.size() > 0) 
 		  {return result;}
 		 } 
 		  catch(DataAccessException e) { throw new
-		  DataBaseException("error.dataBase.query,dailySafe ,"+e.getMessage()  );
+		  DataBaseException("error.dataBase.query,SafeOfDay ,"+e.getMessage()  );
 		  }
 		  finally { }
 		  
@@ -351,6 +363,50 @@ public class ExpansesDao  implements  IExpansesDao{
 		 
 	 } 
 
+	
+
+	@Override
+	 public SafeOfDay getParentSafeOfDay(Date date) throws EmptyResultSetException, DataBaseException {
+		 
+
+			
+		  try { 
+			
+
+		  
+		  String query = "from  SafeOfDay  s "
+		  		+ "	where  "
+		  		+ " to_char(s.dayDate ,'dd/MM/YYYY') = (select max s1.dayDate from SafeOfDay where  s1.dayDate < :date_P  ) " ;							
+
+		  query += " order by s.dayDate  desc";
+			
+		  
+		  Query queryList = entityManger.createQuery(query);
+		  queryList.setParameter ("date_P", date,TemporalType.DATE);
+ 
+		  List<Object> result =	 queryList.getResultList();
+		  
+		  if(result.size() == 0) {
+			  throw new  EmptyResultSetException("error.emptyRS,SafeOfDay"); }
+		  
+		  if(result.size() > 0) 
+		  {return (SafeOfDay) result.get(0);}
+		 } 
+		  catch(DataAccessException e) { throw new
+		  DataBaseException("error.dataBase.query,SafeOfDay ,"+e.getMessage()  );
+		  }
+		  finally { }
+		  
+		 
+		return null;
+		 
+		 
+		 
+	 } 
+
+	
+	
+	
 	
 	
 	

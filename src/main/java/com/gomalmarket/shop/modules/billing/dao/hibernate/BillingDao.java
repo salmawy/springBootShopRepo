@@ -31,9 +31,9 @@ public class BillingDao implements IBillingDao {
 
 		try {
 
-			String query = " select distinct co.customer.id,co.customer.name,co.customer.typeId,co.invoiceStatus from "
-					+ "	 CustomerOrder co " + " where co.fridageId=  " + fridageId + "	and co.periodId=-1 "
-					+ " and co.seasonId=  " + seasonId;
+			String query = " select distinct co.customer.id,co.customer.name,co.customer.type.id,co.invoiceStatus from "
+					+ "	 CustomerOrder co " + " where co.fridage.id=  " + fridageId + "	and co.periodId=-1 "
+					+ " and co.season.id=  " + seasonId;
 
 			Query queryList = entityManger.createQuery(query);
 
@@ -60,12 +60,12 @@ public class BillingDao implements IBillingDao {
 
 		try {
 
-			String query = "" + "select distinct customer from " + "	 CustomerOrder co " + " where co.fridageId=  "
-					+ fridageId + "	and co.periodId=-1 " + " and co.seasonId=  " + seasonId + " and co.invoiceStatus=  "
+			String query = "" + "select distinct customer from " + "	 CustomerOrder co " + " where co.fridage.id=  "
+					+ fridageId + "	and co.periodId=-1 " + " and co.season.id=  " + seasonId + " and co.invoiceStatus=  "
 					+ status;
 
 			if (typeId != 0) {
-				query += " and co.customer.typeId =" + typeId;
+				query += " and co.customer.type.id =" + typeId;
 
 			}
 			Query queryList = entityManger.createQuery(query);
@@ -93,7 +93,7 @@ public class BillingDao implements IBillingDao {
 		try {
 
 			String query = "select " + " sum(amount)," + "	unitePrice," + " sum(netQuantity), "
-					+ " sum(packageNumber) " + " from  SellerOrderWeight" + " where  customerOrderId=" + orderId
+					+ " sum(packageNumber) " + " from  SellerOrderWeight" + " where  customerOrder.id=" + orderId
 					+ " group by unitePrice ";
 
 			Query queryList = entityManger.createQuery(query);

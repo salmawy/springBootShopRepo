@@ -22,7 +22,7 @@ public interface ICustomerService {
 	public List getCustomersSummaryTransactions(Season season,Fridage fridage,int customerId) throws EmptyResultSetException, DataBaseException ;
 	public List  getPurchasedCustomerData(Season season,Fridage fridage) throws EmptyResultSetException, DataBaseException ;
 	 public List<String> getSuggestedCustomerName(String searchString,int customerTypeId) ;
-	 public Double getSafeBalance(Season season) throws EmptyResultSetException ;
+
 	 public void saveCustomerOrder(CustomerOrder customerOrder) throws DataBaseException, InvalidReferenceException ;
 	 public void editCustomerOrder(CustomerOrder newValue,CustomerOrder oldValue) throws DataBaseException, InvalidReferenceException ;
 	void payPurchasedOrder(Customer customer,double amount,Date date,String notes,Season season,Fridage fridage)

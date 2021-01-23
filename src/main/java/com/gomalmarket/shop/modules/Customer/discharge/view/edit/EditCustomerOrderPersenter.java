@@ -617,12 +617,9 @@ public class EditCustomerOrderPersenter extends CustomerBaseAction implements In
 	private boolean vallidateSafeWithdrawal(double amount) {
 
 		double balance=0.0;;
-		try {
-			balance = this.getCustomerService().getSafeBalance(getAppContext().getSeason());
-		} catch (EmptyResultSetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	 
+			balance = this.getExpansesService().getSafeBalance(getAppContext().getSeason());
+		 
 		if (amount > balance) {
 
 			return false;

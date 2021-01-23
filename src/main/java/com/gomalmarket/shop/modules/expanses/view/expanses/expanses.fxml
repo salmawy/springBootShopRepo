@@ -7,106 +7,104 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.expanses.view.expanses.ExpansesPersenter">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.expanses.view.expanses.ExpansesPersenter">
    <children>
-      <ScrollPane maxHeight="-Infinity" prefHeight="530.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <content>
-            <VBox prefHeight="500.0" prefWidth="900.0" style="-fx-background-color: #ffffff;">
+      <VBox fx:id="mainVBox" layoutX="-1.0" prefHeight="540.0" prefWidth="621.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-21.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox fx:id="safeDataBox" alignment="CENTER" minHeight="-Infinity" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
                <children>
-                  <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+                  <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
                      <children>
-                        <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
-                           <children>
-                              <Pane prefHeight="80.0" prefWidth="50.0" style="-fx-background-color: #00A65A;" />
-                              <VBox layoutX="67.0" layoutY="29.0" />
-                              <Label id="totalAmount_label" fx:id="initailBalance_label" layoutX="60.0" layoutY="-2.0" prefHeight="36.0" prefWidth="127.0" style="-fx-font-size: 12;" text="Bookmarks">
-                                 <font>
-                                    <Font size="9.0" />
-                                 </font>
-                              </Label>
-                              <Label id="totalAmount_value" fx:id="initailBalanceValue_label" layoutX="64.0" layoutY="35.0" prefHeight="30.0" prefWidth="126.0" style="-fx-font-size: 12;" text="410">
-                                 <font>
-                                    <Font size="9.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </Pane>
-                        <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
-                           <children>
-                              <Pane prefHeight="80.0" prefWidth="50.0" style="-fx-background-color: #0000cc;" />
-                              <VBox layoutX="63.0" layoutY="26.0" />
-                              <Label id="totalVan_label" fx:id="currentBalance_label" layoutX="59.0" layoutY="3.0" prefHeight="26.0" prefWidth="130.0" style="-fx-font-size: 12;" text="Likes">
-                                 <font>
-                                    <Font size="9.0" />
-                                 </font>
-                              </Label>
-                              <Label id="totalVan_value" fx:id="currentBalanceValue_label" layoutX="61.0" layoutY="41.0" prefHeight="27.0" prefWidth="132.0" style="-fx-font-size: 12;" text="93,688">
-                                 <font>
-                                    <Font size="9.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </Pane>
+                        <Pane prefHeight="80.0" prefWidth="50.0" style="-fx-background-color: #00A65A;" />
+                        <VBox layoutX="67.0" layoutY="29.0" />
+                        <Label id="totalAmount_label" fx:id="initailBalance_label" layoutX="60.0" layoutY="-2.0" prefHeight="36.0" prefWidth="127.0" style="-fx-font-size: 12;" text="Bookmarks">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Label id="totalAmount_value" fx:id="initailBalanceValue_label" layoutX="64.0" layoutY="35.0" prefHeight="30.0" prefWidth="126.0" style="-fx-font-size: 12;" text="410">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
                      </children>
-                     <padding>
-                        <Insets bottom="10.0" top="10.0" />
-                     </padding>
-                  </HBox>
-                  <AnchorPane maxHeight="1.7976931348623157E308" prefHeight="503.0" prefWidth="1000.0" style="-fx-background-color: #ffffff;">
+                  </Pane>
+                  <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
                      <children>
-                        <JFXTabPane prefHeight="503.0" prefWidth="984.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <tabs>
-                              <Tab fx:id="income_tab" text="income">
-                                <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                       <children>
-                                          <VBox prefHeight="442.0" prefWidth="984.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <children>
-                                                <HBox fx:id="incomeHeader_Pane" prefHeight="36.0" prefWidth="880.0" spacing="15.0" style="-fx-background-color: #ffffff;">
-                                                   <opaqueInsets>
-                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                   </opaqueInsets>
-                                                   <padding>
-                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                   </padding></HBox>
-                                                <AnchorPane fx:id="incomeTable_loc" minHeight="-Infinity" prefHeight="420.0" prefWidth="880.0" />
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </AnchorPane>
-                                </content>
-                              </Tab>
-                              <Tab fx:id="outcome_Tab" text="outcome">
-                                <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                       <children>
-                                          <VBox prefHeight="350.0" prefWidth="984.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <children>
-                                                <HBox fx:id="outcomeHeader_Pane" prefHeight="36.0" prefWidth="200.0" spacing="15.0" style="-fx-background-color: #ffffff;">
-                                                   <opaqueInsets>
-                                                      <Insets />
-                                                   </opaqueInsets>
-                                                   <padding>
-                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                                   </padding></HBox>
-                                                <AnchorPane fx:id="outcomeTable_loc" minHeight="-Infinity" prefHeight="420.0" prefWidth="984.0" />
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </AnchorPane>
-                                </content>
-                              </Tab>
-                           </tabs>
-                        </JFXTabPane>
+                        <Pane prefHeight="80.0" prefWidth="50.0" style="-fx-background-color: #0000cc;" />
+                        <VBox layoutX="63.0" layoutY="26.0" />
+                        <Label id="totalVan_label" fx:id="currentBalance_label" layoutX="59.0" layoutY="3.0" prefHeight="26.0" prefWidth="130.0" style="-fx-font-size: 12;" text="Likes">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <Label id="totalVan_value" fx:id="currentBalanceValue_label" layoutX="61.0" layoutY="41.0" prefHeight="27.0" prefWidth="132.0" style="-fx-font-size: 12;" text="93,688">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Label>
                      </children>
-                  </AnchorPane>
+                  </Pane>
                </children>
                <padding>
-                  <Insets left="1.0" />
+                  <Insets bottom="10.0" top="10.0" />
                </padding>
-            </VBox>
-         </content>
-      </ScrollPane>
+            </HBox>
+            <AnchorPane fx:id="tabPanContainer" maxHeight="1.7976931348623157E308" prefHeight="503.0" prefWidth="1000.0" style="-fx-background-color: #ffffff;">
+               <children>
+                  <JFXTabPane fx:id="fxtabPan" prefHeight="440.0" prefWidth="600.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <tabs>
+                        <Tab fx:id="income_tab" text="income">
+                          <content>
+                            <AnchorPane fx:id="incomeInchorePan" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox prefHeight="442.0" prefWidth="984.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <HBox fx:id="incomeHeader_Pane" prefHeight="36.0" prefWidth="880.0" spacing="15.0" style="-fx-background-color: #ffffff;">
+                                             <opaqueInsets>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </opaqueInsets>
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </HBox>
+                                          <AnchorPane fx:id="incomeTable_loc" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefWidth="880.0" VBox.vgrow="ALWAYS" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab fx:id="outcome_Tab" text="outcome">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox prefHeight="350.0" prefWidth="984.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <HBox fx:id="outcomeHeader_Pane" prefHeight="36.0" prefWidth="200.0" spacing="15.0" style="-fx-background-color: #ffffff;">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </HBox>
+                                          <AnchorPane fx:id="outcomeTable_loc" maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="420.0" prefWidth="984.0" VBox.vgrow="ALWAYS" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                     </tabs>
+                  </JFXTabPane>
+               </children>
+            </AnchorPane>
+         </children>
+         <padding>
+            <Insets left="1.0" />
+         </padding>
+      </VBox>
    </children>
    <padding>
       <Insets left="20.0" />

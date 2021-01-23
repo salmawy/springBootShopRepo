@@ -39,7 +39,7 @@ public class Income extends BaseBean {
     
     @ManyToOne
     @JoinColumn(name = "SAFE_ID",nullable = true)
-    private SafeOfDay safeId;
+    private SafeOfDay safe;
 
 
 }

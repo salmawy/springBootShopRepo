@@ -7,16 +7,22 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1000.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.com.sales.debt.view.DebtsPersenter">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="1298.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.sales.debt.view.DebtsPersenter">
    <children>
       <SplitPane dividerPositions="0.2391304347826087" prefHeight="540.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
-            <VBox alignment="TOP_CENTER" maxHeight="-Infinity" prefHeight="300.0" prefWidth="236.0" spacing="10.0">
+            <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="552.0" prefWidth="235.0" spacing="10.0">
                <children>
-                  <JFXComboBox fx:id="sellerType_CB" prefHeight="25.0" prefWidth="133.0" promptText="ksasd" />
-                  <JFXTextField fx:id="sellerName_TF" promptText="sdsdsd" />
-                  <Separator prefWidth="200.0" />
-                  <AnchorPane fx:id="sellersTable_Loc" maxHeight="-Infinity" prefHeight="444.0" prefWidth="226.0" />
+                  <VBox spacing="7.0" style="-fx-border-color: black; -fx-background-color: #ffffff;" VBox.vgrow="NEVER">
+                     <children>
+                        <JFXComboBox fx:id="sellerType_CB" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="133.0" promptText="ksasd" VBox.vgrow="NEVER" />
+                        <JFXTextField fx:id="sellerName_TF" promptText="sdsdsd" VBox.vgrow="NEVER" />
+                     </children>
+                     <padding>
+                        <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                     </padding>
+                  </VBox>
+                  <AnchorPane fx:id="sellersTable_Loc" maxHeight="1.7976931348623157E308" prefHeight="444.0" prefWidth="226.0" style="-fx-background-color: #ffffff;" VBox.vgrow="ALWAYS" />
                </children>
                <padding>
                   <Insets left="5.0" right="5.0" />
@@ -24,16 +30,16 @@
             </VBox>
             <AnchorPane prefHeight="540.0" prefWidth="756.0">
                <children>
-                  <VBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="398.0" prefWidth="756.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="538.0" prefWidth="755.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="70.0" prefWidth="600.0" spacing="16.0">
                            <children>
-                              <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                              <Pane prefHeight="100.0" prefWidth="260.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
                                  <children>
                                     <Pane prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #00A65A;" />
-                                    <VBox layoutX="50.0" layoutY="2.0" prefHeight="47.0" prefWidth="150.0">
+                                    <VBox layoutX="50.0" layoutY="2.0" prefHeight="47.0" prefWidth="210.0">
                                        <children>
-                                          <Label id="totalAmount_label" fx:id="currentDebt_label" prefHeight="27.0" prefWidth="153.0" style="-fx-font-size: 12;" text="Bookmarks">
+                                          <Label id="totalAmount_label" fx:id="currentDebt_label" prefHeight="25.0" prefWidth="204.0" style="-fx-font-size: 12;" text="Bookmarks">
                                              <font>
                                                 <Font size="9.0" />
                                              </font>
@@ -47,12 +53,12 @@
                                     </VBox>
                                  </children>
                               </Pane>
-                              <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                              <Pane prefHeight="100.0" prefWidth="260.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
                                  <children>
                                     <Pane prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #00C0EF;" />
-                                    <VBox layoutX="56.0" layoutY="2.0" prefHeight="47.0" prefWidth="142.0">
+                                    <VBox layoutX="56.0" layoutY="2.0" prefHeight="47.0" prefWidth="210.0" style="-fx-border-color: 1;">
                                        <children>
-                                          <Label id="totalCar_label" fx:id="collecteDebt_label" prefHeight="27.0" prefWidth="143.0" style="-fx-font-size: 12;" text="MESSAGES">
+                                          <Label id="totalCar_label" fx:id="collecteDebt_label" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="143.0" style="-fx-font-size: 12;" text="MESSAGES">
                                              <font>
                                                 <Font size="9.0" />
                                              </font>
@@ -66,12 +72,12 @@
                                     </VBox>
                                  </children>
                               </Pane>
-                              <Pane prefHeight="58.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                              <Pane prefHeight="50.0" prefWidth="260.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
                                  <children>
                                     <Pane prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #DD4B39;" />
-                                    <VBox layoutX="63.0" layoutY="2.0" prefHeight="47.0" prefWidth="136.0">
+                                    <VBox layoutX="63.0" layoutY="2.0" prefHeight="47.0" prefWidth="210.0">
                                        <children>
-                                          <Label id="totalVan_label" fx:id="initailDebt_label" prefHeight="19.0" prefWidth="133.0" style="-fx-font-size: 12;" text="Likes">
+                                          <Label id="totalVan_label" fx:id="initailDebt_label" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="133.0" style="-fx-font-size: 12;" text="Likes">
                                              <font>
                                                 <Font size="9.0" />
                                              </font>
@@ -90,7 +96,7 @@
                               <Insets bottom="10.0" top="10.0" />
                            </padding>
                         </HBox>
-                        <SplitPane dividerPositions="0.3948497854077253" orientation="VERTICAL" prefHeight="473.0" prefWidth="756.0">
+                        <SplitPane dividerPositions="0.3948497854077253" orientation="VERTICAL" prefHeight="468.0" prefWidth="803.0" VBox.vgrow="ALWAYS">
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="248.0" prefWidth="754.0">
                                  <children>

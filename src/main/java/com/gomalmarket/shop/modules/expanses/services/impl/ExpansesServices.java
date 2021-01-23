@@ -6,7 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +31,7 @@ import com.gomalmarket.shop.core.entities.Loaner;
 import com.gomalmarket.shop.core.entities.Outcome;
 import com.gomalmarket.shop.core.entities.OutcomeDetail;
 import com.gomalmarket.shop.core.entities.OutcomeType;
-import com.gomalmarket.shop.core.entities.Safe;
+import com.gomalmarket.shop.core.entities.SeasonSafe;
 import com.gomalmarket.shop.core.entities.SafeOfDay;
 import com.gomalmarket.shop.core.entities.SafeTracing;
 import com.gomalmarket.shop.core.entities.Season;
@@ -37,6 +40,7 @@ import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.core.service.IBaseService;
+import com.gomalmarket.shop.modules.expanses.enums.SafeTypeEnum;
 import com.gomalmarket.shop.modules.expanses.services.IExpansesServices;
 import com.gomalmarket.shop.modules.expanses.services.dao.IExpansesDao;
 
@@ -50,6 +54,8 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Transactional
 public class ExpansesServices implements IExpansesServices {
+	 @PersistenceContext
+	    EntityManager entityManger;
 
 	@Autowired
 	ShopAppContext shopAppContext;
@@ -57,7 +63,7 @@ public class ExpansesServices implements IExpansesServices {
 	IExpansesDao expansesDao;
 	@Autowired
 	IBaseService baseService;
-	
+
 	@Autowired
 	RepoSupplier repoSupplier;
 ///	private ResourceBundle settingsBundle = ResourceBundle.getBundle("ApplicationSettings_ar");
@@ -101,7 +107,7 @@ public class ExpansesServices implements IExpansesServices {
 		Loaner loaner = findLoaner(name);
 		LoanAccount account = findLoanerAccount(loaner.getId());
 
-		LoanPaying pay = new LoanPaying();
+		LoanPaying pay =  new LoanPaying();
 		pay.setLoanAccount(account);
 		pay.setNotes(notes);
 		pay.setPaidAmunt(amount);
@@ -123,7 +129,7 @@ public class ExpansesServices implements IExpansesServices {
 			outPayLoan.setTypeName(String.valueOf(OutcomeTypeEnum.OUT_PAY_LOAN));
 			outPayLoan.setOrderId(-1);
 
-			Outcome outome = findOutcome(date);
+			Outcome outome = findOrCreateOutcome(date);
 			saveOutcomeDetail(outPayLoan, outome);
 
 		}
@@ -153,40 +159,47 @@ public class ExpansesServices implements IExpansesServices {
 
 	public void saveIncomeDetail(IncomeDetail incomeDetail, Date date) throws DataBaseException {
 
-		Income income = findIncome(date);
+		Income income = findOrCreateIncome(date);
 		incomeDetail.setIncome(income);
 		incomeDetail.setResipeintName(shopAppContext.getCurrentUser().getUsername());
 
 		income.setTotalAmount(income.getTotalAmount() + incomeDetail.getAmount());
+		
+		
+		changeSafeBalance(incomeDetail.getIncome().getSafe(), incomeDetail.getAmount(), SafeTransactionTypeEnum.add, incomeDetail.getType().getName(), incomeDetail.getId());
+
 		this.getBaseService().addEditBean(incomeDetail);
 
 		this.getBaseService().addEditBean(income);
 
 	}
 
-	public Income findIncome(Date date) {
+	public Income findOrCreateIncome(Date date) throws DataBaseException {
 
-		Income income = new Income();
-		income.setIncomeDate(date);
-		income.setTotalAmount(0.0);
+		Income income = null;
 
 		try {
 
 			income = (Income) this.getExpansesDao().getIncome(date).get(0);
+			if(income.getSafe()==null) {
+				income.setSafe(findOrCreateSafeOfDay(income.getIncomeDate()));
+				
+			}
 
 			return income;
-		} catch (DataBaseException | EmptyResultSetException e) {
+		} catch ( EmptyResultSetException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			log.info("error.emptyRS incomeDate of date " + date.toString());
+ 			log.info("error.emptyRS incomeDate of date " + date.toString());
 		}
-
-		try {
-			this.getBaseService().addBean(income);
-		} catch (DataBaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
+		
+		
+		 income = new Income();
+		income.setIncomeDate(date);
+		income.setTotalAmount(0.0);
+		income.setSafe(findOrCreateSafeOfDay(income.getIncomeDate()));
+		this.getBaseService().addBean(income);
+	 
 
 		return income;
 
@@ -206,23 +219,27 @@ public class ExpansesServices implements IExpansesServices {
 		outcomeDetail.setOutcome(outcome);
 		outcomeDetail.setSpenderName(shopAppContext.getCurrentUser().getUsername());
 
-		outcome.setTotalOutcome(outcome.getTotalOutcome() + outcomeDetail.getAmount());
-	//	this.getBaseService().addBean(outcomeDetail);
+		outcome.setTotalAmount(outcome.getTotalAmount() + outcomeDetail.getAmount());
+		
+		changeSafeBalance(outcomeDetail.getOutcome().getSafe(), outcomeDetail.getAmount(), SafeTransactionTypeEnum.subtract, outcomeDetail.getType().getName(), outcomeDetail.getId());
 
-	//	this.getBaseService().editBean(outcome);
-		this.repoSupplier.getOutcomeRepo().save(outcome);
-		this.repoSupplier.getOutcomeDetailRepo().save(outcomeDetail);
+		  this.getBaseService().addBean(outcomeDetail);
+
+	 this.getBaseService().editBean(outcome);
+		 
 
 	}
 
-	//@Override
-	public Outcome findOutcome(Date date) throws DataBaseException {
+	 @Override
+	public Outcome findOrCreateOutcome(Date date) throws DataBaseException {
 
 		Outcome outcome = null;
 		try {
 
 			outcome = (Outcome) this.getExpansesDao().getOutcome(date).get(0);
-
+			if(outcome.getSafe()==null) {
+				outcome.setSafe(findOrCreateSafeOfDay(outcome.getOutcomeDate()));
+			}
 			try {
 				Outcome temp = (Outcome) getSynchronizeBean(Outcome.class, outcome.getId());
 				outcome = temp;
@@ -237,30 +254,34 @@ public class ExpansesServices implements IExpansesServices {
 		} catch (DataBaseException | EmptyResultSetException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
-			log.info( "error.emptyRS incomeDate of date " + date.toString());
+			log.info("error.emptyRS incomeDate of date " + date.toString());
 		}
-
-
 
 		outcome = new Outcome();
 		outcome.setOutcomeDate(date);
-		outcome.setTotalOutcome(0.0);
+		outcome.setTotalAmount(0.0);
 		outcome.setSeason(shopAppContext.getSeason());
+		outcome.setSafe(findOrCreateSafeOfDay(outcome.getOutcomeDate()));
 		this.getBaseService().addBean(outcome);
- 		return outcome;
-	
+		return outcome;
 
- 
 	}
-	public SafeOfDay findSafeOfDay(Date date) throws DataBaseException {
 
-		SafeOfDay  safeOfDay = null;
+	@Override
+	public SafeOfDay findOrCreateSafeOfDay(Date date) throws DataBaseException {
+
+		SafeOfDay safeOfDay = null;
+		//###############################################################################################################
+
 		try {
-			
-			 
 
 			safeOfDay = (SafeOfDay) this.getExpansesDao().getSafeOfDay(date).get(0);
-
+			/*
+			 * if (safeOfDay.getParent() == null) {
+			 * safeOfDay.setParent(getParent(safeOfDay));
+			 * 
+			 * }
+			 */
 			try {
 				SafeOfDay temp = (SafeOfDay) getSynchronizeBean(SafeOfDay.class, safeOfDay.getId());
 				safeOfDay = temp;
@@ -275,31 +296,37 @@ public class ExpansesServices implements IExpansesServices {
 		} catch (DataBaseException | EmptyResultSetException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
-			log.info( "error.emptyRS SafeOfDay of date " + date.toString());
+			log.info("error.emptyRS SafeOfDay of date " + date.toString());
 		}
-
-
-
-		safeOfDay = new SafeOfDay();
+//###############################################################################################################
+ 		safeOfDay =  new SafeOfDay();
 		safeOfDay.setDayDate(date);
 		safeOfDay.setBalance(0.0);
+		//safeOfDay.setParent(getParent(safeOfDay));
 		safeOfDay.setSeason(shopAppContext.getSeason());
 		repoSupplier.getSafeOfDayRepo().save(safeOfDay);
-  		return safeOfDay;
-	
+		return safeOfDay;
 
- 
 	}
 
-	
-	
-	
+	private SafeOfDay getParent(SafeOfDay safeOfDay) throws DataBaseException {
+
+		Date dayDate = safeOfDay.getDayDate();
+		try {
+			return getExpansesDao().getParentSafeOfDay(dayDate);
+		} catch (EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+
+	}
+
 	public SafeOfDay createSafeOfDay(Date date) throws DataBaseException {
 
-		SafeOfDay  safeOfDay = null;
+		SafeOfDay safeOfDay = null;
 		try {
-			
-			 
 
 			safeOfDay = (SafeOfDay) this.getExpansesDao().getSafeOfDay(date).get(0);
 
@@ -317,34 +344,18 @@ public class ExpansesServices implements IExpansesServices {
 		} catch (DataBaseException | EmptyResultSetException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
-			log.info( "error.emptyRS SafeOfDay of date " + date.toString());
+			log.info("error.emptyRS SafeOfDay of date " + date.toString());
 		}
-
-
 
 		safeOfDay = new SafeOfDay();
 		safeOfDay.setDayDate(date);
 		safeOfDay.setBalance(0.0);
 		safeOfDay.setSeason(shopAppContext.getSeason());
 		repoSupplier.getSafeOfDayRepo().save(safeOfDay);
-  		return safeOfDay;
-	
+		return safeOfDay;
 
- 
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public Loaner findLoaner(String name) throws DataBaseException {
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -381,7 +392,7 @@ public class ExpansesServices implements IExpansesServices {
 
 	public void outcomeTransaction(Date date, double amount, String notes, OutcomeType type, int customerId,
 			int orderId, Fridage fridage, Season season) throws DataBaseException {
-
+this.initEntityDictionary();
 		OutcomeDetail outcomeDetail = new OutcomeDetail();
 		outcomeDetail.setAmount(amount);
 		outcomeDetail.setFridage(fridage);
@@ -390,21 +401,24 @@ public class ExpansesServices implements IExpansesServices {
 		outcomeDetail.setType(type);
 
 		outcomeDetail.setOrderId(orderId);
-		Outcome outcome = findOutcome(date);
+		Outcome outcome = findOrCreateOutcome(date);
 		saveOutcomeDetail(outcomeDetail, outcome);
-		recalculateSafeBalance(season);
+ 
 
 		log.info(this.getClass().getName() + "=>tranasction completed succfully");
 
 	}
 
-
-	public void editOutcomeTransaction(Date date, double amount, String notes, OutcomeType type, int customerId, int orderId,
-			Fridage fridage, Season season, int detailId) throws DataBaseException, InvalidReferenceException {
+	public void editOutcomeTransaction(Date date, double amount, String notes, OutcomeType type, int customerId,
+			int orderId, Fridage fridage, Season season, int detailId)
+			throws DataBaseException, InvalidReferenceException {
 
 		this.entitDictionary = new HashMap<String, Object>();
 		OutcomeDetail detail = (OutcomeDetail) this.getBaseService().findBean(OutcomeDetail.class, detailId);
-		this.getBaseService().deleteBean(detail);
+		deleteOutcomeDetailTransaction(detail);
+
+		
+		
 
 		OutcomeDetail outcomeDetail = new OutcomeDetail();
 		outcomeDetail.setAmount(amount);
@@ -412,14 +426,14 @@ public class ExpansesServices implements IExpansesServices {
 		outcomeDetail.setSpenderName(shopAppContext.getCurrentUser().getUsername());
 		outcomeDetail.setCustomerId(customerId);
 		outcomeDetail.setType(type);
-		//outcomeDetail.setTypeName(String.valueOf(typeId));
+		// outcomeDetail.setTypeName(String.valueOf(typeId));
 
 		outcomeDetail.setOrderId(orderId);
-		Outcome outcome = findOutcome(date);
+		Outcome outcome = findOrCreateOutcome(date);
 		saveOutcomeDetail(outcomeDetail, outcome);
-		recalculateSafeBalance(season);
+	 
 
- 		log.info(this.getClass().getName() + "=>tranasction completed succfully");
+		log.info(this.getClass().getName() + "=>tranasction completed succfully");
 
 	}
 
@@ -429,7 +443,7 @@ public class ExpansesServices implements IExpansesServices {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("name", name);
 		LoanAccount account = null;
-	 
+
 		account = (LoanAccount) this.getBaseService().findAllBeansWithDepthMapping(Loaner.class, map).get(0);
 
 		return account;
@@ -441,13 +455,13 @@ public class ExpansesServices implements IExpansesServices {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", loanerId);
 		LoanAccount account = null;
-	 
-			account = (LoanAccount) this.getBaseService().findAllBeansWithDepthMapping(Loaner.class, map).get(0);
 
-	 
+		account = (LoanAccount) this.getBaseService().findAllBeansWithDepthMapping(Loaner.class, map).get(0);
 
 		return account;
 	}
+
+	
 
 	public void incomeTransaction(Date date, double amount, String notes, IncomeType type, int sellerId, int orderId,
 			Fridage fridage, Season season) throws DataBaseException {
@@ -462,56 +476,68 @@ public class ExpansesServices implements IExpansesServices {
 		incomeDetail.setSellerOrderId(orderId);
 
 		saveIncomeDetail(incomeDetail, date);
-		recalculateSafeBalance(season);
+//		recalculateSafeBalance(season);
 
- 	log.info( this.getClass().getName() + "=>tranasction completed succfully");
-
-	}
-
-	public void recalculateSafeBalance(Season season) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("incomeDetail.income.seasonId=", season.getId());
-
-		Map<String, Object> map2 = new HashMap<String, Object>();
-		map2.put("outcomeDetail.outcome.seasonId=", season.getId());
-
-		Double totalIncome = 0.0;
-		Double totaloutcome = 0.0;
-
-		try {
-			totalIncome = (Double) this.getBaseService().aggregate("IncomeDetail incomeDetail", "sum",
-					"amount", map);
-			totalIncome = (totalIncome == null) ? 0.0 : totalIncome;
-			totaloutcome = (Double) this.getBaseService().aggregate("OutcomeDetail outcomeDetail", "sum",
-					"amount", map2);
-			totaloutcome = (totaloutcome == null) ? 0.0 : totaloutcome;
-
-			map2 = new HashMap<String, Object>();
-			map2.put("seasonId", season.getId());
-
-			Safe safe = null;
-			try {
-
-				safe = (Safe) this.getBaseService().findAllBeans(Safe.class, map2, null).get(0);
-				Safe temp = (Safe) getSynchronizeBean(Safe.class, safe.getId());
-				safe = temp;
-
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-			double temp = totalIncome - totaloutcome;
-			safe.setBalance(safe.getBaseAmount() + temp);
-			repoSupplier.getSafeRepo().save(safe);
-		//	this.getBaseService().addEditBean(safe);
-
-		} catch (DataBaseException | EmptyResultSetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		log.info(this.getClass().getName() + "=>tranasction completed succfully");
 
 	}
 
-	public Loaner saveLoaner(Loaner Loaner) throws DataBaseException {
+	
+	@Override
+	public void deleteOutcomeDetailTransaction(OutcomeDetail outcomeDetail) throws DataBaseException {
+		
+		
+		
+		SafeOfDay safeOfDay=outcomeDetail.getOutcome().getSafe();
+		Outcome outcome=outcomeDetail.getOutcome();
+	
+		outcome.setTotalAmount(outcome.getTotalAmount()-outcomeDetail.getAmount());
+		getBaseService().addEditBean(outcome);
+		
+		
+		changeSafeBalance(safeOfDay, outcomeDetail.getAmount(), SafeTransactionTypeEnum.add, outcomeDetail.getType().getName(), outcomeDetail.getId());
+		 
+		
+		
+		
+		
+		getBaseService().deleteBean(outcomeDetail);
+		
+ 
+	//	recalculateSafeBalance(season);
+
+		log.info(this.getClass().getName() + "=>tranasction completed succfully");
+
+	}
+
+	
+	@Override
+	public void deleteIncomeDetailTransaction(IncomeDetail incomeDetail) throws DataBaseException {
+		
+		
+		
+		SafeOfDay safeOfDay=incomeDetail.getIncome().getSafe();
+		Income income=incomeDetail.getIncome();
+	
+		income.setTotalAmount(income.getTotalAmount()-incomeDetail.getAmount());
+		getBaseService().addEditBean(income);
+		changeSafeBalance(safeOfDay, incomeDetail.getAmount(), SafeTransactionTypeEnum.subtract, incomeDetail.getType().getName(), incomeDetail.getId());
+		 
+		
+		
+		
+		
+		getBaseService().deleteBean(incomeDetail);
+		
+ 
+	//	recalculateSafeBalance(season);
+
+		log.info(this.getClass().getName() + "=>tranasction completed succfully");
+
+	}
+
+	
+	 public Loaner saveLoaner(Loaner Loaner) throws DataBaseException {
 
 		try {
 			Map<String, Object> m = new HashMap<String, Object>();
@@ -549,21 +575,21 @@ public class ExpansesServices implements IExpansesServices {
 
 	}
 
-	public Double getSafeBalance(Season season) {
-
-		Double balance = 0.0;
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("seasonId", season.getId());
-
-		try {
-			Safe safe = (Safe) this.getBaseService().findBean(Safe.class, map);
-			return safe.getBalance();
-		} catch (DataBaseException | EmptyResultSetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	@Override
+	public Double getSafeBalance(Season season) { 
+		
+		Map <String,Object>params=new HashMap<String,Object>();
+		params.put("seasonId", season.getId());
+		
+	Optional<SeasonSafe>	safeOp= repoSupplier.getSafeRepo().findById(season.getId());
+				
+		if(safeOp.isPresent()) {
+			
+			return safeOp.get().getBalance();
 		}
-		return balance;
-
+		
+		return 0.0;
+		
 	}
 
 	public List getLoanerDebts(int loanerId, String type) throws EmptyResultSetException, DataBaseException {
@@ -598,58 +624,67 @@ public class ExpansesServices implements IExpansesServices {
 		// ======================================================================
 
 		if (type.equals(LoanTypeEnum.IN_LOAN)) {
-			IncomeType incomeType=(IncomeType) this.getBaseService().findBean(IncomeType.class, IncomeTypesEnum.IN_LOAN);
+			IncomeType incomeType = (IncomeType) this.getBaseService().findBean(IncomeType.class,
+					IncomeTypesEnum.IN_LOAN);
 
-			incomeTransaction(date, amount, notes, incomeType, loaner.getId(), -1, fridage,
-					season);
+			incomeTransaction(date, amount, notes, incomeType, loaner.getId(), -1, fridage, season);
 
 		}
 
 		// ======================================================================
 
 		else if (type.equals(LoanTypeEnum.OUT_LOAN)) {
-			
-			OutcomeType outcomeType=(OutcomeType) this.getBaseService().findBean(OutcomeType.class, OutcomeTypeEnum.OUT_LOAN);
-			outcomeTransaction(date, amount, notes, outcomeType, loaner.getId(), -1, fridage,
-					season);
-		
+
+			OutcomeType outcomeType = (OutcomeType) this.getBaseService().findBean(OutcomeType.class,
+					OutcomeTypeEnum.OUT_LOAN);
+			outcomeTransaction(date, amount, notes, outcomeType, loaner.getId(), -1, fridage, season);
 
 		}
 
 		// ======================================================================
 
-		 
 		log.info(this.getClass().getName() + "=>tranasction completed succfully");
 
 	}
 
-	 
-	public void changeSafeBalance(Safe safe, double amount, int transactionType, String transactionName,
-			int transactionId) throws DataBaseException, InvalidReferenceException {
-		double newBalance = safe.getBalance();
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public void changeSafeBalance(SafeOfDay safeOfDay, double amount, int transactionType, String transactionName,
+			int transactionId) throws DataBaseException {
+		
+		
+		double newBalance = safeOfDay.getBalance();
 		if (transactionType == SafeTransactionTypeEnum.add)
 			newBalance += amount;
 		else if (transactionType == SafeTransactionTypeEnum.subtract)
 			newBalance -= amount;
 
 		SafeTracing tracing = new SafeTracing();
-		tracing.setSafe(safe);
+		tracing.setSafeOfDay(safeOfDay);
 		tracing.setAmount(amount);
 		tracing.setAfterAmount(newBalance);
-		tracing.setBeforAmount(safe.getBalance());
+		tracing.setBeforAmount(safeOfDay.getBalance());
 		tracing.setTransactionType(transactionType);
 		tracing.setTransactionId(transactionId);
 
 		tracing.setTransactionName(transactionName);
 
-		safe.setBalance(newBalance);
+		safeOfDay.setBalance(newBalance);
 		this.getBaseService().addBean(tracing);
-		this.getBaseService().addEditBean(safe);
-		entitDictionary.put(safe.getClass().getName(), safe);
- 
+		this.getBaseService().addEditBean(safeOfDay);
+		entitDictionary.put(safeOfDay.getClass().getName(), safeOfDay);
+
 	}
 
-	//@Override
+	// @Override
 	public void changeOutcomeDetailAmount(OutcomeDetail outcomeDetail, double amount, int transactionTypeId)
 			throws DataBaseException, InvalidReferenceException {
 
@@ -665,20 +700,20 @@ public class ExpansesServices implements IExpansesServices {
 
 		// change outcome
 		Outcome outcome = (Outcome) getSynchronizeBean(Outcome.class, outcomeDetail.getOutcome().getId());
-		newAmount = outcome.getTotalOutcome();
+		newAmount = outcome.getTotalAmount();
 		if (transactionTypeId == SafeTransactionTypeEnum.add)
 			newAmount += amount;
 		else if (transactionTypeId == SafeTransactionTypeEnum.subtract)
 			newAmount -= amount;
 
-		outcome.setTotalOutcome(newAmount);
+		outcome.setTotalAmount(newAmount);
 		// =========================================================================================================================
 
 		this.getBaseService().addEditBean(outcomeDetail);
 		this.getBaseService().addEditBean(outcome);
 		entitDictionary.put(outcome.getClass().getName(), outcome);
 
-		changeSafeBalance(outcome.getSafeId(), amount, SafeTransactionTypeEnum.add, outcomeDetail.getType().getName(),
+		changeSafeBalance(outcome.getSafe(), amount, SafeTransactionTypeEnum.add, outcomeDetail.getType().getName(),
 				outcomeDetail.getId());
 
 	}
@@ -712,10 +747,8 @@ public class ExpansesServices implements IExpansesServices {
 		this.getBaseService().addEditBean(income);
 		entitDictionary.put(income.getClass().getName(), income);
 
-		changeSafeBalance(income.getSafeId(), amount, SafeTransactionTypeEnum.add, incomeDetail.getType().getName(),
+		changeSafeBalance(income.getSafe(), amount, SafeTransactionTypeEnum.add, incomeDetail.getType().getName(),
 				incomeDetail.getId());
-
-	 
 
 	}
 
@@ -766,7 +799,7 @@ public class ExpansesServices implements IExpansesServices {
 	}
 
 	@Override
-	public List getIncomeDates(Season season ) throws EmptyResultSetException, DataBaseException {
+	public List getIncomeDates(Season season) throws EmptyResultSetException, DataBaseException {
 
 		return getExpansesDao().getIncomeDates(season.getId());
 	}
@@ -779,26 +812,22 @@ public class ExpansesServices implements IExpansesServices {
 
 	}
 
-	
-	
-	
- 
- 
-
-	 
-
- 
 	@Override
-public void initEntityDictionary() {
-	
-	try {
-		entitDictionary=new HashMap();
-		
-	}catch (Exception e) {
-		// TODO: handle exception
+	public void initEntityDictionary() {
+
+		try {
+			entitDictionary = new HashMap();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
 	}
-	
-	
-}
- 
+
+	@Override
+	public double getSafeBalanceOfday(int seasonId,Date date,SafeTypeEnum type) {
+		// TODO Auto-generated method stub
+		return getExpansesDao().getSafeBalanceOfday(seasonId, date,type);
+	}
+
 }

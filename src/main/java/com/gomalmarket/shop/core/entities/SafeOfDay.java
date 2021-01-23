@@ -37,9 +37,7 @@ public class SafeOfDay extends BaseBean {
     @Column(name = "BALANCE")
     private Double balance;
 
-    @OneToOne
-    @JoinColumn(name = "PARENT_ID")
-    private SafeOfDay baseAmount;
+
 
     @ManyToOne
     @JoinColumn(name = "SEASON_ID")

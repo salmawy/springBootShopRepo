@@ -308,9 +308,11 @@ public class SalesService implements ISalesService {
 		if (oldPaidAmountDetail != null && paidAmount == 0.0)
 
 		{
-
-			this.getBaseService().deleteBean(oldPaidAmountDetail);
-			recalculateSafeBalance(seasonId);
+			getExpansesServices().deleteIncomeDetailTransaction(oldPaidAmountDetail);
+			/*
+			 * this.getBaseService().deleteBean(oldPaidAmountDetail);
+			 * recalculateSafeBalance(seasonId);
+			 */
 		} else if (oldPaidAmountDetail != null && oldPaidAmountDetail.getAmount() != paidAmount
 				&& paidAmount > 0.0) {
 
@@ -359,39 +361,7 @@ public class SalesService implements ISalesService {
  
 	}
 
-	public void recalculateSafeBalance(int seasonId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("incomeDetail.income.seasonId=", seasonId);
-
-		Map<String, Object> map2 = new HashMap<String, Object>();
-		map2.put("outcomeDetail.outcome.seasonId=", seasonId);
-
-		Double totalIncome = 0.0;
-		Double totaloutcome = 0.0;
-
-		try {
-			totalIncome = (Double) aggregate("IncomeDetail incomeDetail", "sum", "amount", map);
-			totalIncome = (totalIncome == null) ? 0.0 : totalIncome;
-			totaloutcome = (Double) aggregate("OutcomeDetail outcomeDetail", "sum", "amount", map2);
-			totaloutcome = (totaloutcome == null) ? 0.0 : totaloutcome;
-
-			map2 = new HashMap<String, Object>();
-			map2.put("seasonId", seasonId);
-
-			SafeOfDay safe = (SafeOfDay) this.getBaseService().findAllBeans(SafeOfDay.class, map2, null).get(0);
-			double temp = totalIncome - totaloutcome;
-			safe.setBalance(safe.getBaseAmount() + temp);
-			this.getBaseService().addEditBean(safe);
-
-		} catch (DataBaseException | EmptyResultSetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
  
-
  
 	public int saveAndUpdateSellerLoanBag(Seller seller, Season season, double orderCost, double paidAmount)
 			throws DataBaseException {
@@ -583,10 +553,15 @@ public class SalesService implements ISalesService {
 
 			map.put("sellerOrderId", order.getId());
 			try {
-				IncomeDetail incomeDetail = (IncomeDetail) this.getBaseService()
-						.findBean(IncomeDetail.class, map);
-				this.getBaseService().deleteBean(incomeDetail);
-				recalculateSafeBalance(order.getSeason().getId());
+				IncomeDetail incomeDetail = (IncomeDetail) this.getBaseService().findBean(IncomeDetail.class, map);
+				
+				getExpansesServices().deleteIncomeDetailTransaction(incomeDetail);
+			
+				
+				/*
+				 * this.getBaseService().deleteBean(incomeDetail);
+				 * recalculateSafeBalance(order.getSeason().getId());
+				 */
 
 			}  catch (EmptyResultSetException e) {
 				// TODO Auto-generated catch block
@@ -601,11 +576,13 @@ public class SalesService implements ISalesService {
 
 			map.put("sellerOrderId", order.getId());
 			try {
-				IncomeDetail incomeDetail = (IncomeDetail) this.getBaseService()
-						.findBean(IncomeDetail.class, map);
+				IncomeDetail incomeDetail = (IncomeDetail) this.getBaseService().findBean(IncomeDetail.class, map);
+				getExpansesServices().deleteIncomeDetailTransaction(incomeDetail);
 
-				this.getBaseService().deleteBean(incomeDetail);
-				recalculateSafeBalance(order.getSeason().getId());
+				/*
+				 * this.getBaseService().deleteBean(incomeDetail);
+				 * recalculateSafeBalance(order.getSeason().getId());
+				 */
 
 			} catch (EmptyResultSetException e) {
 				// TODO: handle exception
@@ -713,7 +690,7 @@ public class SalesService implements ISalesService {
 	public double getSeasonStartTotalSellersLoan(int seasonId) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("seasonId=", seasonId);
+		map.put("season.id=", seasonId);
 
 		try {
 			double value = (double) this.aggregate("SellerLoanBag", "sum", "priorLoan", map);
@@ -730,7 +707,7 @@ public class SalesService implements ISalesService {
 	public double getSeasoncCurrentotalSellersLoan(int seasonId) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("seasonId=", seasonId);
+		map.put("season.id=", seasonId);
 
 		try {
 			double value = (double) this.aggregate("SellerLoanBag", "sum", "currentLoan", map);

@@ -382,27 +382,32 @@ private void fitToAnchorePane(Node node) {
  		  SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
 
 			
-		/* TODO
-		 * try { Resource r=new
-		 * ClassPathResource("reports/sales/priodicSellerLoans.jrxml");
-		 * 
-		 * InputStream report = null; try { report = new FileInputStream (
-		 * r.getFile().getPath()); } catch (FileNotFoundException e) {
-		 * 
-		 * // TODO Auto-generated catch block e.printStackTrace(); } catch (IOException
-		 * e) { // TODO Auto-generated catch block e.printStackTrace(); } Map<String,
-		 * Object> param = new HashMap<String, Object>();
-		 * 
-		 * param.put("fromDate", sdf.format(fromDateValue));
-		 * 
-		 * param.put("toDate", sdf.format(toDateValue)); param.put("seasonId",seasonId);
-		 * 
-		 * getBaseService().printReport(param, report);
-		 * 
-		 * } catch (DataBaseException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } catch (JRException e) { // TODO Auto-generated catch
-		 * block e.printStackTrace(); }
-		 */
+		
+		  try { Resource r=new
+		  ClassPathResource("reports/sales/priodicSellerLoans.jrxml");
+		  
+		  InputStream report = null; try { report = new FileInputStream (
+		  r.getFile().getPath()); } catch (FileNotFoundException e) {
+		  
+		  // TODO Auto-generated catch block 
+			  e.printStackTrace(); 
+			  } catch (IOException  e) {
+ 			  e.printStackTrace(); }
+		 
+		  
+		  Map<String,Object> param = new HashMap<String, Object>();
+		  
+		  param.put("fromDate", sdf.format(fromDateValue));
+		  
+		  param.put("toDate", sdf.format(toDateValue)); param.put("seasonId",seasonId);
+		  
+		  getBaseService().printReport(param, report);
+		  
+		  } catch (DataBaseException e) { // TODO Auto-generated catch block
+		  e.printStackTrace(); }
+		  catch (JRException e) { // TODO Auto-generated catch
+		   e.printStackTrace(); }
+		 
 			
 			
 		}  

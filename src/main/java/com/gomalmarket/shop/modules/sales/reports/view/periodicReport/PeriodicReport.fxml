@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.com.sales.reports.view.periodicReport.PeriodicReportPersenter">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.sales.reports.view.periodicReport.PeriodicReportPersenter">
    <children>
-      <SplitPane dividerPositions="0.20078740157480315" orientation="VERTICAL" prefHeight="540.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <items>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="60.0" prefWidth="898.0" style="-fx-background-color: #ffffff;">
+      <VBox prefHeight="540.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="898.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;">
                <children>
                   <VBox layoutX="75.0" layoutY="37.0" prefHeight="102.0" prefWidth="956.0" AnchorPane.bottomAnchor="78.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
@@ -41,9 +42,12 @@
                      </padding>
                   </VBox>
                </children>
+               <effect>
+                  <SepiaTone level="0.26" />
+               </effect>
             </AnchorPane>
-            <AnchorPane fx:id="gridLocation_Panel" minHeight="140.0" minWidth="0.0" prefHeight="460.0" prefWidth="898.0" />
-         </items>
-      </SplitPane>
+            <AnchorPane fx:id="gridLocation_Panel" maxHeight="1.7976931348623157E308" minHeight="140.0" minWidth="0.0" prefHeight="460.0" prefWidth="898.0" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

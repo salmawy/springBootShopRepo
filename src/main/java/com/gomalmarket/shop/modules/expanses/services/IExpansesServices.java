@@ -15,6 +15,7 @@ import com.gomalmarket.shop.core.entities.Season;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
+import com.gomalmarket.shop.modules.expanses.enums.SafeTypeEnum;
 
 public interface IExpansesServices {
 	 public List getOutcome(Date date) throws EmptyResultSetException, DataBaseException ;
@@ -52,6 +53,11 @@ public interface IExpansesServices {
 			throws EmptyResultSetException, DataBaseException;
 	void editOutcomeTransaction(Date date, double amount, String notes, OutcomeType type, int customerId, int orderId,
 			Fridage fridage, Season season, int detailId) throws DataBaseException, InvalidReferenceException;
-	Outcome findOutcome(Date date) throws DataBaseException;
+	Outcome findOrCreateOutcome(Date date) throws DataBaseException;
 	void initEntityDictionary();
+	SafeOfDay findOrCreateSafeOfDay(Date date) throws DataBaseException;
+	void deleteOutcomeDetailTransaction(OutcomeDetail outcomeDetail) throws DataBaseException;
+	void deleteIncomeDetailTransaction(IncomeDetail incomeDetail) throws DataBaseException;
+	
+	public double getSafeBalanceOfday(int seasonId,Date date,SafeTypeEnum type);
 }

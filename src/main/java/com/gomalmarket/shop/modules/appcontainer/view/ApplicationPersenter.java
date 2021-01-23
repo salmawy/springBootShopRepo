@@ -45,19 +45,23 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author ahmed
  */
 @SuppressWarnings("restriction")
+@Slf4j
 public class ApplicationPersenter extends BaseAction implements Initializable {
 
 
-	 
+	 @FXML
+	 private VBox vboxMainContainer;
 
 	    @FXML
 	    private TitledPane contractorComp;
@@ -186,7 +190,21 @@ public class ApplicationPersenter extends BaseAction implements Initializable {
   	  logger.log(Level.INFO,"============================================================================================================");
 
 	  
-	  
+    	vboxMainContainer.heightProperty().addListener(( obs,oldvalue,newValue)->{
+  		  log.info("=======================================================================================================================");
+  		
+   		  appPage.setPrefHeight(newValue.doubleValue());
+   		  mystackPane.setPrefHeight(newValue.doubleValue());
+
+  		  
+   		  appContainer.setPrefHeight(newValue.doubleValue());
+   		  
+  		  log.info("heightProperty old value =>"+oldvalue);
+  		  log.info("heightProperty newValue  =>"+newValue);
+  			  log.info("=======================================================================================================================");
+
+  	  });
+     
 	  
 	  fillPanelsMap();
         intiateApp();  
@@ -452,7 +470,7 @@ private void fitToAnchorePane(Node node) {
 	  panelPathes.put("suppliers_btn",new String [] { "com.gomalmarket.shop.modules.contractor.view.suppliers.SupplierView",getMessage("title.withdrawls.suppliers")});
 	  panelPathes.put("generateInvoice_btn",new String [] { "com.gomalmarket.shop.modules.billing.view.generateInvoice.InitGenerateInvoiceView",getMessage("title.invoice.generate")});
 	  panelPathes.put("labour_btn", new String [] {"com.gomalmarket.shop.modules.contractor.view.labours.LabourView",getMessage("title.withdrawls.labur")});
- 
+	  
 	  panelPathes.put("payInvoice_btn", new String [] {"com.gomalmarket.shop.modules.billing.view.invoicePayment.InvoicePaymentView",getMessage("title.invoice.generate")});
 	  panelPathes.put("sellersLoanReport_btn", new String [] {"com.gomalmarket.shop.modules.sales.reports.view.periodicReport.PeriodicReportView",getMessage("sales.report.periodic")});
 	  panelPathes.put("contractorPerdiocReport_btn",new String [] { "com.gomalmarket.shop.modules.contractor.view.periodicReport.PeriodicReportView",getMessage("contractors.report.periodic")});

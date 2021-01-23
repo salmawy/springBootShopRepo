@@ -4,6 +4,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,11 +36,13 @@ import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.modules.expanses.action.ExpansesAction;
+import com.gomalmarket.shop.modules.expanses.enums.SafeTypeEnum;
 import com.gomalmarket.shop.modules.expanses.view.addOutcome.AddOutcomeView;
 import com.gomalmarket.shop.modules.expanses.view.beans.IncomeVB;
 import com.gomalmarket.shop.modules.expanses.view.beans.OutcomeVB;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTabPane;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -54,16 +57,29 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 public class ExpansesPersenter extends ExpansesAction implements Initializable, CustomTableActions {
 
 	
 	Logger logger = Logger.getLogger(this.getClass().getName());	
+	@FXML 
+	private VBox mainVBox;
+	
+	@FXML 
+	private AnchorPane tabPanContainer;
+	@FXML 
+	private HBox safeDataBox;
 
-
+	@FXML
+	private JFXTabPane fxtabPan;
+	
+	@FXML
+	private AnchorPane incomeInchorePan;
     @FXML
     private Label initailBalance_label;
 
@@ -143,6 +159,43 @@ public class ExpansesPersenter extends ExpansesAction implements Initializable, 
 		
 	}
   private void init() {
+	  
+	  
+	  
+	  
+	  
+	  
+	  	mainVBox.heightProperty().addListener(( obs,oldvalue,newValue)->{
+			  log.info("=======================================================================================================================");
+			
+	 		  tabPanContainer.setPrefHeight(newValue.doubleValue()-safeDataBox.heightProperty().doubleValue());
+ 
+			  
+ 	 		  
+			  log.info("heightProperty old value =>"+oldvalue);
+			  log.info("heightProperty newValue  =>"+newValue);
+				  log.info("=======================================================================================================================");
+
+		  });
+	   
+	  
+	  
+	  
+	  
+	  	fxtabPan.heightProperty().addListener(( obs,oldvalue,newValue)->{
+			  log.info("=======================================================================================================================");
+			
+	 		  incomeInchorePan.setPrefHeight(newValue.doubleValue());
+ 
+			  
+ 	 		  
+			  log.info("fxtabPan old value =>"+oldvalue);
+			  log.info("fxtabPan newValue  =>"+newValue);
+				  log.info("=======================================================================================================================");
+
+		  });
+	  
+	  
 	  
 	  addIncome_btn=new JFXButton(this.getMessage("button.add"));
 	  addIncome_btn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.PLUS));
@@ -225,19 +278,17 @@ public class ExpansesPersenter extends ExpansesAction implements Initializable, 
 	  fillIncomeMonthes();
 	  fillOutcomeMonthes();
   //==============================================================================================================
-	  
+	 
+	  initailBalanceValue_label.setText(String.valueOf(this.getExpansesServices().getSafeBalanceOfday(getAppContext().getSeason().getId(), new Date(),SafeTypeEnum.OPENNNING_BALANCE)));
+
+	  currentBalanceValue_label.setText(String.valueOf(this.getExpansesServices().getSafeBalanceOfday(getAppContext().getSeason().getId(), new Date(),SafeTypeEnum.CURRENT_BALANCE)));
   }
   
   
   
 	 
  	private void addEditOutcome(int id ) {
-      
-
-
-
-		
-		
+      	
  
 		this.request=new HashMap<String,Object>();
 		
@@ -247,7 +298,7 @@ public class ExpansesPersenter extends ExpansesAction implements Initializable, 
 		URL u=	 getClass().getClassLoader().getResource("appResources/custom.css");
 
    	    String css =u.toExternalForm();
-		Scene scene1= new Scene(form.getView(), 350, 420);
+		Scene scene1= new Scene(form.getView(), 463, 420);
 		Stage popupwindow=new Stage();
 		popupwindow.setResizable(false);
 		popupwindow.initStyle(StageStyle.TRANSPARENT);
@@ -516,7 +567,7 @@ private List<Column> prepareIncomeTableColumns(){
 			}
 //-----------------amount --------------------------------------------------------------------------------------------------------
 
-			outcomeDayAmount.put(temp.getId(), temp.getTotalOutcome());
+			outcomeDayAmount.put(temp.getId(), temp.getTotalAmount());
 			
 //-----------------days --------------------------------------------------------------------------------------------------------
 			parentKey	=monthSDF.format(temp.getOutcomeDate());

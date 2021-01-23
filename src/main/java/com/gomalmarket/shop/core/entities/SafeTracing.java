@@ -22,7 +22,7 @@ public class SafeTracing extends BaseBean {
 	private int id ;
 	@ManyToOne
 	@JoinColumn(name = "SAFE_ID")
-	private SafeOfDay safe;
+	private SafeOfDay SafeOfDay;
 
 	@Column(name = "AMOUNT")
 	private double amount;

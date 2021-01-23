@@ -7,50 +7,52 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="420.0" prefWidth="350.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.expanses.view.addOutcome.AddOutcomePersenter">
+<AnchorPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="420.0" prefWidth="463.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.expanses.view.addOutcome.AddOutcomePersenter">
    <children>
-      <Pane layoutX="10.0" layoutY="10.0" prefHeight="350.0" prefWidth="300.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane layoutX="10.0" layoutY="10.0" prefHeight="420.0" prefWidth="436.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Pane fx:id="coloredPane" prefHeight="46.0" prefWidth="340.0" style="-fx-background-color: #00A65A;">
+            <Pane fx:id="coloredPane" prefHeight="46.0" prefWidth="453.0" style="-fx-background-color: #00A65A;">
                <children>
-                  <Label fx:id="title_label" layoutX="87.0" layoutY="13.0" minWidth="-Infinity" prefHeight="20.0" prefWidth="175.0" text="Title" textFill="WHITE">
+                  <Label fx:id="title_label" layoutX="168.0" layoutY="13.0" minWidth="-Infinity" prefHeight="20.0" prefWidth="175.0" text="Title" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
-            <VBox layoutX="4.0" layoutY="51.0" prefHeight="355.0" prefWidth="340.0">
+            <VBox layoutX="23.0" layoutY="51.0" prefHeight="355.0" prefWidth="416.0" spacing="5.0">
                <children>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
-                        <Label fx:id="outcomeType_label" prefHeight="30.0" prefWidth="77.0" text="Label" />
+                        <Label fx:id="outcomeType_label" prefHeight="50.0" prefWidth="130.0" text="Label" />
                         <JFXComboBox fx:id="outcomeType_combo" prefHeight="25.0" prefWidth="250.0" />
                      </children>
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
-                        <Label fx:id="outcomeAmount_label" prefHeight="30.0" prefWidth="77.0" text="Label" />
+                        <Label fx:id="outcomeAmount_label" prefHeight="50.0" prefWidth="130.0" text="Label" />
                         <JFXTextField fx:id="outcomeAmount_TF" prefHeight="26.0" prefWidth="250.0" />
                      </children>
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
-                        <Label fx:id="datePicker_label" minWidth="-Infinity" prefHeight="30.0" prefWidth="77.0" text="Label" />
-                        <VBox fx:id="datePicker_loc" prefHeight="30.0" prefWidth="260.0" />
+                        <Label fx:id="datePicker_label" minWidth="-Infinity" prefHeight="50.0" prefWidth="130.0" text="Label" />
+                        <VBox fx:id="datePicker_loc" prefHeight="30.0" prefWidth="266.0" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="60.0" prefWidth="350.0">
+                  <HBox prefHeight="80.0" prefWidth="350.0">
                      <children>
-                        <JFXTextArea fx:id="note_TA" prefHeight="60.0" prefWidth="350.0" promptText="notes" />
+                        <JFXTextArea fx:id="note_TA" prefHeight="60.0" prefWidth="418.0" promptText="notes" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="29.0" prefWidth="340.0" />
                   <HBox alignment="CENTER" prefHeight="52.0" prefWidth="340.0" spacing="30.0">
                      <children>
                         <JFXButton fx:id="cancel_btn" text="cancel" />
                         <JFXButton fx:id="saveBtn" alignment="CENTER" onAction="#saveOutcome" text="Save" />
                      </children>
+                     <VBox.margin>
+                        <Insets top="70.0" />
+                     </VBox.margin>
                   </HBox>
                </children>
             </VBox>

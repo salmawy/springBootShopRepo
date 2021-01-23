@@ -133,15 +133,15 @@ public class DebtsPersenter extends SalesAction implements CustomTableActions,In
 		sellerOrdersCustomTable=new CustomTable<PrifSellerOrderVB>(prifOrderColumn, null, null, null, this, CustomTable.tableCard, SellerOrderVB.class);
 		sellersPredicatableTable=new PredicatableTable<SellerDebtVB>(orderDebtColumn, sellersHeadNodes, null, new sellrsTableActionListner(), PredicatableTable.headTableCard, SellerOrderVB.class);
 		sellerInstallmentsCustomTable=new CustomTable<InstalmelmentVB>(sellerInstallmentColumn, null, null, null, null, CustomTable.tableCard, SellerOrderVB.class);
-		orderDataCustomTable=new CustomTable<SellerOrderDetailVB>(orderDataColumn, null, null, null, null, CustomTable.tableCard, SellerOrderVB.class);
+		orderDataCustomTable=new CustomTable<SellerOrderDetailVB>(orderDataColumn, null, null, null, this, CustomTable.tableCard, SellerOrderVB.class);
 //=========================================================================================================================================
 		fitToAnchorePane(sellerOrdersCustomTable.getCutomTableComponent());
 		fitToAnchorePane(sellersPredicatableTable.getCutomTableComponent());
 		fitToAnchorePane(sellerInstallmentsCustomTable.getCutomTableComponent());
 		fitToAnchorePane(orderDataCustomTable.getCutomTableComponent());
-		sellerOrdersCustomTable.getCutomTableComponent().setPrefSize(200, 500);
-		sellersPredicatableTable.getCutomTableComponent().setPrefSize(150, 450);
- 		sellersPredicatableTable.setTablePrefTableHeight(450);
+	//	sellerOrdersCustomTable.getCutomTableComponent().setPrefSize(200, 500);
+	//	sellersPredicatableTable.getCutomTableComponent().setPrefSize(150, 450);
+ 	//	sellersPredicatableTable.setTablePrefTableHeight(450);
 
 //=========================================================================================================================================
 		orderData_loc.getChildren().addAll(orderDataCustomTable.getCutomTableComponent());
@@ -316,11 +316,10 @@ private void loadOrderDetail(int orderId) {
 	}
 	SellerOrder order;
 	try {
-		order = (SellerOrder) this.getBaseService().findBean(SellerOrder.class, orderId);
-	
+ 	List weights=this.getSalesService().getSellerOrderWeights(orderId);
 	List data=new ArrayList();
 	
-	for (Iterator iterator = order.getOrderWeights().iterator(); iterator.hasNext();) {
+	for (Iterator iterator = weights.iterator(); iterator.hasNext();) {
 		SellerOrderWeight weight = (SellerOrderWeight) iterator.next();
 		SellerOrderDetailVB viewBean=new SellerOrderDetailVB();
 		viewBean.setAmount(weight.getAmount());
@@ -339,7 +338,10 @@ private void loadOrderDetail(int orderId) {
 	}
 this.orderDataCustomTable.loadTableData(data);
 	
-	} catch (DataBaseException | InvalidReferenceException e) {
+	} catch (DataBaseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (EmptyResultSetException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}

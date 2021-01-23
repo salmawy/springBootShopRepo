@@ -3,6 +3,8 @@ package com.gomalmarket.shop.core.entities.repos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.gomalmarket.shop.core.entities.SeasonSafe;
+
 import lombok.Getter;
 
 @Component
@@ -51,7 +53,7 @@ public class RepoSupplier {
 	@Autowired
 	PurchasedCustomerInstRepo customerInstRepo;
 	@Autowired
-	SafeOfDayRepo safeRepo;
+	SafeRepo safeRepo;
 	@Autowired
 	SafeTracingRepo safeTracingRepo;
 	@Autowired

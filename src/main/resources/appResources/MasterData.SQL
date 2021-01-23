@@ -275,3 +275,44 @@ Insert into SHOP2020.ID_TABLE
  Values
    ('CONTRACTOR_ID', 3185);
 COMMIT;
+
+
+create view SEASON_SAFE AS
+
+select sum(S.BALANCE ) as  BALANCE,S.SEASON_ID  as id from SHOP2020.SAFE_OF_DAY s
+group by S.SEASON_ID
+
+
+
+
+DROP VIEW SHOP2020.OLD_SAFE_OF_DAY;
+
+/* Formatted on 23/01/2021 20:46:56 (QP5 v5.185.11230.41888) */
+CREATE OR REPLACE FORCE VIEW SHOP2020.OLD_SAFE_OF_DAY
+(
+   BALANCE,
+   DAY_DATE,
+   SEASON_ID
+)
+AS
+     SELECT SUM (INCOME_AMOUNT - OUTCOME_AMOUNT) BALANCE,
+            TO_DATE (DATE_, 'DD/MM/YYYY') AS DAY_DATE,
+            SEASON_ID
+       FROM (  SELECT SUM (INCOME.TOTAL_AMOUNT) INCOME_AMOUNT,
+                      0 OUTCOME_AMOUNT,
+                      TO_CHAR (INCOME.INCOME_DATE, 'DD/MM/YYYY') AS DATE_,
+                      SEASON_ID,
+                      'INCOME' AS INCOME_TYPE,
+                      '' AS OUTCOME_TtYPE
+                 FROM incomes income
+             GROUP BY SEASON_ID, TO_CHAR (INCOME.INCOME_DATE, 'DD/MM/YYYY')
+             UNION
+               SELECT 0 AS INCOME_AMOUNT,
+                      SUM (OUTCOME.TOTAL_OUTCOME) AS OUTCOME_AMOUNT,
+                      TO_CHAR (OUTCOME.OUTCOME_DATE, 'DD/MM/YYYY') AS DATE_,
+                      SEASON_ID,
+                      '' AS INCOME_TYPE,
+                      'OUTCOME_TtYPE' AS TYPE_
+                 FROM outcomes outcome
+             GROUP BY SEASON_ID, TO_CHAR (OUTCOME.OUTCOME_DATE, 'DD/MM/YYYY'))
+   GROUP BY DATE_, SEASON_ID;

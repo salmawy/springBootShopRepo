@@ -29,7 +29,7 @@ import java.util.Date;
      private Date outcomeDate;
 
      @Column(name = "TOTAL_OUTCOME")
-     private Double totalOutcome;
+     private Double totalAmount;
 
      @ManyToOne
      @JoinColumn(name = "SEASON_ID")
@@ -42,7 +42,7 @@ import java.util.Date;
      
      @ManyToOne
      @JoinColumn(name = "SAEF_ID",nullable = true)
-     private SafeOfDay safeId;
+     private SafeOfDay safe;
 
 
 

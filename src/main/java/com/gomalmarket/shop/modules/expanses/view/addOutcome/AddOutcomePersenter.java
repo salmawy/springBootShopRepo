@@ -127,7 +127,7 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
 		 datePicker=new JFXDatePicker();
 		   	datePicker.getEditor().setAlignment(Pos.CENTER_LEFT);
 		   	datePicker.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-		   	datePicker.setPrefWidth(317);
+		   	datePicker.setPrefWidth(250);
 		   	 
 		   	datePicker.setConverter(new StringConverter<LocalDate>()
 		   	{
@@ -152,7 +152,7 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
 		   	    }
 		   	});    
 		   	datePicker_loc.getChildren().add(datePicker);
-		   	datePicker_loc.setPrefWidth(317);
+		   	datePicker_loc.setPrefWidth(250);
 		  
 		  //==============================================================================================================
 

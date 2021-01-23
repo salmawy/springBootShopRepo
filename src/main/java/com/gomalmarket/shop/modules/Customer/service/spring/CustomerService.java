@@ -214,99 +214,9 @@ OutcomeType NOLOUN=(OutcomeType) this.baseService.findBean(OutcomeType.class, Ou
 	 
 	 
 		
-		
-		
-public void saveOutcomeDetail(OutcomeDetail outcomeDetail,Outcome outcome) throws DataBaseException {
-	
-	
-	outcomeDetail.setOutcome(outcome);
-	outcomeDetail.setSpenderName(shopAppContext.getCurrentUser().getUsername());
-
-	outcome.setTotalOutcome(outcome.getTotalOutcome()+outcomeDetail.getAmount());
-	this.getBaseService().addBean(outcomeDetail);
-
-	this.getBaseService().editBean(outcome);
-
-	
-	
-	
-	
-}
-
-
-
-
-public  Outcome findOutcome(Date date) throws DataBaseException {
-
-	
-	 
-		
-		try {
-			
-			return	(Outcome) this.getCustomerDao().getOutcome(date).get(0);
-			
-		
-		} catch (DataBaseException | EmptyResultSetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		 log.info( "error.emptyRS incomeDate of date "+date.toString());
-		}
-		
-		
-	 
-
-		
-		Outcome outcome=new Outcome();
-		outcome.setOutcomeDate(date);
-		outcome.setTotalOutcome(0.0);
-		
-		this.getBaseService().addBean(outcome);
- 		return outcome;
-	
-		
-		
-		
-		
-	}
-
-	
-	
-	public Income updateincome(int id ,double amount) throws DataBaseException, InvalidReferenceException {
-	
-	
-	Income income=(Income) this.getBaseService().findBean(Income.class, id);
-	income.setTotalAmount(income.getTotalAmount()+amount);
-	
-	return income;
-	
-	
-}
-	
-	
-	
-public Double getSafeBalance(Season season) throws EmptyResultSetException {
-	
-	Double balance=0.0;
-	Map<String,Object> map=new HashMap<String, Object>();
-	map.put("seasonId", season.getId());
-	
-	
-	try {
-	SafeOfDay safe=	(SafeOfDay) this.getBaseService().findBean(SafeOfDay.class, map);
-	return safe.getBalance();
-	} catch (DataBaseException | EmptyResultSetException e) {
-		// TODO Auto-generated catch block
-		//e.printStackTrace();
-	}
-	return balance;
-	
-	
-}
-
-
-
-
-
+ 
+ 
+ 
 
 
 
@@ -397,7 +307,7 @@ private void deleteOldCustomerOrder(CustomerOrder order) throws DataBaseExceptio
 				this.getBaseService().findAllBeans(OutcomeDetail.class, map,null).get(0);
 
 					OutcomeDetail nolun= (OutcomeDetail)this.getBaseService().findAllBeans(OutcomeDetail.class, map,null).get(0);
-					this.getBaseService().deleteBean(nolun);
+					getExpansesServices().deleteOutcomeDetailTransaction(nolun);
 					
 					map=new HashMap<String, Object>();
 					map.put("orderId", order.getId());
@@ -407,7 +317,7 @@ private void deleteOldCustomerOrder(CustomerOrder order) throws DataBaseExceptio
 					this.getBaseService().deleteBean(tips);
 
 				
-				recalculateSafeBalance(order.getSeason() );
+		 //recalculateSafeBalance(order.getSeason() );
 				
 				}catch (EmptyResultSetException e) {
 					// TODO Auto-generated catch block
@@ -420,44 +330,6 @@ private void deleteOldCustomerOrder(CustomerOrder order) throws DataBaseExceptio
 }
 
 
-
-
-public void recalculateSafeBalance(Season season) {
-	Map<String,Object> map=new HashMap<String, Object>();
-	map.put("incomeDetail.income.seasonId=", season.getId());
-	
-	Map<String,Object> map2=new HashMap<String, Object>();
-	map2.put("outcomeDetail.outcome.seasonId=", season.getId());
-	
-	Double totalIncome=0.0;
-	Double totaloutcome=0.0;
-
-	try {
-		totalIncome=(Double) this.getBaseService().aggregate("IncomeDetail incomeDetail", "sum", "amount", map);
-		totalIncome=(totalIncome==null)?0.0:totalIncome;
-		totaloutcome=(Double) this.getBaseService().aggregate("OutcomeDetail outcomeDetail", "sum", "amount", map2);
-		totaloutcome=(totaloutcome==null)?0.0:totaloutcome;
-		
-		
-		map2=new HashMap<String, Object>();
-		map2.put("seasonId", season.getId());
-		
-		SafeOfDay safe=(SafeOfDay)this.getBaseService().findAllBeans(SafeOfDay.class,map2,null).get(0);
-		double temp=totalIncome-totaloutcome;
-		safe.setBalance(safe.getBaseAmount()+temp);
-		this.getBaseService().addEditBean(safe);
-		
-		
-		
-
-	} catch (DataBaseException | EmptyResultSetException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} 
-	
-	
-	
-}
 
 
 	/*

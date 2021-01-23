@@ -51,8 +51,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("unchecked")
-
+@Slf4j
 public class InitGenerateInvoicePersenter extends BillingAction implements Initializable, CustomTableActions {
 
 	@FXML
@@ -134,9 +135,13 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
 			 * customer type=>[2]
 			 * invoice invoiceStatus =>[3]
  			 * */
-			
+			log.info("row ==>>>"+row.toString());
 			
 			String parentKey;
+			if(row[3]==null) {
+				
+				log.info("row =>"+row[0]+" , "+row[1]+" , "+row[2]+" , "+row[3]+"}");
+			}
 			if((int)row[3] ==0) {
 				parentKey=row[2]+"_"+InvoiceStatusEnum.UNDER_EDIT;
   

@@ -246,20 +246,20 @@ public List getSellersLoanSummary(Date fromDate,Date toDate,int seasonId) throws
 	 
 
 	  try { 
-		 String sql="select  " + 
-			  		"SLB.PRIOR_LOAN,  " + 
-			  		 
-			  		"nvl(( select sum( SO.TOTAL_COST )from seller_order  so where SO.SELLER_LOAN_BAG_ID=slb.id \r\n" + 
-			  		"    and SO.ORDER_DATE between :fromDate and :toDate   ),0)as TOTAL_COST ," + 
-			  	 
-			  		"nvl((select sum(INST.AMOUNT )from INSTALMENT inst    where INST.SELLER_BAG_LOAN_ID=slb.id \r\n" + 
-			  		"    and INST.INSTALMENT_DATE between :fromDate and :toDate   ),0)as AMOUNT ,   " + 
-			  		"    SLB.CURRENT_LOAN  ,S.NAME " + 
-			  		"from seller_loan_bag slb  , seller s  " + 
-			  		"where SLB.SEASON_ID=:seasonId " + 
-			  		"and SLB.CURRENT_LOAN>0  and s.id=SLB.SELLER_ID  " + 
-			  		"group by SLB.SELLER_ID,slb.PRIOR_LOAN,slb.id,SLB.CURRENT_LOAN,S.NAME"
-			  		+ " order by CURRENT_LOAN desc ";
+		 String sql=" select    \r\n" + 
+		 		"                      SLB.PRIOR_LOAN,    \r\n" + 
+		 		"                       \r\n" + 
+		 		"                      nvl(( select sum( SO.TOTAL_COST )from seller_orders  so where SO.SELLER_LOAN_BAG_ID =slb.id \r\n" + 
+		 		"                          and SO.ORDER_DATE between :fromDate and :toDate   ),0)as TOTAL_COST ,  \r\n" + 
+		 		"                   \r\n" + 
+		 		"                      nvl((select sum(INST.AMOUNT )from SHOP2020.INSTALLMENTS inst    where INST.SELLER_LOAN_BAG_ID =slb.id  \r\n" + 
+		 		"                          and INST.INSTALLMENT_DATE between :fromDate and :toDate   ),0)as AMOUNT ,     \r\n" + 
+		 		"                          SLB.CURRENT_LOAN  ,S.NAME   \r\n" + 
+		 		"                      from seller_loan_bagS slb  , sellerS s    \r\n" + 
+		 		"                      where SLB.SEASON_ID=:seasonId   \r\n" + 
+		 		"                      and SLB.CURRENT_LOAN>0  and s.id=SLB.SELLER_ID    \r\n" + 
+		 		"                      group by SLB.SELLER_ID,slb.PRIOR_LOAN,slb.id,SLB.CURRENT_LOAN,S.NAME\r\n" + 
+		 		"                        order by CURRENT_LOAN desc ";
 
 		 Query  query = entityManger.createNativeQuery(sql);
 	  query.setParameter("fromDate", fromDate);
