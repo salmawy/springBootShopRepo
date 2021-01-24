@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.text.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
@@ -7,30 +8,30 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.billing.view.generateInvoice.InitGenerateInvoicePersenter">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.billing.view.generateInvoice.InitGenerateInvoicePersenter">
    <children>
-      <ScrollPane prefHeight="540.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" prefHeight="540.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <SplitPane dividerPositions="0.33172302737520126" orientation="VERTICAL" prefHeight="623.0" prefWidth="900.0">
-               <items>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="296.0" prefWidth="898.0" style="-fx-background-color: #ffffff;">
+            <VBox>
+               <children>
+                  <AnchorPane maxHeight="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="214.0" prefWidth="898.0" style="-fx-background-color: #ffffff;">
                      <children>
-                        <HBox layoutX="5.0" layoutY="9.0" prefHeight="187.0" prefWidth="887.0">
+                        <HBox layoutX="5.0" layoutY="9.0" maxHeight="-Infinity" prefHeight="222.0" prefWidth="887.0" AnchorPane.bottomAnchor="-85.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="9.0">
                            <children>
-                              <Pane prefHeight="156.0" prefWidth="887.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                              <Pane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="189.0" prefWidth="887.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Pane fx:id="owner_coloredPane" prefHeight="187.0" prefWidth="51.0" style="-fx-background-color: #00C0EF;" />
-                                    <VBox layoutX="53.0" prefHeight="165.0" prefWidth="835.0" spacing="7.0">
+                                    <Pane fx:id="owner_coloredPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="187.0" prefWidth="51.0" style="-fx-background-color: #00C0EF;" />
+                                    <VBox layoutX="53.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="165.0" prefWidth="835.0" spacing="7.0">
                                        <children>
                                           <HBox prefHeight="53.0" prefWidth="956.0" spacing="7.0">
                                              <children>
-                                                <Label fx:id="customerType_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="68.0" text="Label" />
+                                                <Label fx:id="customerType_label" contentDisplay="CENTER" prefHeight="21.0" prefWidth="121.0" text="Label" />
                                                 <AnchorPane prefHeight="40.0" prefWidth="270.0">
                                                    <children>
                                                       <JFXComboBox fx:id="customerType_CB" minWidth="270.0" prefHeight="25.0" prefWidth="270.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="0.0" />
                                                    </children>
                                                 </AnchorPane>
-                                                <Label fx:id="invoiceStatus_label" contentDisplay="CENTER" prefHeight="38.0" prefWidth="107.0" text="Label" />
+                                                <Label fx:id="invoiceStatus_label" contentDisplay="CENTER" prefHeight="38.0" prefWidth="121.0" text="Label" />
                                                 <AnchorPane prefHeight="40.0" prefWidth="270.0">
                                                    <children>
                                                       <JFXComboBox fx:id="invoiceStatus_CB" layoutX="66.0" layoutY="-4.0" prefHeight="25.0" prefWidth="270.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -43,7 +44,7 @@
                                           </HBox>
                                           <HBox prefHeight="53.0" prefWidth="956.0" spacing="7.0">
                                              <children>
-                                                <Label fx:id="customerName_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="68.0" text="Label" />
+                                                <Label fx:id="customerName_label" contentDisplay="CENTER" prefHeight="21.0" prefWidth="121.0" text="Label" />
                                                 <AnchorPane minWidth="270.0" prefHeight="40.0" prefWidth="270.0">
                                                    <children>
                                                       <JFXComboBox fx:id="customerName_CB" prefHeight="25.0" prefWidth="270.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -56,9 +57,9 @@
                                           </HBox>
                                           <HBox prefHeight="53.0" prefWidth="956.0" spacing="7.0">
                                              <children>
-                                                <Label fx:id="fromDate_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="68.0" text="Label" />
+                                                <Label fx:id="fromDate_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="121.0" text="Label" />
                                                 <AnchorPane fx:id="fromDate_Panel" minWidth="270.0" prefHeight="40.0" prefWidth="270.0" />
-                                                <Label fx:id="toDate_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="107.0" text="Label" />
+                                                <Label fx:id="toDate_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="121.0" text="Label" />
                                                 <AnchorPane fx:id="toDate_Panel" prefHeight="40.0" prefWidth="270.0" />
                                              </children>
                                              <padding>
@@ -85,9 +86,10 @@
                         </HBox>
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="gridLocation_Panel" minHeight="140.0" minWidth="0.0" prefHeight="460.0" prefWidth="898.0" />
-               </items>
-            </SplitPane>
+                  <AnchorPane fx:id="gridLocation_Panel" maxHeight="1.7976931348623157E308" minHeight="140.0" minWidth="0.0" prefHeight="339.0" prefWidth="898.0" style="-fx-background-color: #ffffff;" VBox.vgrow="ALWAYS" />
+                  <PointLight color="CHARTREUSE" lightOn="true" />
+               </children>
+            </VBox>
          </content>
       </ScrollPane>
    </children>

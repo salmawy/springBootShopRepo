@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.com.contractor.view.periodicReport.PeriodicReportPersenter">
+   <children>
+      <SplitPane dividerPositions="0.27053140096618356" orientation="VERTICAL" prefHeight="623.0" prefWidth="900.0">
+         <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="296.0" prefWidth="898.0" style="-fx-background-color: #ffffff;">
+               <children>
+                  <HBox layoutX="5.0" layoutY="9.0" prefHeight="154.0" prefWidth="887.0">
+                     <children>
+                        <Pane prefHeight="172.0" prefWidth="900.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                           <children>
+                              <Pane fx:id="owner_coloredPane" prefHeight="153.0" prefWidth="51.0" style="-fx-background-color: #00C0EF;" />
+                              <VBox layoutX="53.0" prefHeight="165.0" prefWidth="835.0" spacing="7.0">
+                                 <children>
+                                    <HBox prefHeight="53.0" prefWidth="956.0" spacing="7.0">
+                                       <children>
+                                          <Label fx:id="fromDate_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="68.0" text="Label" textAlignment="CENTER" />
+                                          <AnchorPane fx:id="fromDate_Panel" prefHeight="40.0" prefWidth="270.0" />
+                                          <Label fx:id="toDate_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="68.0" text="Label" textAlignment="CENTER" />
+                                          <AnchorPane fx:id="toDate_Panel" prefHeight="40.0" prefWidth="270.0" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </HBox>
+                                    <HBox prefHeight="53.0" prefWidth="956.0" spacing="7.0">
+                                       <children>
+                                          <Label fx:id="name_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="68.0" text="Label" textAlignment="CENTER" />
+                                          <JFXTextField fx:id="name_TF" prefHeight="25.0" prefWidth="270.0" />
+                                          <Label fx:id="type_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="68.0" text="Label" textAlignment="CENTER" />
+                                          <AnchorPane prefHeight="40.0" prefWidth="270.0">
+                                             <children>
+                                                <JFXComboBox fx:id="type_CB" layoutX="40.0" prefHeight="25.0" prefWidth="270.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </HBox>
+                                    <HBox prefHeight="53.0" prefWidth="956.0" spacing="7.0">
+                                       <children>
+                                          <Label fx:id="owner_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="68.0" text="Label" textAlignment="CENTER" />
+                                          <AnchorPane prefHeight="40.0" prefWidth="270.0">
+                                             <children>
+                                                <JFXComboBox fx:id="owner_CB" prefHeight="25.0" prefWidth="266.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                          <Label fx:id="paidType_label" contentDisplay="CENTER" prefHeight="33.0" prefWidth="68.0" text="Label" textAlignment="CENTER" />
+                                          <AnchorPane prefHeight="40.0" prefWidth="270.0">
+                                             <children>
+                                                <JFXComboBox fx:id="paidType_CB" layoutX="66.0" layoutY="-4.0" prefHeight="25.0" prefWidth="270.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </HBox>
+                                    <HBox alignment="TOP_RIGHT" prefHeight="35.0" prefWidth="821.0" spacing="7.0">
+                                       <children>
+                                          <JFXButton fx:id="search_Btn" />
+                                          <JFXButton fx:id="cancel_Btn" />
+                                          <JFXButton fx:id="showReport_Btn" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </Pane>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="gridLocation_Panel" minHeight="140.0" minWidth="0.0" prefHeight="460.0" prefWidth="898.0" />
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

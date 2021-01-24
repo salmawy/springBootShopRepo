@@ -111,7 +111,7 @@ public class CustomerOrder extends BaseBean {
 
 
 	@Column(name ="INVOICE_STATUS")
-	private Integer invoiceStatus;
+	private Integer invoiceStatus=0;
 
 
 }
