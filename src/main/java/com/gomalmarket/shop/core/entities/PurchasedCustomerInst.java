@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity(name = "PurchasedCustomerInst")
 @Setter
 @Getter
-public class PurchasedCustomerInst extends BaseBean {
+public class PurchasedCustomerInst extends BaseEntity {
 	
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -45,4 +45,6 @@ public class PurchasedCustomerInst extends BaseBean {
 	@Column(name = "CUSTOMER_ID", insertable = false, updatable = false)
 	private int customerId;
 
+	
+	 
 }

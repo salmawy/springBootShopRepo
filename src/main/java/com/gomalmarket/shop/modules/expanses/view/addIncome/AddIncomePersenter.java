@@ -15,7 +15,7 @@ import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.springframework.context.ApplicationContext;
 
-import com.gomalmarket.shop.core.Enum.IncomeTypesEnum;
+import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.LoanTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
 import com.gomalmarket.shop.core.entities.Contractor;
@@ -108,7 +108,7 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 
     	incomeDetailId=(int) request.get("incomeDetailId");
     	mode=(incomeDetailId==0)?Add:edit;
-    	incomeTypes=new ArrayList<ComboBoxItem>(Arrays.asList(new ComboBoxItem(IncomeTypesEnum.IN_PAY_LOAN,this.getMessage(" label.pay.inloan") )));
+    	incomeTypes=new ArrayList<ComboBoxItem>(Arrays.asList(new ComboBoxItem(IncomeTypeEnum.IN_PAY_LOAN.getId(),this.getMessage(" label.pay.inloan") )));
     
     
     }
@@ -183,12 +183,14 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 	     title_label.setText(getMessage("label.safe.income.data"));
 	    //==============================================================================================================
 
-		 TextFields.bindAutoCompletion(incomeName_TF, t-> {
-			 
-			 
-			 return getLoanerNames(t.getUserText(), LoanTypeEnum.IN_LOAN);
-
-	        });
+		/*
+		 * TextFields.bindAutoCompletion(incomeName_TF, t-> {
+		 * 
+		 * 
+		 * return "";// getLoanerNames(t.getUserText(), LoanTypeEnum.IN_LOAN);
+		 * 
+		 * });
+		 */
 	}
     
 
@@ -207,14 +209,7 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 			
 			   String name = incomeName_TF.getText(); 
 			   String inAmount = incomeAmount_TF.getText();
-			   LoanAccount account = null;
-			try {
-				account = this.getExpansesServices().getLoanerAccount(name);
-			} catch (DataBaseException | EmptyResultSetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			  
+			 
 			  if (name.isEmpty()) {
 				  
 				  
@@ -230,30 +225,30 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 			  
 			  return false; }
 			  
-			  if (account == null) {
+			  /*  if (account == null) {
 			  
 			  alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
 			  this.getMessage("msg.err.notfound.name")); return false;//err.notfound.name
 			  
 			  }
 			  
-			  if (Double.parseDouble(inAmount) > 0 && account.getType().equals("IN_LOAN"))
-			  {
-				  
-				  
-			  alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
-			  this.getMessage("err.amountShouldBePayedFromLoaner"));
-			  
-			  return false;
-			  
-			  } 
-			  if (Double.parseDouble(inAmount) > account.getDueAmount()) {
-				  
-			  alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
-			  this.getMessage(" msg.err.input.amount.greather"));
-			  
-			  return false; 
-			  }
+		
+		 * if (Double.parseDouble(inAmount) > 0 && account.getType().equals("IN_LOAN"))
+		 * {
+		 * 
+		 * 
+		 * alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
+		 * this.getMessage("err.amountShouldBePayedFromLoaner"));
+		 * 
+		 * return false;
+		 * 
+		 * } if (Double.parseDouble(inAmount) > account.getDueAmount()) {
+		 * 
+		 * alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
+		 * this.getMessage(" msg.err.input.amount.greather"));
+		 * 
+		 * return false; }
+		 */
 			  
 			   
 			  return true;
@@ -312,7 +307,7 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 				  amount = Double.parseDouble(this.incomeAmount_TF.getText());
 				  String notes =  note_TA.getText();
 				  
-				  try {
+			/*	  try {
 				  
 				  
 				  this.getExpansesServices().loanPayTansaction(incomeName_TF.getText(), new
@@ -323,7 +318,7 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 					  alert(AlertType.ERROR, this.getMessage("msg.err"),this.getMessage("msg.err"),
 				       this.getMessage("msg.err.general"));
 				   }
-			   
+			   */
 				 }
 			
 //---------------------------------------------------------------------------------------------------------------
@@ -351,25 +346,19 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 				}
 				
 				
-private List<String> getLoanerNames(String loanerName, String loanerType) {
-			
-			List <String >names=new ArrayList<String>();
-			try {
-				names=	getExpansesServices().inExactMatchSearchloanerName(loanerName, loanerType);
-			} catch (EmptyResultSetException e) {
-				// TODO Auto-generated catch block
-			//	e.printStackTrace();
-			} catch (DataBaseException e) {
-				// TODO Auto-generated catch block
-			//	e.printStackTrace();
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-
-			
-			}
-			return names;
-			
-		}
+	private List<String> getLoanerNames(String loanerName, String loanerType) {
+		/*
+		 * 
+		 * List <String >names=new ArrayList<String>(); try { names=
+		 * getExpansesServices().inExactMatchSearchloanerName(loanerName, loanerType); }
+		 * catch (EmptyResultSetException e) { // TODO Auto-generated catch block //
+		 * e.printStackTrace(); } catch (DataBaseException e) { // TODO Auto-generated
+		 * catch block // e.printStackTrace(); } catch (Exception e) {
+		 * e.printStackTrace();
+		 * 
+		 * 
+		 * } return names;
+		 * 
+		 */return null;}
 
 }

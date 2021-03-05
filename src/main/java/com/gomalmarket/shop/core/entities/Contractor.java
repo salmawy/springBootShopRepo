@@ -1,11 +1,19 @@
 package com.gomalmarket.shop.core.entities;
 
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.persistence.*;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Table(name ="CONTRACTORS")
 @Entity(name ="Contractor")
-public class Contractor  extends BaseBean{
+@Setter
+@Getter
+public class Contractor extends BaseEntity {
 	
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -35,51 +43,61 @@ public class Contractor  extends BaseBean{
 	private int typeId;
 	
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
+	@Embedded
+	private BaseEntity systemInfo;
+
+
+	@Override
+	public Integer getChangerId() {
+		// TODO Auto-generated method stub
+		return systemInfo.getChangerId();
 	}
 
 
-	public String getTypeName() {
-		return typeName;
+	@Override
+	public void setChangerId(Integer changerId) {
+		systemInfo.setChangerId(changerId);		
 	}
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
+
+
+	@Override
+	public Timestamp getTimestamp() {
+		// TODO Auto-generated method stub
+		return systemInfo.getTimestamp();
 	}
-	public int getOwnerId() {
-		return ownerId;
+
+
+	@Override
+	public void setTimestamp(Timestamp timestamp) {
+		systemInfo.setTimestamp(timestamp);		
 	}
-	public void setOwnerId(int ownerId) {
-		this.ownerId = ownerId;
+
+
+	@Override
+	public Date getChangeDate() {
+		// TODO Auto-generated method stub
+		return systemInfo.getChangeDate();
 	}
-	public int getTypeId() {
-		return typeId;
+
+
+	@Override
+	public void setChangeDate(Date changeDate) {
+		systemInfo.setChangeDate(changeDate);
 	}
-	public void setTypeId(int typeId) {
-		this.typeId = typeId;
+
+
+	@Override
+	public Integer getChanged() {
+		// TODO Auto-generated method stub
+		return systemInfo.getChanged();
 	}
-	
+
+
+	@Override
+	public void setChanged(Integer changed) {
+		systemInfo.setChangerId(changed);
+		
+	}
 	
 	
 

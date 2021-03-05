@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +17,7 @@ import javax.persistence.TableGenerator;
 @Entity(name = "Loaner")
 @Setter
 @Getter
-public class Loaner extends BaseBean {
+public class Loaner extends BaseEntity  {
 	
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -33,7 +34,6 @@ public class Loaner extends BaseBean {
 
     @Column(name = "LOAN_ACCOUNT_ID")
     private int loanAccountId;
-
-
+ 
 
 }

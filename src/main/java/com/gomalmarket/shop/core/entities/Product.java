@@ -4,7 +4,8 @@
  import lombok.Setter;
 
  import javax.persistence.Column;
- import javax.persistence.Entity;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,7 +14,7 @@ import javax.persistence.Table;
  @Entity(name = "Product")
  @Setter
  @Getter
-public class Product extends  BaseBean  {
+public class Product extends  BaseEntity  {
 	 
 	 
 	 @GeneratedValue
@@ -33,6 +34,5 @@ public class Product extends  BaseBean  {
 	 @Column(name = "UNITE_WEIGHTS")
 	private Double uniteWeight;
 
-	
-	
+	 
 }

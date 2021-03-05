@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,7 +14,7 @@ import javax.persistence.Table;
 @Entity(name = "VehicleType")
 @Setter
 @Getter
-public class VehicleType extends BaseBean  {
+public class VehicleType   {
 	@GeneratedValue
 	@Id
 	@Column(name ="ID" )
@@ -21,7 +22,6 @@ public class VehicleType extends BaseBean  {
 
 	@Column(name = "NAME")
 	private String name;
-	
-	
+	 
 
 }

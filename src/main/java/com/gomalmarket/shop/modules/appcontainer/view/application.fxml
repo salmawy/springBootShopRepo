@@ -22,7 +22,7 @@
                <right>
                   <VBox prefHeight="600.0" prefWidth="250.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Accordion fx:id="App_Components" nodeOrientation="RIGHT_TO_LEFT" prefHeight="400.0" prefWidth="250.0">
+                        <Accordion fx:id="App_Components" maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" prefHeight="400.0" prefWidth="250.0" VBox.vgrow="ALWAYS">
                            <panes>
                               <TitledPane fx:id="customersComp" text="customers">
                                  <content>

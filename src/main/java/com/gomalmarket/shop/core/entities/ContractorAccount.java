@@ -4,13 +4,16 @@ package com.gomalmarket.shop.core.entities;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.persistence.*;
 
 @Table(name ="CONTRACTOR_ACCOUNTS")
 @Entity(name ="ContractorAccount")
 @Setter
 @Getter
-public class ContractorAccount extends BaseBean {
+public class ContractorAccount extends BaseEntity  {
 
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -31,8 +34,9 @@ public class ContractorAccount extends BaseBean {
 	@JoinColumn(name="CONTRACTOR_ID")
 	private Contractor contractor;
 	
+ 
 
-
+	 
 
 
 

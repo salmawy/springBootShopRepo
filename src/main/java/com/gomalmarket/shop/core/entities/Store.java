@@ -4,7 +4,8 @@
  import lombok.Setter;
 
  import javax.persistence.Column;
- import javax.persistence.Entity;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,7 +14,7 @@ import javax.persistence.Table;
  @Entity(name = "Store")
  @Setter
  @Getter
-public class Store extends BaseBean {
+public class Store  {
 	 @GeneratedValue
 		@Id
 		@Column(name ="ID" )
@@ -22,6 +23,6 @@ public class Store extends BaseBean {
 	private Integer fridageId;
 
 
-
+		 
 	
 }

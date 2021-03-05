@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity(name = "SeasonSafe")
 @Setter
 @Getter
-public class SeasonSafe  {
+public class SeasonSafe extends BaseEntity {
 	
 
 	@Id
@@ -22,8 +22,7 @@ public class SeasonSafe  {
     
  
   
-
- 
+	 
 
 
 }

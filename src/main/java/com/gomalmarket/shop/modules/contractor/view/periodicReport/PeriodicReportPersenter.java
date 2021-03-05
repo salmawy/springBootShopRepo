@@ -21,24 +21,24 @@ import java.util.logging.Logger;
 
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
+import com.gomalmarket.shop.core.Enum.ContractorTypeEnum;
+import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
+import com.gomalmarket.shop.core.UIComponents.customTable.Column;
+import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
+import com.gomalmarket.shop.core.entities.ContractorAccountDetail;
+import com.gomalmarket.shop.core.exception.DataBaseException;
+import com.gomalmarket.shop.core.exception.EmptyResultSetException;
+import com.gomalmarket.shop.modules.contractor.action.ContractorAction;
+import com.gomalmarket.shop.modules.contractor.view.beans.ContractorDataVB;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 
-import App.com.contractor.action.ContractorAction;
-import App.com.contractor.view.beans.ContractorDataVB;
-import App.core.Enum.ContractorTypeEnum;
-import App.core.UIComponents.comboBox.ComboBoxItem;
-import App.core.UIComponents.customTable.Column;
-import App.core.UIComponents.customTable.CustomTable;
-import App.core.applicationContext.ApplicationContext;
-import App.core.beans.ContractorAccountDetail;
-import App.core.exception.DataBaseException;
-import App.core.exception.EmptyResultSetException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.NodeOrientation;
@@ -237,8 +237,8 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 				 name_TF.getStyleClass().add("TextField");
 				 
 				 TextFields.bindAutoCompletion(name_TF, t-> {
-					 	int ownerId=owner_CB.getSelectionModel().getSelectedItem().getValue();
-					 	int typeId=type_CB.getSelectionModel().getSelectedItem().getValue();
+					 	int ownerId=owner_CB.getSelectionModel().getSelectedItem().getId();
+					 	int typeId=type_CB.getSelectionModel().getSelectedItem().getId();
 			          //  return this.getSalesService().getSuggestedSellerName( t.getUserText());
 					 return this.getContractorService().getSuggestedContractorName(name_TF.getText(), ownerId, typeId);
 			        });
@@ -320,9 +320,9 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 		  
 		  
 		  String name=(name_TF.getText().length()>0)?name_TF.getText():null;
-		  int paid=paidType_CB.getSelectionModel().getSelectedItem().getValue();
-		  int ownerId=owner_CB.getSelectionModel().getSelectedItem().getValue();
-		  int typeId=type_CB.getSelectionModel().getSelectedItem().getValue();
+		  int paid=paidType_CB.getSelectionModel().getSelectedItem().getId();
+		  int ownerId=owner_CB.getSelectionModel().getSelectedItem().getId();
+		  int typeId=type_CB.getSelectionModel().getSelectedItem().getId();
 		  
 		   if(toDateValue!=null&&fromDateValue!=null&&toDateValue.before(fromDateValue)) { 
 			   alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),getMessage("msg.err.toDateAfterFromDate")); return;
@@ -331,7 +331,7 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 		  
 		  List<ContractorDataVB> data=new LinkedList<ContractorDataVB>();
 		  
-		  int seasonId=ApplicationContext.season.getId(); 
+		  int seasonId=getAppContext().getSeason().getId(); 
 		  try {  
 			 List result=this.getContractorService().getContractorAccount(name, seasonId, typeId, fromDateValue, toDateValue, paid, ownerId);
 
@@ -348,7 +348,7 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 					viewBean.setId(transaction.getId());
 					viewBean.setAmount(transaction.getAmount());
 					viewBean.setNotes(transaction.getReport());
-					viewBean.setPaid(transaction.getPaid()==1);
+					viewBean.setPaid((transaction.getPaid()==1)?getAppContext().getMessages().getString("label.contractor.status.paid.no"):getAppContext().getMessages().getString("label.contractor.status.paid.no"));
  				 
 					
 					data.add(viewBean);
@@ -408,7 +408,7 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 	        c=new Column(this.getMessage("label.money.amount"), "amount", "double", 15, true);
 	      columns.add(c);
 	    
-	      c=new Column(this.getMessage("label.contractor.status.paid"), "paid", "chk", 15, true);
+	      c=new Column(this.getMessage("label.contractor.status.paid"), "paid", "String", 15, true);
 	      columns.add(c);
 	  
 	      c=new Column(this.getMessage("label.notes"), "notes", "String", 40, true);
@@ -451,7 +451,7 @@ private void fitToAnchorePane(Node node) {
 		}		
 		
  
-		int seasonId=ApplicationContext.season.getId();
+		int seasonId=getAppContext().getSeason().getId();
 		
 		
 		
@@ -479,9 +479,9 @@ private void fitToAnchorePane(Node node) {
 			
 		    param.put("toDate",   (toDateValue==null)?"":sdf.format(toDateValue));
 			param.put("seasonId",seasonId);
-			param.put("ownerId",owner_CB.getSelectionModel().getSelectedItem().getValue());
-			param.put("typeId",type_CB.getSelectionModel().getSelectedItem().getValue());
-			param.put("paid",paidType_CB.getSelectionModel().getSelectedItem().getValue());
+			param.put("ownerId",owner_CB.getSelectionModel().getSelectedItem().getId());
+			param.put("typeId",type_CB.getSelectionModel().getSelectedItem().getId());
+			param.put("paid",paidType_CB.getSelectionModel().getSelectedItem().getId());
 			param.put("name",name_TF.getText());
 
 			

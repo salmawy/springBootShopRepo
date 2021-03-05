@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -220,7 +221,7 @@ public class LabourPersenter extends ContractorAction implements Initializable {
 
   	try {
 			List contractors=this.getContractorService().getContractorAccount(0, getAppContext().getSeason().getId(), contractorTypeId);
-		    List tableData=new ArrayList();
+		    List tableData=new LinkedList();
 			
 		    
 		    for (Iterator iterator = contractors.iterator(); iterator.hasNext();) {
@@ -293,7 +294,7 @@ public class LabourPersenter extends ContractorAction implements Initializable {
         c=new Column(this.getMessage("label.money.amount"), "amount", "double", 20, true);
       columns.add(c);
     
-      c=new Column(this.getMessage("label.contractor.status.paid"), "paid", "int", 10, true);
+      c=new Column(this.getMessage("label.contractor.status.paid"), "paid", "String", 10, true);
       columns.add(c);
   
       c=new Column(this.getMessage("label.notes"), "notes", "String", 40, true);
@@ -364,7 +365,7 @@ public class LabourPersenter extends ContractorAction implements Initializable {
 				map.put("typeId", contractorTypeId);
 				map.put("ownerId", ownerId);
 				try {
-					Contractor contractor=(Contractor) this.getBaseService().getBean(Contractor.class, map);
+ 					Contractor contractor=(Contractor) this.getBaseService().findBean(Contractor.class, map);
 					  LoadLaboursNames(ownerId);
 
 					this.loadContractorTransactions(contractor.getId(), paid,ownerId);
@@ -376,7 +377,7 @@ public class LabourPersenter extends ContractorAction implements Initializable {
 				} catch (DataBaseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (InvalidReferenceException e) {
+				}   catch (EmptyResultSetException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -429,17 +430,17 @@ public class LabourPersenter extends ContractorAction implements Initializable {
 		transactionsCustomeTable.getTable().getItems().clear();
 		
 		g1.getSelectedToggle();
-		List tableData=new ArrayList();
+		List tableData=new LinkedList();
 		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("contractorAccount.contractorId", id);
+		map.put("contractorAccount.contractor.id", id);
 		map.put("contractorAccount.contractor.typeId", contractorTypeId);
-		map.put("seasonId", getAppContext().getSeason().getId()));
+		map.put("season.id", getAppContext().getSeason().getId());
 		map.put("contractorAccount.contractor.ownerId", ownerId);
 
 	if(paid>-1)
 		map.put("paid", paid);
 
-		List order=new ArrayList(Arrays.asList(new JPAOrderBy("detailDate", JPAOrderByEnum.DESC)));
+		List order=new LinkedList(Arrays.asList("detailDate"));
 		
 			try {
 			List transactions=	this.getBaseService().findAllBeansWithDepthMapping(ContractorAccountDetail.class, map,order);
@@ -451,7 +452,8 @@ public class LabourPersenter extends ContractorAction implements Initializable {
 			viewBean.setId(transaction.getId());
 			viewBean.setAmount(transaction.getAmount());
 			viewBean.setNotes(transaction.getReport());
-			viewBean.setPaid(transaction.getPaid()==1);
+			
+			viewBean.setPaid((transaction.getPaid()==1)?getAppContext().getMessages().getString("label.contractor.status.paid.no"):getAppContext().getMessages().getString("label.contractor.status.paid.no"));
 			if(transaction.getPaid()==0)
 				ownerTotalAmount+=transaction.getAmount();
 			else
@@ -494,7 +496,7 @@ public class LabourPersenter extends ContractorAction implements Initializable {
 		
 		Map<String,Object> map=new HashMap<String, Object>();
 		map.put("contractorAccount.contractor.typeId =", contractorTypeId);
-		map.put("seasonId =", getAppContext().getSeason().getId());
+		map.put("season.id =", getAppContext().getSeason().getId());
 		map.put("paid=", 1);
 		map.put("contractorAccount.contractor.ownerId= ", owner_combo.getSelectionModel().getSelectedItem().getId());
 
@@ -518,7 +520,7 @@ public class LabourPersenter extends ContractorAction implements Initializable {
 		
 		Map<String,Object> map=new HashMap<String, Object>();
 		map.put("contractorAccount.contractor.typeId=", contractorTypeId);
-		map.put("seasonId=", getAppContext().getSeason().getId());
+		map.put("season.id=", getAppContext().getSeason().getId());
 		map.put("paid=", 0);
 		map.put("contractorAccount.contractor.ownerId=", owner_combo.getSelectionModel().getSelectedItem().getId());
 

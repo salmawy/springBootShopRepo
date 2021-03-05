@@ -18,7 +18,7 @@ import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTableActions;
 import com.gomalmarket.shop.core.UIComponents.customTable.PredicatableTable;
-import com.gomalmarket.shop.core.entities.IncLoan;
+import com.gomalmarket.shop.core.entities.ShopLoan;
 import com.gomalmarket.shop.core.entities.LoanAccount;
 import com.gomalmarket.shop.core.entities.LoanPaying;
 import com.gomalmarket.shop.core.exception.DataBaseException;
@@ -208,7 +208,7 @@ private void loadDebts(int id,String type) {
 		List installments=this.getExpansesServices().getLoanerDebts(id, type);
 	   List data=new ArrayList();
 		for (Iterator iterator = installments.iterator(); iterator.hasNext();) {
-			IncLoan installment = (IncLoan) iterator.next();
+			ShopLoan installment = (ShopLoan) iterator.next();
 			InstalmelmentVB row=new InstalmelmentVB();
 			row.setId(installment.getId());
 			row.setAmount(installment.getAmount());

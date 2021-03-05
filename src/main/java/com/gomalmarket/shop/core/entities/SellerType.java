@@ -1,7 +1,7 @@
 package com.gomalmarket.shop.core.entities;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
+ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Entity(name = "SellerType")
 @Setter
 @Getter
-public class SellerType  extends BaseBean{
+public class SellerType  {
 	@GeneratedValue
 	@Id
 	@Column(name ="ID" )
@@ -21,4 +21,6 @@ public class SellerType  extends BaseBean{
 	@Column(name = "NAME")
 	private String name;
 
+	
+	 
 }

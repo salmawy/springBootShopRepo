@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity(name = "SafeTracing")
 @Setter
 @Getter
-public class SafeTracing extends BaseBean {
+public class SafeTracing extends BaseEntity {
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
 			pkColumnValue = "SAFE_TRACING_ID",
@@ -43,7 +43,7 @@ public class SafeTracing extends BaseBean {
 	private String  transactionName;
 
 
- 
+	 
 	
 	
 	

@@ -14,29 +14,31 @@ import java.util.logging.Logger;
 
 import org.controlsfx.glyphfont.FontAwesome;
 import org.hibernate.criterion.Order;
+import org.springframework.context.ApplicationContext;
 
+import com.gomalmarket.shop.core.JPAOrderBy;
+import com.gomalmarket.shop.core.Enum.ContractorTypeEnum;
+import com.gomalmarket.shop.core.Enum.JPAOrderByEnum;
+import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
+import com.gomalmarket.shop.core.UIComponents.customTable.Column;
+import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
+import com.gomalmarket.shop.core.UIComponents.customTable.CustomTableActions;
+import com.gomalmarket.shop.core.UIComponents.customTable.PredicatableTable;
+import com.gomalmarket.shop.core.entities.Contractor;
+import com.gomalmarket.shop.core.entities.ContractorAccountDetail;
+import com.gomalmarket.shop.core.exception.DataBaseException;
+import com.gomalmarket.shop.core.exception.EmptyResultSetException;
+import com.gomalmarket.shop.core.exception.InvalidReferenceException;
+import com.gomalmarket.shop.modules.contractor.action.ContractorAction;
+import com.gomalmarket.shop.modules.contractor.view.addSupplier.AddSupplierView;
+import com.gomalmarket.shop.modules.contractor.view.beans.ContractorDataVB;
+import com.gomalmarket.shop.modules.contractor.view.beans.ContractorVB;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
 
-import App.com.contractor.action.ContractorAction;
-import App.com.contractor.view.addSupplier.AddSupplierView;
-import App.com.contractor.view.beans.ContractorDataVB;
-import App.com.contractor.view.beans.ContractorVB;
-import App.core.Enum.ContractorTypeEnum;
-import App.core.UIComponents.comboBox.ComboBoxItem;
-import App.core.UIComponents.customTable.Column;
-import App.core.UIComponents.customTable.CustomTable;
-import App.core.UIComponents.customTable.CustomTableActions;
-import App.core.UIComponents.customTable.PredicatableTable;
-import App.core.applicationContext.ApplicationContext;
-import App.core.beans.Contractor;
-import App.core.beans.ContractorAccountDetail;
-import App.core.exception.DataBaseException;
-import App.core.exception.EmptyResultSetException;
-import App.core.exception.InvalidReferenceException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -176,7 +178,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 		ComboBoxItem object = (ComboBoxItem) iterator.next();
 	owner_combo.getItems().add(object);}
 	owner_combo.getSelectionModel().selectFirst();
-	LoadSuppliersNames(((ComboBoxItem)owners.get(0)).getValue());
+	LoadSuppliersNames(((ComboBoxItem)owners.get(0)).getId());
 	
 //=========================================================================================================================================
 	calculateTotalShopAmount();
@@ -201,7 +203,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 				 
 	        	try {
 	        		ContractorVB contractor= (ContractorVB) table.getSelectionModel().getSelectedItem().getValue();
-					  int ownerId=owner_combo.getSelectionModel().getSelectedItem().getValue();
+					  int ownerId=owner_combo.getSelectionModel().getSelectedItem().getId();
 		        	  loadContractorTransactions(contractor.getId(), paid,ownerId);
 	        	}catch (NullPointerException e) {}
 	        	
@@ -217,7 +219,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
   	//contractorPredicatableTable.getTable().getRoot().getChildren().clear();
 
   	try {
-			List contractors=this.getContractorService().getContractorAccount(0, ApplicationContext.season.getId(), contractorTypeId);
+			List contractors=this.getContractorService().getContractorAccount(0, getAppContext().getSeason().getId(), contractorTypeId);
 		    List tableData=new ArrayList();
 			
 		    
@@ -328,7 +330,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 
 	private void addTransaction() {
 	 
-			int ownerId=owner_combo.getSelectionModel().getSelectedItem().getValue();
+			int ownerId=owner_combo.getSelectionModel().getSelectedItem().getId();
 			AddSupplierView form=new AddSupplierView();
 			URL u=getClass().getClassLoader().getResource("appResources/custom.css");
 			this.request=new HashMap<String, Object>();
@@ -362,7 +364,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 				map.put("ownerId", ownerId);
 
 				try {
-					Contractor contractor=(Contractor) this.getBaseService().getBean(Contractor.class, map);
+					Contractor contractor=(Contractor) this.getBaseService().findBean(Contractor.class, map);
 					LoadSuppliersNames(ownerId);
 
 					this.loadContractorTransactions(contractor.getId(), paid,ownerId);
@@ -371,13 +373,10 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 					    contractorPredicatableTable.getTable().requestFocus();
 					    contractorPredicatableTable.getTable().getSelectionModel().select(0);
 					    contractorPredicatableTable.getTable().getFocusModel().focus(0);
-				} catch (DataBaseException e) {
+				} catch (DataBaseException | EmptyResultSetException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (InvalidReferenceException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} 
 				
 				
 				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
@@ -429,16 +428,16 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 		g1.getSelectedToggle();
 		List tableData=new ArrayList();
 		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("contractorAccount.contractorId", id);
+		map.put("contractorAccount.contractor.id", id);
 		map.put("contractorAccount.contractor.typeId", contractorTypeId);
-		map.put("seasonId", ApplicationContext.season.getId());
+		map.put("season.id", getAppContext().getSeason().getId());
 		map.put("contractorAccount.contractor.ownerId", ownerId);
 
 	if(paid>-1)
 		map.put("paid", paid);
 
 		List order=new ArrayList(Arrays.asList(Order.desc("detailDate")));
-			try {
+ 			try {
 			List transactions=	this.getBaseService().findAllBeansWithDepthMapping(ContractorAccountDetail.class, map,order);
 		for (Iterator iterator = transactions.iterator(); iterator.hasNext();) {
 			
@@ -448,7 +447,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 			viewBean.setId(transaction.getId());
 			viewBean.setAmount(transaction.getAmount());
 			viewBean.setNotes(transaction.getReport());
-			viewBean.setPaid(transaction.getPaid()==1);
+			viewBean.setPaid((transaction.getPaid()==1)?getAppContext().getMessages().getString("label.contractor.status.paid.no"):getAppContext().getMessages().getString("label.contractor.status.paid.no"));
 			if(transaction.getPaid()==0)
 				ownerTotalAmount+=transaction.getAmount();
 			else
@@ -491,13 +490,13 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 		
 		Map<String,Object> map=new HashMap<String, Object>();
 		map.put("contractorAccount.contractor.typeId =", contractorTypeId);
-		map.put("seasonId =", ApplicationContext.season.getId());
+		map.put("season.id =", getAppContext().getSeason().getId());
 		map.put("paid=", 1);
-		map.put("contractorAccount.contractor.ownerId= ", owner_combo.getSelectionModel().getSelectedItem().getValue());
+		map.put("contractorAccount.contractor.ownerId= ", owner_combo.getSelectionModel().getSelectedItem().getId());
 
 		Double amount=0.0;
 		try {
-			 amount=(Double) this.getBaseRetrievalService().aggregate("ContractorAccountDetail", "sum", "amount", map);
+			 amount=(Double) this.getBaseService().aggregate("ContractorAccountDetail", "sum", "amount", map);
 		} catch (DataBaseException | EmptyResultSetException e) {
 			amount=0.0;
 		//	e.printStackTrace();
@@ -515,13 +514,13 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 		
 		Map<String,Object> map=new HashMap<String, Object>();
 		map.put("contractorAccount.contractor.typeId=", contractorTypeId);
-		map.put("seasonId=", ApplicationContext.season.getId());
+		map.put("season.id=", getAppContext().getSeason().getId());
 		map.put("paid=", 0);
-		map.put("contractorAccount.contractor.ownerId=", owner_combo.getSelectionModel().getSelectedItem().getValue());
+		map.put("contractorAccount.contractor.ownerId=", owner_combo.getSelectionModel().getSelectedItem().getId());
 
 		Double amount=0.0;
 		try {
-			 amount=(Double) this.getBaseRetrievalService().aggregate("ContractorAccountDetail", "sum", "amount", map);
+			 amount=(Double) this.getBaseService().aggregate("ContractorAccountDetail", "sum", "amount", map);
 		} catch (DataBaseException | EmptyResultSetException e) {
 			// TODO Auto-generated catch block
 			amount=0.0;
@@ -597,7 +596,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 				  paid=1;
 			  else  if(owner_radioBtn.isSelected())
 				  paid=0;
-			  int ownerId=owner_combo.getSelectionModel().getSelectedItem().getValue();
+			  int ownerId=owner_combo.getSelectionModel().getSelectedItem().getId();
 			  loadContractorTransactions(contractor.getId(),paid,ownerId);
 			  
 			  

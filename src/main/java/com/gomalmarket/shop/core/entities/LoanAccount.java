@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity(name = "LoanAccount")
 @Setter
 @Getter
-public class LoanAccount extends BaseBean {
+public class LoanAccount extends BaseEntity {
 
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -43,5 +43,4 @@ public class LoanAccount extends BaseBean {
 
     }
 
-
-}
+ }

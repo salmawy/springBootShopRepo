@@ -51,13 +51,16 @@ public interface IBaseService
 
 	void printReport(Map param, InputStream report) throws DataBaseException, JRException;
 
-	public Object getBean(Class<?> beanClass, Object identifier) throws DataBaseException, InvalidReferenceException ;
+	public Object getBean(Class<?> beanClass, Integer identifier) throws DataBaseException, InvalidReferenceException ;
 	 
 	public Season getCurrentSeason() throws DataBaseException, EmptyResultSetException ;
 
 	void mergeEntity(Object entity);
 
 	List findAllBeans(Class<SellerOrderWeight> beanClass, Map<String, Object> ParamtersMap) throws DataBaseException, EmptyResultSetException;
+
+	List<Object> findAllBeansWithDepthMapping(Class beanClass, Map propertyMap, List<String> nOrder)
+			throws DataBaseException, EmptyResultSetException;
 
 
 }

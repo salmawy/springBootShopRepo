@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import org.controlsfx.glyphfont.FontAwesome;
 
 import com.gomalmarket.shop.core.JPAOrderBy;
-import com.gomalmarket.shop.core.Enum.IncomeTypesEnum;
+import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.JPAOrderByEnum;
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
@@ -476,16 +476,16 @@ private List<Column> prepareIncomeTableColumns(){
 			
 		
 			String name="";
-			if (detail.getType().getId()==IncomeTypesEnum.INTST_PAY) {
+			if (detail.getType().getId()==IncomeTypeEnum.INTST_PAY) {
 				Seller seller=(Seller) this.getBaseService().findBean(Seller.class, detail.getSellerId());
 				name=seller.getName();
 			}
-			else if (detail.getType().getId()==IncomeTypesEnum.IN_LOAN||detail.getType().getId()==IncomeTypesEnum.IN_PAY_LOAN)
+			else if (detail.getType().getId()==IncomeTypeEnum.IN_LOAN||detail.getType().getId()==IncomeTypeEnum.IN_PAY_LOAN)
 			{
 				Loaner loaner=(Loaner) this.getBaseService().findBean(Loaner.class, detail.getSellerId());
 				name=loaner.getName();
 			}
-			else if(detail.getType().getId()==IncomeTypesEnum.CASH) {
+			else if(detail.getType().getId()==IncomeTypeEnum.CASH) {
 				totalCash+=detail.getAmount();
 
 			continue;

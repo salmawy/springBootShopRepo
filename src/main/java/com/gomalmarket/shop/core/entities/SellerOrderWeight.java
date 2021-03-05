@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity(name = "SellerOrderWeight")
 @Setter
 @Getter
-public class SellerOrderWeight extends BaseBean {
+public class SellerOrderWeight extends BaseEntity {
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
 			pkColumnValue = "SELLER_ORDER_WEIGHT_ID",
@@ -54,5 +54,6 @@ public class SellerOrderWeight extends BaseBean {
     @JoinColumn(name = "PRODUCT_ID")
     private Product product;
 
-
+	@Embedded
+	private BaseEntity systemColumns;
 }

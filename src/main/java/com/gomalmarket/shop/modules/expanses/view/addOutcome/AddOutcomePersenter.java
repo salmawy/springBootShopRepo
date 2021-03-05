@@ -225,7 +225,7 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
 			 double amount = Double.parseDouble(this.outcomeAmount_TF.getText());
 
 	            String notes = note_TA.getText();
-			OutcomeType type=(OutcomeType) outcomeType_combo.getSelectionModel().getSelectedItem().getValueObject();
+			OutcomeTypeEnum type=OutcomeTypeEnum.fromId( outcomeType_combo.getSelectionModel().getSelectedItem().getId());
 	       //     if (typeId == OutcomeTypeEnum.OUT_PAY_LOAN) {
 	      //          this.getExpansesServices().loanPayTansaction(outcomeName_TF.getText(), new Date(), amount, typeId, notes, ApplicationContext.fridage.getId());
 	       ///     } else {

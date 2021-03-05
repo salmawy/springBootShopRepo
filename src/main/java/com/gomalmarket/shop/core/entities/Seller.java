@@ -5,7 +5,8 @@
  import lombok.Setter;
 
  import javax.persistence.Column;
- import javax.persistence.Entity;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +17,7 @@ import javax.persistence.TableGenerator;
  @Entity(name = "Seller")
  @Setter
  @Getter
-public class Seller extends BaseBean {
+public class Seller extends BaseEntity {
 	 
 	 @TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 				pkColumnName = "ID_TABLE_NAME",
@@ -56,5 +57,5 @@ public class Seller extends BaseBean {
 	
 	
 
-
+	 
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +18,7 @@ import java.util.Date;
 @Entity(name = "Installment")
 @Setter
 @Getter
-public class Installment extends BaseBean {
+public class Installment extends BaseEntity {
 
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -46,5 +47,5 @@ public class Installment extends BaseBean {
     @Column(name = "SELLER_ORDER_ID")
     private Integer sellerOrderId;
 
-
+	 
 }

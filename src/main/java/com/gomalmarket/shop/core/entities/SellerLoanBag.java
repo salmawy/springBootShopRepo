@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity(name = "SellerLoanBag")
 @Setter
 @Getter
-public class SellerLoanBag extends BaseBean {
+public class SellerLoanBag extends BaseEntity {
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
 			pkColumnValue = "SELLER_LOAN_BAG_ID",
@@ -54,6 +54,10 @@ public class SellerLoanBag extends BaseBean {
 
     }
 
+    
+    
+    
+	 
 }
 
 

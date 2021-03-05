@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity(name = "OutcomeDetail")
 @Setter
 @Getter
-public class OutcomeDetail extends BaseBean {
+public class OutcomeDetail extends BaseEntity {
 
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -54,8 +54,11 @@ public class OutcomeDetail extends BaseBean {
     private int outcomeId;
     
     @ManyToOne
-    @JoinColumn(name = "TYPE_ID")
+    @JoinColumn(name = "TYPE_ID",insertable = false,updatable = false)
     private OutcomeType type;
+    
+    @Column(name = "TYPE_ID")
+    private int typeId;
 
-
+	 
 }

@@ -5,7 +5,8 @@
  import lombok.Setter;
 
  import javax.persistence.Column;
- import javax.persistence.Entity;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -14,7 +15,7 @@ import javax.persistence.Table;
  @Entity(name = "User")
  @Setter
  @Getter
-public class User extends BaseBean  implements java.io.Serializable  {
+public class User extends BaseEntity  implements java.io.Serializable  {
 	
 	 @GeneratedValue
 		@Id
@@ -31,7 +32,7 @@ public class User extends BaseBean  implements java.io.Serializable  {
 
 
 	
-
+ 	 
 
 
 }

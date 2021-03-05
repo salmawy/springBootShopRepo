@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity(name = "SellerOrder")
 @Setter
 @Getter
-public class SellerOrder extends BaseBean {
+public class SellerOrder  {
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
 			pkColumnValue = "SELLER_ORDER_ID",
@@ -52,5 +52,5 @@ public class SellerOrder extends BaseBean {
     @JoinColumn(name = "FRIDAGE_ID")
     private Fridage fridage;
 
-
+	 
 }

@@ -4,16 +4,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.sql.Timestamp;
 import java.util.Date;
 @MappedSuperclass
-
 @Setter
 @Getter
-public class BaseBean {
+ 
+public abstract class BaseEntity implements ISysInfo {
 	
 
 	@Column(name = "CHANGER_ID")
@@ -29,7 +30,7 @@ public class BaseBean {
 	private Integer changed=1;
 
 	
-	public BaseBean() {
+	public BaseEntity() {
 		
 		  this.changed=1;
 		 this.timestamp=new Timestamp(new Date().getTime()); 
@@ -39,5 +40,7 @@ public class BaseBean {
 		 
 	}
 
+
+	
 
 }

@@ -3,6 +3,7 @@ package com.gomalmarket.shop.core.entities;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @Entity(name = "SafeOfDay")
 @Setter
 @Getter
-public class SafeOfDay extends BaseBean {
+public class SafeOfDay extends BaseEntity {
 	
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -46,5 +47,5 @@ public class SafeOfDay extends BaseBean {
     @Column(name = "SEASON_ID",insertable = false,updatable = false)
     private Integer seasonId;
 
-
+	 
 }

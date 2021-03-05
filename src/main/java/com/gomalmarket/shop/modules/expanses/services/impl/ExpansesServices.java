@@ -15,13 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gomalmarket.shop.core.Enum.IncomeTypesEnum;
+import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.LoanTypeEnum;
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.SafeTransactionTypeEnum;
 import com.gomalmarket.shop.core.config.ShopAppContext;
 import com.gomalmarket.shop.core.entities.Fridage;
-import com.gomalmarket.shop.core.entities.IncLoan;
+import com.gomalmarket.shop.core.entities.ShopLoan;
 import com.gomalmarket.shop.core.entities.Income;
 import com.gomalmarket.shop.core.entities.IncomeDetail;
 import com.gomalmarket.shop.core.entities.IncomeType;
@@ -101,63 +101,7 @@ public class ExpansesServices implements IExpansesServices {
 		return this.getExpansesDao().getIncomeDays(month);
 	}
 
-	public void loanPayTansaction(String name, Date date, double amount, int type, String notes, Fridage fridage)
-			throws DataBaseException, InvalidReferenceException {
-
-		Loaner loaner = findLoaner(name);
-		LoanAccount account = findLoanerAccount(loaner.getId());
-
-		LoanPaying pay =  new LoanPaying();
-		pay.setLoanAccount(account);
-		pay.setNotes(notes);
-		pay.setPaidAmunt(amount);
-		pay.setPayingDate(date);
-		this.getBaseService().addBean(pay);
-
-		if (type == OutcomeTypeEnum.OUT_PAY_LOAN) {
-
-			OutcomeDetail outPayLoan = new OutcomeDetail();
-			outPayLoan.setAmount(amount);
-			outPayLoan.setFridage(fridage);
-			outPayLoan.setSpenderName(shopAppContext.getCurrentUser().getUsername());
-
-			OutcomeType outcomeType = (OutcomeType) this.getBaseService().findBean(OutcomeType.class,
-					OutcomeTypeEnum.OUT_PAY_LOAN);
-			outPayLoan.setCustomerId(loaner.getId());
-
-			outPayLoan.setType(outcomeType);
-			outPayLoan.setTypeName(String.valueOf(OutcomeTypeEnum.OUT_PAY_LOAN));
-			outPayLoan.setOrderId(-1);
-
-			Outcome outome = findOrCreateOutcome(date);
-			saveOutcomeDetail(outPayLoan, outome);
-
-		}
-
-		else if (type == IncomeTypesEnum.IN_PAY_LOAN) {
-			IncomeDetail incomeDetail = new IncomeDetail();
-			incomeDetail.setAmount(amount);
-			incomeDetail.setFridage(fridage);
-			incomeDetail.setResipeintName(shopAppContext.getCurrentUser().getUsername());
-			incomeDetail.setSellerId(loaner.getId());
-
-			IncomeType incomeType = (IncomeType) this.getBaseService().findBean(IncomeType.class,
-					IncomeTypesEnum.IN_PAY_LOAN);
-
-			incomeDetail.setType(incomeType);
-			incomeDetail.setTypeName(String.valueOf(IncomeTypesEnum.IN_PAY_LOAN));
-
-			incomeDetail.setSellerOrderId(-1);
-
-			saveIncomeDetail(incomeDetail, date);
-
-		}
-
-		log.info(this.getClass().getName() + "=>tranasction completed succfully");
-
-	}
-
-	public void saveIncomeDetail(IncomeDetail incomeDetail, Date date) throws DataBaseException {
+ public void saveIncomeDetail(IncomeDetail incomeDetail, Date date) throws DataBaseException {
 
 		Income income = findOrCreateIncome(date);
 		incomeDetail.setIncome(income);
@@ -390,7 +334,7 @@ public class ExpansesServices implements IExpansesServices {
 
 	}
 
-	public void outcomeTransaction(Date date, double amount, String notes, OutcomeType type, int customerId,
+	public void outcomeTransaction(Date date, double amount, String notes, OutcomeTypeEnum type, int customerId,
 			int orderId, Fridage fridage, Season season) throws DataBaseException {
 this.initEntityDictionary();
 		OutcomeDetail outcomeDetail = new OutcomeDetail();
@@ -398,7 +342,7 @@ this.initEntityDictionary();
 		outcomeDetail.setFridage(fridage);
 		outcomeDetail.setSpenderName(shopAppContext.getCurrentUser().getUsername());
 		outcomeDetail.setCustomerId(customerId);
-		outcomeDetail.setType(type);
+		outcomeDetail.setTypeId(type.getId());
 
 		outcomeDetail.setOrderId(orderId);
 		Outcome outcome = findOrCreateOutcome(date);
@@ -409,7 +353,7 @@ this.initEntityDictionary();
 
 	}
 
-	public void editOutcomeTransaction(Date date, double amount, String notes, OutcomeType type, int customerId,
+	public void editOutcomeTransaction(Date date, double amount, String notes, OutcomeTypeEnum type, int customerId,
 			int orderId, Fridage fridage, Season season, int detailId)
 			throws DataBaseException, InvalidReferenceException {
 
@@ -425,7 +369,7 @@ this.initEntityDictionary();
 		outcomeDetail.setFridage(fridage);
 		outcomeDetail.setSpenderName(shopAppContext.getCurrentUser().getUsername());
 		outcomeDetail.setCustomerId(customerId);
-		outcomeDetail.setType(type);
+		outcomeDetail.setTypeId(type.getId());
 		// outcomeDetail.setTypeName(String.valueOf(typeId));
 
 		outcomeDetail.setOrderId(orderId);
@@ -437,33 +381,12 @@ this.initEntityDictionary();
 
 	}
 
-	@Override
-	public LoanAccount getLoanerAccount(String name) throws DataBaseException, EmptyResultSetException {
+ 
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("name", name);
-		LoanAccount account = null;
-
-		account = (LoanAccount) this.getBaseService().findAllBeansWithDepthMapping(Loaner.class, map).get(0);
-
-		return account;
-	}
-
-	@Override
-	public LoanAccount getLoanerAccount(int loanerId) throws DataBaseException, EmptyResultSetException {
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", loanerId);
-		LoanAccount account = null;
-
-		account = (LoanAccount) this.getBaseService().findAllBeansWithDepthMapping(Loaner.class, map).get(0);
-
-		return account;
-	}
-
+ 
 	
 
-	public void incomeTransaction(Date date, double amount, String notes, IncomeType type, int sellerId, int orderId,
+	public void incomeTransaction(Date date, double amount, String notes, IncomeTypeEnum type, int sellerId, int orderId,
 			Fridage fridage, Season season) throws DataBaseException {
 
 		IncomeDetail incomeDetail = new IncomeDetail();
@@ -471,7 +394,7 @@ this.initEntityDictionary();
 		incomeDetail.setFridage(fridage);
 		incomeDetail.setResipeintName(shopAppContext.getCurrentUser().getUsername());
 		incomeDetail.setSellerId(sellerId);
-		incomeDetail.setType(type);
+		incomeDetail.setTypeId(type.getId());
 
 		incomeDetail.setSellerOrderId(orderId);
 
@@ -537,43 +460,9 @@ this.initEntityDictionary();
 	}
 
 	
-	 public Loaner saveLoaner(Loaner Loaner) throws DataBaseException {
 
-		try {
-			Map<String, Object> m = new HashMap<String, Object>();
-			m.put("name", Loaner.getName());
-			Loaner = (Loaner) this.getBaseService().findAllBeans(Loaner.class, m, null).get(0);
 
-			return Loaner;
-		} catch (DataBaseException | EmptyResultSetException e) {
-			this.getBaseService().addBean(Loaner);
-
-		}
-
-		return Loaner;
-
-	}
-
-	public LoanAccount saveLoanerAccount(LoanAccount account) throws DataBaseException {
-
-		try {
-			Map<String, Object> m = new HashMap<String, Object>();
-			m.put("loanerId", account.getLoaner().getId());
-			m.put("type", account.getType());
-			m.put("finished", 0);
-
-			account = (LoanAccount) this.getBaseService().findAllBeans(LoanAccount.class, m, null).get(0);
-
-			return account;
-		} catch (DataBaseException | EmptyResultSetException e) {
-
-			this.getBaseService().addBean(account);
-
-		}
-
-		return account;
-
-	}
+	
 
 	@Override
 	public Double getSafeBalance(Season season) { 
@@ -592,64 +481,7 @@ this.initEntityDictionary();
 		
 	}
 
-	public List getLoanerDebts(int loanerId, String type) throws EmptyResultSetException, DataBaseException {
-
-		return this.getExpansesDao().getLoanerDebts(loanerId, type);
-	}
-
-	@Override
-	public List getLoanerInstalments(int loanerId, String type) throws EmptyResultSetException, DataBaseException {
-		return this.getExpansesDao().getLoanerInstalments(loanerId, type);
-	}
-
-	@Override
-	public void loanIncTansaction(String name, Date date, double amount, String type, String notes, Fridage fridage,
-			Season season) throws DataBaseException, InvalidReferenceException {
-		// ======================================================================
-		Loaner loaner = new Loaner();
-		loaner.setName(name);
-		saveLoaner(loaner);
-		// ======================================================================
-		LoanAccount account = new LoanAccount();
-		account.setType(type);
-		account.setLoaner(loaner);
-		saveLoanerAccount(account);
-		// ======================================================================
-		IncLoan loan = new IncLoan();
-		loan.setAmount(amount);
-		loan.setLoanAccount(account);
-		loan.setLoanDate(date);
-		loan.setNotes(notes);
-		this.getBaseService().addBean(loan);
-		// ======================================================================
-
-		if (type.equals(LoanTypeEnum.IN_LOAN)) {
-			IncomeType incomeType = (IncomeType) this.getBaseService().findBean(IncomeType.class,
-					IncomeTypesEnum.IN_LOAN);
-
-			incomeTransaction(date, amount, notes, incomeType, loaner.getId(), -1, fridage, season);
-
-		}
-
-		// ======================================================================
-
-		else if (type.equals(LoanTypeEnum.OUT_LOAN)) {
-
-			OutcomeType outcomeType = (OutcomeType) this.getBaseService().findBean(OutcomeType.class,
-					OutcomeTypeEnum.OUT_LOAN);
-			outcomeTransaction(date, amount, notes, outcomeType, loaner.getId(), -1, fridage, season);
-
-		}
-
-		// ======================================================================
-
-		log.info(this.getClass().getName() + "=>tranasction completed succfully");
-
-	}
-
-	
-	
-	
+ 
 	
 	
 	
@@ -804,13 +636,7 @@ this.initEntityDictionary();
 		return getExpansesDao().getIncomeDates(season.getId());
 	}
 
-	@Override
-	public List inExactMatchSearchloanerName(String loanerName, String loanerType)
-			throws EmptyResultSetException, DataBaseException {
-
-		return getExpansesDao().inExactMatchSearchloanerName(loanerName, loanerType);
-
-	}
+ 
 
 	@Override
 	public void initEntityDictionary() {

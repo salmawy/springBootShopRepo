@@ -40,5 +40,8 @@ public interface IBaseDao {
 	Object findBean(Class<?> beanClass, Map propertyMap) throws DataBaseException, EmptyResultSetException;
 
 	void mergeEntity(Object entity);
+
+	List<Object> findAllBeansWithDepthMapping(Class beanClass, Map propertyMap, List<String> nOrder)
+			throws DataBaseException, EmptyResultSetException;
  
     }

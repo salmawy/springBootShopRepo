@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity(name = "Income")
 @Setter
 @Getter
-public class Income extends BaseBean {
+public class Income extends BaseEntity  {
 	
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -34,7 +34,8 @@ public class Income extends BaseBean {
     @Column(name = "SEASON_ID",insertable = false,updatable = false)
     private int seasonId;
     
-    
+	@Embedded
+	private BaseEntity systemColumns;
     
     
     @ManyToOne

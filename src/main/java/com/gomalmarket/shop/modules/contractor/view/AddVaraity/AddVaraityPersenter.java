@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.gomalmarket.shop.core.Enum.ContractorTypeEnum;
 import com.gomalmarket.shop.core.exception.DataBaseException;
+import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.core.validator.Validator;
 import com.gomalmarket.shop.modules.contractor.action.ContractorAction;
 import com.jfoenix.controls.JFXButton;
@@ -194,7 +195,7 @@ public class AddVaraityPersenter extends ContractorAction implements Initializab
 		int ownerId=(Integer)this.request.get("ownerId"); 
 		Date date=getValueOfDatePicker();
 		try {
-			this.getContractorService().contractorTransaction(name, ContractorTypeEnum.LABOUR, amount, getAppContext().getFridage().getId(), notes, paid, ownerId, date, getAppContext().getSeason().getId());
+			this.getContractorService().contractorTransaction(name, ContractorTypeEnum.LABOUR, amount, getAppContext().getFridage().getId(), notes, paid, ownerId, date, getAppContext().getSeason());
 				this.response=new HashMap<String, Object>();
 				response.put("valid", true);
 				response.put("name", name);
@@ -206,6 +207,9 @@ public class AddVaraityPersenter extends ContractorAction implements Initializab
 
 			
 			
+			e.printStackTrace();
+		} catch (InvalidReferenceException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

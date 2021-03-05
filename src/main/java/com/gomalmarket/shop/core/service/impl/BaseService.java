@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.gomalmarket.shop.core.JPAOrderBy;
 import com.gomalmarket.shop.core.config.ShopAppContext;
-import com.gomalmarket.shop.core.entities.BaseBean;
+import com.gomalmarket.shop.core.entities.BaseEntity;
 import com.gomalmarket.shop.core.entities.Season;
 import com.gomalmarket.shop.core.entities.SellerOrderWeight;
 
@@ -114,9 +114,9 @@ public class BaseService implements IBaseService {
 	public void setChangeInformation(Object bean) {
 		try {
 			if (bean != null) {
-				((BaseBean) bean).setChangerId(shopAppContext.getCurrentUser().getId());
-				((BaseBean) bean).setChangeDate(new Date());
-				((BaseBean) bean).setChanged(1);
+				((BaseEntity) bean).setChangerId(shopAppContext.getCurrentUser().getId());
+				((BaseEntity) bean).setChangeDate(new Date());
+				((BaseEntity) bean).setChanged(1);
 
 			}
 		} catch (Exception e) {
@@ -163,7 +163,7 @@ public class BaseService implements IBaseService {
 		getBaseDao().PrintReport(param, report);
 
 	}
-	public Object getBean(Class<?> beanClass, Object identifier) throws DataBaseException, InvalidReferenceException {
+	public Object getBean(Class<?> beanClass, Integer identifier) throws DataBaseException, InvalidReferenceException {
 		return this.getBaseDao().findBean(beanClass, identifier);
 	}
 	
@@ -184,5 +184,10 @@ public class BaseService implements IBaseService {
 	public List findAllBeans(Class<SellerOrderWeight> beanClass, Map<String, Object> ParamtersMap) throws DataBaseException, EmptyResultSetException {
 	return getBaseDao().findAllBeans(beanClass, ParamtersMap, null, 0, 0);
 		
+	}
+	@Override
+	public List<Object> findAllBeansWithDepthMapping(Class beanClass, Map propertyMap, List<String> nOrder)
+			throws DataBaseException, EmptyResultSetException {
+		return this.getBaseDao().findAllBeansWithDepthMapping(beanClass, propertyMap, nOrder);
 	}
 }

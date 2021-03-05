@@ -1,21 +1,40 @@
 package com.gomalmarket.shop.core.Enum;
 
-public class OutcomeTypeEnum {
-	
-	public final static int	varaity=1;
-	public final static int	K_L	=2;
-	public final static int	OUT_LOAN=	3;
-	public final static int labours	=4;
-	public final static int ORDER_PAY=	5;
-	public final static int allah	=6;
-	public final static int PURCHASES_WITHDRAWALS=	7;
-	public final static int 	maintaince=	8;
-	public final static int OUT_PAY_LOAN=	9;
-	public final static int K_V	=10;
-	public final static int INVOICE_TIPS=	11;
-	public final static int TIPS=	12;
-	public final static int K_S=	13;
-	public final static int NOLOUN	=14;
-	public final static int forgivness=	15;
+public enum OutcomeTypeEnum implements EnumClass<Integer> {
+
+	varaity(1),
+	K_L(2),
+	OUT_LOAN(3),
+	labours(4),
+	ORDER_PAY(5),
+	allah(6),
+	PURCHASES_WITHDRAWALS(7),
+	maintaince(8),
+	OUT_PAY_LOAN(9),
+	K_V(10),
+	INVOICE_TIPS(11),
+	TIPS(12),
+	K_S(13),
+	NOLOUN(14),
+	forgivness(15);
+
+	OutcomeTypeEnum(Integer value) {
+		this.id = value;
+	}
+
+	private Integer id;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public static OutcomeTypeEnum fromId(Integer id) {
+		for (OutcomeTypeEnum at : OutcomeTypeEnum.values()) {
+			if (at.getId().equals(id)) {
+				return at;
+			}
+		}
+		return null;
+	}
 
 }

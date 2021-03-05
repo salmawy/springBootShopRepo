@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity(name = "IncomeDetail")
 @Setter
 @Getter
-public class IncomeDetail extends BaseBean {
+public class IncomeDetail extends BaseEntity {
 
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -52,12 +52,18 @@ public class IncomeDetail extends BaseBean {
     private Integer installmentId;
 
 	@ManyToOne
-	@JoinColumn(name = "TYPE_ID")
+	@JoinColumn(name = "TYPE_ID",insertable = false,updatable = false)
     private IncomeType type;
 
+	
+	@Column(name = "TYPE_ID")
+    private Integer typeId;
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "FRIDAGE_ID")
     private Fridage fridage;
 
+	 
 
 }

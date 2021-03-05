@@ -109,8 +109,7 @@ public void generateInvoice(CustomerOrder invoice ) throws DataBaseException, In
 	
 	 this.getBaseService().editBean(invoice);  
 	 
-	 OutcomeType invoiceTips=(OutcomeType)this.getBaseService().findBean(OutcomeType.class,  OutcomeTypeEnum.INVOICE_TIPS);
-	 this.getExpansesService().outcomeTransaction(new Date(), invoice.getTips(), invoice.getNotes(),invoiceTips, invoice.getCustomer().getId(), invoice.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());		 
+ 	 this.getExpansesService().outcomeTransaction(new Date(), invoice.getTips(), invoice.getNotes(),OutcomeTypeEnum.INVOICE_TIPS, invoice.getCustomer().getId(), invoice.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());		 
 	 
  
 		 
@@ -130,9 +129,8 @@ public void payInvoice(CustomerOrder invoice) throws DataBaseException, InvalidR
     		invoice.getCustomer().getType().getId()==CustomerTypeEnum.kareem||
     		invoice.getCustomer().getType().getId()==CustomerTypeEnum.mahmed)
      {
-   	 OutcomeType orderPay=(OutcomeType)this.getBaseService().findBean(OutcomeType.class,  OutcomeTypeEnum.ORDER_PAY);
-
-    	this.getExpansesService().outcomeTransaction(invoice.getDueDate(), invoice.getNetPrice(), "",orderPay  , invoice.getCustomer().getId(), invoice.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());
+ 
+    	this.getExpansesService().outcomeTransaction(invoice.getDueDate(), invoice.getNetPrice(), "",OutcomeTypeEnum.ORDER_PAY  , invoice.getCustomer().getId(), invoice.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());
      }
 
  this.getBaseService().addEditBean(invoice);

@@ -3,13 +3,16 @@ package com.gomalmarket.shop.core.entities;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.persistence.*;
 
 @Table(name ="CUSTOMERS")
 @Entity(name ="Customer")
 @Setter
 @Getter
-public class Customer  extends BaseBean{
+public class Customer extends BaseEntity  {
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
 			pkColumnValue = "CUSTOMER_ID",
@@ -33,9 +36,4 @@ public class Customer  extends BaseBean{
 	@JoinColumn(name = "TYPE_ID")
 	private CustomerType type;
 	
-	
-	
-
-	
-
 }

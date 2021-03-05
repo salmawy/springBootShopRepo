@@ -219,8 +219,11 @@ private void setTableActionListner(){
 	}
 
 	public void loadTableData(List<RowClass> data) {
+		
+		table.getItems().clear();
 
-		ObservableList<RowClass> observableList = FXCollections.observableArrayList(data);
+		ObservableList<RowClass> observableList = FXCollections.observableList(data);
+		
 		this.table.setItems(observableList);
 
 	}

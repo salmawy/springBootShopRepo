@@ -19,11 +19,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.DataException;
-import org.hibernate.jdbc.Work;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -307,15 +303,23 @@ public class BaseDaoImpl implements IBaseDao {
 			
 			CriteriaBuilder cb = entityManger.getCriteriaBuilder();
             CriteriaQuery cq = cb.createQuery(beanClass);
+            List<Predicate> predicates = new ArrayList<>();
+
             Root root = cq.from(beanClass);
 			String key;
 			
 			for(Iterator itr = propertyMap.keySet().iterator() ; itr.hasNext() ;)
 			{
 				key = (String)itr.next();
-				cq.where(cb.equal(root.get(key), propertyMap.get(key)));
+                predicates.add(cb.equal(root.get(key), propertyMap.get(key)));
+
 
  			}
+			
+			if(predicates.size()>0) {
+ 				cq.where( predicates.toArray(predicates.toArray(new Predicate[0])));
+
+			}
 			Query query=entityManger.createQuery(cq);	
 			result = query.getResultList();
 			
@@ -380,48 +384,39 @@ public class BaseDaoImpl implements IBaseDao {
 	}
 	
 	@Override  
-	public void PrintReport(Map param,InputStream report)  {
-
-
-		Session session = (Session) entityManger.getDelegate();
-
-		session.doWork(new Work() {
-			
-			@Override
-			public void execute(Connection connection) throws SQLException {
-				JasperReport jr = null;
-				try {
-					jr = JasperCompileManager.compileReport(report);
-				} catch (JRException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-
-			     
-			    		   
-			    	 
-
-						log.info("paramters=> "+ param.toString());
-
-				param.put(JRParameter.REPORT_LOCALE, new Locale("ar", "AE", "Arabic"));
-			
-				JasperPrint jp=null;
-				try {
-					jp = JasperFillManager.fillReport(jr, param, connection);
-			
-				
-					JasperViewer.viewReport(jp, false, new Locale("ar", "AE", "Arabic"));
-				} catch (JRException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
-			}
-		});
-			
-
-	 
-	}
+	public void PrintReport(Map param, InputStream report) {
+		/*
+		 * 
+		 * 
+		 * Session session = (Session) entityManger.getDelegate();
+		 * 
+		 * session.doWork(new Work() {
+		 * 
+		 * @Override public void execute(Connection connection) throws SQLException {
+		 * JasperReport jr = null; try { jr =
+		 * JasperCompileManager.compileReport(report); } catch (JRException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * log.info("paramters=> "+ param.toString());
+		 * 
+		 * param.put(JRParameter.REPORT_LOCALE, new Locale("ar", "AE", "Arabic"));
+		 * 
+		 * JasperPrint jp=null; try { jp = JasperFillManager.fillReport(jr, param,
+		 * connection);
+		 * 
+		 * 
+		 * JasperViewer.viewReport(jp, false, new Locale("ar", "AE", "Arabic")); } catch
+		 * (JRException e) { // TODO Auto-generated catch block e.printStackTrace(); } }
+		 * });
+		 * 
+		 * 
+		 * 
+		 */}
  
 	
 	
@@ -455,7 +450,65 @@ public class BaseDaoImpl implements IBaseDao {
 		
 		
 	}
+	@Override
+	public List<Object> findAllBeansWithDepthMapping(Class beanClass, Map propertyMap,List<String> nOrder) 
+	throws DataBaseException,EmptyResultSetException
+	{
+ 		try
+		{
+			String key, value;
+			StringBuffer sb = new StringBuffer("");
+			
+			sb.append("from " + beanClass.getSimpleName() + " as bean");
+			
+			boolean andFlag=false;
+			
+			for(Iterator<Object> itr = propertyMap.keySet().iterator() ; itr.hasNext() ;)
+			{
+				if(andFlag)
+					sb.append(" and");
+				else
+					sb.append(" where");
+				key = (String)itr.next();
+				value = String.valueOf(propertyMap.get(key));
+				sb.append(" bean."+key);
+				if(!value.equals("is null") && !value.equals("is not null")&&!value.contains(">")&&!value.contains("<")&& !value.contains("<> "))
+					sb.append("=");
+				sb.append(" " + value + " ");
+				
+				andFlag=true;
+			}
+			
+			if(nOrder!=null)
+			{
+				sb.append(" ORDER BY  ");
+ 				Iterator itr = nOrder.iterator(); 
+				while(itr.hasNext())
+				{
+ 					sb.append(" bean."+itr.next().toString());
+					if(itr.hasNext())
+						sb.append(" , ");
+				}
+			}
+			System.out.println(sb.toString());
+ 			List<Object> result = entityManger.createQuery(sb.toString()).getResultList();
 
+			if(result.size()==0)
+				throw new EmptyResultSetException("error.emptyRS," + beanClass.getSimpleName());
+			
+			return result;
+		}
+		catch(DataAccessException e)
+		{
+			throw new DataBaseException("error.dataBase.query," + beanClass.getSimpleName() + "," + e.getMessage());
+		}
+		finally
+        {
+ 
+        }
+	}
+
+	
 
 	@Override
 	public void mergeEntity(Object entity) {

@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="420.0" prefWidth="350.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.com.contractor.view.addLabour.AddLabourPersenter">
+<AnchorPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="420.0" prefWidth="350.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.contractor.view.addLabour.AddLabourPersenter">
    <children>
       <Pane layoutX="10.0" layoutY="10.0" prefHeight="350.0" prefWidth="300.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -20,7 +20,7 @@
                   </Label>
                </children>
             </Pane>
-            <VBox layoutX="4.0" layoutY="51.0" prefHeight="355.0" prefWidth="340.0">
+            <VBox layoutX="4.0" layoutY="51.0" prefHeight="355.0" prefWidth="340.0" spacing="10.0">
                <children>
                   <HBox fx:id="paid_toogleBtn" alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="300.0">
                      <children>

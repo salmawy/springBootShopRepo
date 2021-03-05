@@ -19,7 +19,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import com.gomalmarket.shop.core.Enum.IncomeTypesEnum;
+import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.SafeTransactionTypeEnum;
 import com.gomalmarket.shop.core.Enum.SellerTypeEnum;
 import com.gomalmarket.shop.core.config.ShopAppContext;
@@ -141,11 +141,10 @@ public class SalesService implements ISalesService {
 			incomeDetail.setResipeintName(shopAppContext.getCurrentUser().getUsername());
 			incomeDetail.setSellerId(seller.getId());
 			
-			IncomeType incomeType=(IncomeType)this.getBaseService().findBean(IncomeType.class, IncomeTypesEnum.CASH);
+ 			
 			
 			
-			
-			incomeDetail.setType(incomeType);
+			incomeDetail.setTypeId(IncomeTypeEnum.CASH.getId());
 
 			incomeDetail.setSellerOrderId(sellerOrder.getId());
 
@@ -252,7 +251,7 @@ public class SalesService implements ISalesService {
 		try {
 			map = new HashMap<String, Object>();
 			map.put("sellerOrderId", oldOrder.getId());
-			map.put("typeId", IncomeTypesEnum.INTST_PAY);
+			map.put("typeId", IncomeTypeEnum.INTST_PAY);
 			oldPaidAmountDetail = (IncomeDetail) this.getBaseService().findBean(IncomeDetail.class, map);
 			oldPaidAmount = oldPaidAmountDetail.getAmount();
 
@@ -528,12 +527,11 @@ public class SalesService implements ISalesService {
 		incomeDetail.setNotes(notes);
 		incomeDetail.setSellerId(sellerId);
 		
-		IncomeType inst = (IncomeType) this.getBaseService().findBean(IncomeType.class, IncomeTypesEnum.INTST_PAY);
-
+ 
 		
 		
 		
-		incomeDetail.setType(inst);
+		incomeDetail.setTypeId(IncomeTypeEnum.INTST_PAY.getId());
  		incomeDetail.setInstallmentId(installment.getId());
 		if (sellerOrderId != 0) {
 			incomeDetail.setSellerOrderId(sellerOrderId);

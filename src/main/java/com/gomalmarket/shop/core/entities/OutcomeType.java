@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 @Entity(name = "OutcomeType")
 @Setter
 @Getter
-public class OutcomeType extends BaseBean {
+public class OutcomeType extends BaseEntity {
 	
 	
 	@GeneratedValue
@@ -30,4 +31,8 @@ public class OutcomeType extends BaseBean {
 	@Column(name = "NAME_AR")
 	private String nameAr;
 
+	
+	 
+	
+	
 }

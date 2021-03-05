@@ -1,25 +1,28 @@
 package com.gomalmarket.shop.modules.contractor.services.spring;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
+import com.gomalmarket.shop.core.config.ShopAppContext;
 import com.gomalmarket.shop.core.entities.Contractor;
 import com.gomalmarket.shop.core.entities.ContractorAccount;
 import com.gomalmarket.shop.core.entities.ContractorAccountDetail;
+import com.gomalmarket.shop.core.entities.OutcomeType;
+import com.gomalmarket.shop.core.entities.Season;
+import com.gomalmarket.shop.core.entities.repos.RepoSupplier;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
+import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.core.service.IBaseService;
 import com.gomalmarket.shop.modules.contractor.dao.IContractorDao;
 import com.gomalmarket.shop.modules.contractor.services.IContractorService;
@@ -37,10 +40,20 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 public class ContractorService implements IContractorService {
 
+	
+	@Autowired
  	IExpansesServices expansesService ;
+	@Autowired
 	IBaseService baseService;
+	@Autowired
 	IContractorDao contractorDao;
   
+	@Autowired
+	RepoSupplier repoSupplier;
+	@PersistenceContext
+	EntityManager entityManager;
+	@Autowired
+	ShopAppContext appContext;
 	@Override
 	public List getContractorAccount(int contractorId, int seasonId, int typeId)
 			throws DataBaseException, EmptyResultSetException {
@@ -49,28 +62,30 @@ public class ContractorService implements IContractorService {
 
 	@Override
 	
-	public void contractorTransaction(String name,int typeId,double amount,int fridageId,String notes,int paid,int ownerId,Date date,int seasonId) throws DataBaseException {
+	public void contractorTransaction(String name,int typeId,double amount,int fridageId,String notes,int paid,int ownerId,Date date,Season season) throws DataBaseException, InvalidReferenceException {
 
 		//===================save contractor into Database ========================================================	 
 		 Contractor contractor=saveContractor(name, typeId, ownerId);
-		 ContractorAccount contractorAccount=findContractorAccount(contractor.getId());
+		 ContractorAccount contractorAccount=findContractorAccount(contractor);
 		 
 	//========================save contractor detail into Database ========================================================	
 		 ContractorAccountDetail accountDetail=new ContractorAccountDetail();
 		 accountDetail.setAmount(amount);
-		 accountDetail.setContractorAccountId(contractorAccount.getId());
+		 accountDetail.setContractorAccount(contractorAccount);
 		 accountDetail.setDetailDate(date);
 		 accountDetail.setPaid(paid);
 		 accountDetail.setReport(notes);
-		 accountDetail.setSpenderName(ApplicationContext.currentUser.getUsername());
-		 accountDetail.setSeasonId(seasonId);
+		 accountDetail.setSpenderName(appContext.getCurrentUser().getUsername());
+		 accountDetail.setSeason(season);
 		this.getBaseService().addBean(accountDetail); 
 		contractorAccount.setTotalAmount(contractorAccount.getTotalAmount()+amount);
-		this.getBaseService().addEditBean(contractorAccount); 
-
+	//	this.getBaseService().addEditBean(contractorAccount); 
 	//=============================== insert outcomeTransaction  total value=====================================
-	this.getExpansesService().outcomeTransaction(date, amount, notes, OutcomeTypeEnum.K_L, contractor.getId(), -1, fridageId, seasonId);
 
+if(accountDetail.getPaid()==1) {
+ 
+this.getExpansesService().outcomeTransaction(date, amount, notes, OutcomeTypeEnum.K_L, contractor.getId(), -1, getAppContext().getFridage(), season);
+}
 
 		
  	           
@@ -109,17 +124,17 @@ public class ContractorService implements IContractorService {
 			return contractor;
 			
 		}
-	 public ContractorAccount  findContractorAccount(int contractorId) throws DataBaseException {
+	 public ContractorAccount  findContractorAccount(Contractor contractor) throws DataBaseException {
 			
 		ContractorAccount contractorAccount=new ContractorAccount();
-		contractorAccount.setId(contractorId);
+		contractorAccount.setContractor(contractor);
 		contractorAccount.setTotalAmount(0.0);
 
 			try {
 				Map <String,Object>m=new HashMap<String,Object>();
-				m.put("contractorId", contractorId);
+				m.put("contractor.id", contractor.getId());
 			
-				contractorAccount=(ContractorAccount) this.getBaseService().findAllBeans(ContractorAccount.class, m, null).get(0);
+				contractorAccount=(ContractorAccount) this.getBaseService().findAllBeansWithDepthMapping(ContractorAccount.class, m).get(0);
 				return contractorAccount;
 			} catch (DataBaseException | EmptyResultSetException e) {
 				this.getBaseService().addBean(contractorAccount);

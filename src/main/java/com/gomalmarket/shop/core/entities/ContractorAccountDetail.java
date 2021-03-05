@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -11,7 +13,7 @@ import java.util.Date;
 @Entity(name ="ContractorAccountDetail")
 @Setter
 @Getter
-public class ContractorAccountDetail extends BaseBean {
+public class ContractorAccountDetail extends BaseEntity {
 
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -46,9 +48,10 @@ public class ContractorAccountDetail extends BaseBean {
 	@JoinColumn(name = "CONTRACTOR_ACCOUNT_ID")
 	private  ContractorAccount contractorAccount;
 	
-	
+	 
 
-   
+
+	 
 
 
 }

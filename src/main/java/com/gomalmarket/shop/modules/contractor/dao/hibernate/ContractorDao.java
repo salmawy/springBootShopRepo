@@ -40,9 +40,9 @@ EntityManager entityManager;
 		  		
 		  		+ " from "
 		  		+ " ContractorAccountDetail cad  "
-		  		+ " where  cad.seasonId= "+seasonId ;
+		  		+ " where  cad.season.id= "+seasonId ;
 		  if(contractorId!=0)
-			  q +="	and cad.contractorAccount.contractorId ="+contractorId;
+			  q +="	and cad.contractorAccount.contractor.id ="+contractorId;
 		  if(typeId!=0)
 			  q +="	and cad.contractorAccount.contractor.typeId ="+typeId;
 		
@@ -129,7 +129,7 @@ public List getContractorAccount(String name, int seasonId, int typeId, Date fro
  	  		
 	  		+ " from "
 	  		+ " ContractorAccountDetail cad  "
-	  		+ " where  cad.seasonId= "+seasonId ;
+	  		+ " where  cad.season.id= "+seasonId ;
 	  if(paid!=-1)
 		  q +="	and cad.paid="+paid;
 	  if( typeId!=0 )

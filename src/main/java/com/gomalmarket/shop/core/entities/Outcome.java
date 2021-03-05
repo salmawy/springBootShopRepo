@@ -10,7 +10,7 @@ import java.util.Date;
  @Entity(name = "Outcome")
  @Setter
  @Getter
- public class Outcome extends BaseBean {
+ public class Outcome extends BaseEntity {
 	 
 		@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 				pkColumnName = "ID_TABLE_NAME",
@@ -46,7 +46,7 @@ import java.util.Date;
 
 
 
-
+ 	 
 
 
 

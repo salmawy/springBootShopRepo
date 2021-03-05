@@ -166,16 +166,14 @@ public class CustomerService implements ICustomerService {
 	//	this.getBaseService().addEditBean(customerOrder);
 		repoSupplier.getCustomerOrderRepo().save(customerOrder);
 //=============================== save outcome transactions=====================================
-OutcomeType TIPS= (OutcomeType) this.baseService.findBean(OutcomeType.class, OutcomeTypeEnum.TIPS);
-		
-OutcomeType NOLOUN=(OutcomeType) this.baseService.findBean(OutcomeType.class, OutcomeTypeEnum.NOLOUN);
-
+ 		
+ 
 		 this.expansesServices.initEntityDictionary();
 		this.getExpansesServices().outcomeTransaction(customerOrder.getOrderDate(), customerOrder.getTips(), customerOrder.getNotes(), 
-				TIPS, customerOrder.getCustomer().getId(), customerOrder.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());
+				OutcomeTypeEnum.TIPS, customerOrder.getCustomer().getId(), customerOrder.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());
 		
 		this.getExpansesServices().outcomeTransaction(customerOrder.getOrderDate(), customerOrder.getNolun(), customerOrder.getNotes(), 
-				NOLOUN, customerOrder.getCustomer().getId(), customerOrder.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());
+				OutcomeTypeEnum.NOLOUN, customerOrder.getCustomer().getId(), customerOrder.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());
 	 
  
 		
@@ -386,11 +384,10 @@ public void payPurchasedOrder(Customer customer,double amount,Date date,String n
 	
 	this.getBaseService().addBean(inst);
 	
-	OutcomeType purchWithdrawls=(OutcomeType) this.getBaseService().findBean(OutcomeType.class, OutcomeTypeEnum.PURCHASES_WITHDRAWALS);
+ 	
 	
 	
-	
-	this.getExpansesServices().outcomeTransaction(date, amount, notes, purchWithdrawls, customer.getId(), inst.getId(),  fridage, season);
+	this.getExpansesServices().outcomeTransaction(date, amount, notes, OutcomeTypeEnum.PURCHASES_WITHDRAWALS, customer.getId(), inst.getId(),  fridage, season);
 
  
 	

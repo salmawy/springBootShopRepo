@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +18,7 @@ import java.util.Date;
  @Entity(name = "Season")
  @Setter
  @Getter
- public class Season extends BaseBean {
+ public class Season extends BaseEntity {
 	 @TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 				pkColumnName = "ID_TABLE_NAME",
 				pkColumnValue = "SEASON_ID",
@@ -36,5 +37,5 @@ import java.util.Date;
      @Column(name = "CURRENT_SEASON")
      private int currentSeason;
 
-
+ 	 
  }

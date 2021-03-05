@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity(name = "LoanPaying")
 @Setter
 @Getter
-public class LoanPaying extends BaseBean {
+public class LoanPaying extends BaseEntity {
 
 
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
@@ -35,6 +35,5 @@ public class LoanPaying extends BaseBean {
     @JoinColumn(name = "LOAN_ACCOUNT_ID")
     private LoanAccount loanAccount;
 
-
-
+	 
 }
