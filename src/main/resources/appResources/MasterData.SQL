@@ -1,4 +1,24 @@
 SET DEFINE OFF;
+
+
+
+Insert into CONTRACTORS_TYPES
+   (ID, NAME)
+ Values
+   (1, 'عمالة');
+Insert into CONTRACTORS_TYPES
+   (ID, NAME)
+ Values
+   (2, 'موردين الكيماوي');
+Insert into CONTRACTORS_TYPES
+   (ID, NAME)
+ Values
+   (3, 'منوعات');
+
+
+
+
+
 Insert into FRIDAGES
    (ID, NAME)
  Values
@@ -361,3 +381,16 @@ AS
                  FROM outcomes outcome
              GROUP BY SEASON_ID, TO_CHAR (OUTCOME.OUTCOME_DATE, 'DD/MM/YYYY'))
    GROUP BY DATE_, SEASON_ID;
+
+
+
+
+CREATE OR REPLACE FORCE VIEW SHOP2020.SEASON_SAFE
+(
+   BALANCE,
+   SEASON_ID
+)
+AS
+   (  SELECT SUM (balance) AS balance, SOD.SEASON_ID AS season_id
+        FROM SAFE_OF_DAY sod
+    GROUP BY SOD.SEASON_ID);
