@@ -10,26 +10,19 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.gomalmarket.shop.core.Enum.CustomerTypeEnum;
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.SafeTransactionTypeEnum;
 import com.gomalmarket.shop.core.config.ShopAppContext;
-import com.gomalmarket.shop.core.entities.Customer;
-import com.gomalmarket.shop.core.entities.CustomerOrder;
-import com.gomalmarket.shop.core.entities.Fridage;
-import com.gomalmarket.shop.core.entities.Income;
-import com.gomalmarket.shop.core.entities.Outcome;
-import com.gomalmarket.shop.core.entities.OutcomeDetail;
-import com.gomalmarket.shop.core.entities.OutcomeType;
-import com.gomalmarket.shop.core.entities.PurchasedCustomerInst;
-import com.gomalmarket.shop.core.entities.SafeOfDay;
-import com.gomalmarket.shop.core.entities.Season;
+import com.gomalmarket.shop.core.entities.basic.Fridage;
+import com.gomalmarket.shop.core.entities.basic.Season;
+import com.gomalmarket.shop.core.entities.customers.Customer;
+import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
+import com.gomalmarket.shop.core.entities.customers.PurchasedCustomerInst;
+import com.gomalmarket.shop.core.entities.expanses.OutcomeDetail;
 import com.gomalmarket.shop.core.entities.repos.RepoSupplier;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
@@ -38,6 +31,7 @@ import com.gomalmarket.shop.core.service.IBaseService;
 import com.gomalmarket.shop.modules.Customer.dao.ICustomerDao;
 import com.gomalmarket.shop.modules.Customer.service.ICustomerService;
 import com.gomalmarket.shop.modules.expanses.services.IExpansesServices;
+import com.sun.corba.se.impl.ior.NewObjectKeyTemplateBase;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -168,8 +162,7 @@ public class CustomerService implements ICustomerService {
 //=============================== save outcome transactions=====================================
  		
  
-		 this.expansesServices.initEntityDictionary();
-		this.getExpansesServices().outcomeTransaction(customerOrder.getOrderDate(), customerOrder.getTips(), customerOrder.getNotes(), 
+ 		this.getExpansesServices().outcomeTransaction(customerOrder.getOrderDate(), customerOrder.getTips(), customerOrder.getNotes(), 
 				OutcomeTypeEnum.TIPS, customerOrder.getCustomer().getId(), customerOrder.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());
 		
 		this.getExpansesServices().outcomeTransaction(customerOrder.getOrderDate(), customerOrder.getNolun(), customerOrder.getNotes(), 
@@ -224,8 +217,7 @@ public void editCustomerOrder(CustomerOrder newOrder,CustomerOrder oldOrder) thr
 	Map<String,Object> map=new HashMap<String, Object>();
 	
 	
-	this.getExpansesServices().initEntityDictionary();
-
+ 
 	
 	Customer customer=oldOrder.getCustomer();
 	
@@ -250,12 +242,10 @@ public void editCustomerOrder(CustomerOrder newOrder,CustomerOrder oldOrder) thr
 			
 			//change outcome detail 
 			OutcomeDetail nolune=	 (OutcomeDetail) this.getBaseService().findAllBeans(OutcomeDetail.class, map, null).get(0);
-			double amount=Math.abs(nolune.getAmount()-newOrder.getNolun());
-	        int  operationType=(newOrder.getNolun()<oldOrder.getNolun() )?SafeTransactionTypeEnum.add:SafeTransactionTypeEnum.subtract;
-			
-	        
-	        this.getExpansesServices().changeOutcomeDetailAmount(nolune, amount, operationType);
-		 
+ 			
+	        this.getExpansesServices().editOutcomeTransaction(nolune.getTransactionDate(), newOrder.getNolun(), "", OutcomeTypeEnum.NOLOUN, newOrder.getCustomer().getId(), newOrder.getId(), newOrder.getFridage(), newOrder.getSeason(), nolune.getId());
+
+ 		 
 		} catch (EmptyResultSetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -272,10 +262,8 @@ public void editCustomerOrder(CustomerOrder newOrder,CustomerOrder oldOrder) thr
 		try {
 				//change outcome detail 
 			OutcomeDetail tips=	 (OutcomeDetail) this.getBaseService().findAllBeansWithDepthMapping(OutcomeDetail.class, map).get(0);
-			double amount=Math.abs(newOrder.getTips()-tips.getAmount());
-		int  operationType=(newOrder.getTips()<oldOrder.getNolun() )?SafeTransactionTypeEnum.add:SafeTransactionTypeEnum.subtract;
-			this.getExpansesServices().changeOutcomeDetailAmount(tips, amount, operationType);
-	
+   	        this.getExpansesServices().editOutcomeTransaction(tips.getTransactionDate(), newOrder.getTips(), "", OutcomeTypeEnum.TIPS, newOrder.getCustomer().getId(), newOrder.getId(), newOrder.getFridage(), newOrder.getSeason(), tips.getId());
+
 		} catch (EmptyResultSetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -428,10 +416,8 @@ public void editPurchasedOrder(int installmentId, Customer customer ,double amou
 	this.getBaseService().addEditBean(inst);
 	if(oldAmount!=inst.getAmount()) {
 		
-        int  operationType=(inst.getAmount()<oldAmount )?SafeTransactionTypeEnum.add:SafeTransactionTypeEnum.subtract;
-
-	this.getExpansesServices().changeOutcomeDetailAmount(outcomeDetail, amount, operationType);
-	
+         this.getExpansesServices().editOutcomeTransaction(date, amount, notes, OutcomeTypeEnum.PURCHASES_WITHDRAWALS,customer.getId() , 0, fridage, season, outcomeDetail.getId());
+ 	
 	
 	}
 	

@@ -26,7 +26,7 @@ import com.gomalmarket.shop.core.Enum.InvoiceStatusEnum;
 import com.gomalmarket.shop.core.Enum.ProductTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
-import com.gomalmarket.shop.core.entities.CustomerOrder;
+import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
 import com.gomalmarket.shop.core.exception.BusinessLogicViolationException;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;

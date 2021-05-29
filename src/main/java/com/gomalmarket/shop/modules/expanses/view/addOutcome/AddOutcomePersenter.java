@@ -17,9 +17,9 @@ import org.springframework.context.ApplicationContext;
 
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
-import com.gomalmarket.shop.core.entities.Outcome;
-import com.gomalmarket.shop.core.entities.OutcomeDetail;
-import com.gomalmarket.shop.core.entities.OutcomeType;
+import com.gomalmarket.shop.core.entities.expanses.Outcome;
+import com.gomalmarket.shop.core.entities.expanses.OutcomeDetail;
+import com.gomalmarket.shop.core.entities.expanses.OutcomeType;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
@@ -185,7 +185,7 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
  				int i=0;
 				for ( i = 0; i < types.size(); i++) {
 					
-					if ((int)types.get(i).getId()==detail.getType().getId()) {
+					if ((int)types.get(i).getId()==detail.getTypeId()) {
 						break;
 					}
 					
@@ -195,7 +195,7 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
 				//-------------------------------------------------------------------------------
 				outcomeAmount_TF.setText(String.valueOf(detail.getAmount()));
 				//-------------------------------------------------------------------------------
-				datePicker.setValue(getBaseService().convertToLocalDateViaMilisecond(detail.getOutcome().getOutcomeDate()));
+				datePicker.setValue(getBaseService().convertToLocalDateViaMilisecond(detail.getTransactionDate()));
 				//-------------------------------------------------------------------------------
 				note_TA.setText(detail.getNotes());
 				

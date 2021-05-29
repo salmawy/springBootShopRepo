@@ -1,7 +1,8 @@
 package com.gomalmarket.shop.core.entities.repos;
 
-import com.gomalmarket.shop.core.entities.Contractor;
-import com.gomalmarket.shop.core.entities.CustomerOrder;
+import com.gomalmarket.shop.core.entities.contractor.Contractor;
+import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

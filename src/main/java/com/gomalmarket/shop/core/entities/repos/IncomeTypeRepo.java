@@ -1,7 +1,8 @@
 package com.gomalmarket.shop.core.entities.repos;
 
-import com.gomalmarket.shop.core.entities.Fridage;
-import com.gomalmarket.shop.core.entities.IncomeType;
+import com.gomalmarket.shop.core.entities.basic.Fridage;
+import com.gomalmarket.shop.core.entities.expanses.IncomeType;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

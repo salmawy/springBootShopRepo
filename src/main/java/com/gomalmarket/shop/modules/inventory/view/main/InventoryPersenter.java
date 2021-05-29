@@ -13,7 +13,7 @@ import com.gomalmarket.shop.core.Enum.ProductTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTableActions;
-import com.gomalmarket.shop.core.entities.Fridage;
+import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.sales.action.SalesAction;

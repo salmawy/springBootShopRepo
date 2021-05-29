@@ -7,7 +7,7 @@ import java.util.Map;
 import org.hibernate.exception.DataException;
 
 import com.gomalmarket.shop.core.JPAOrderBy;
-import com.gomalmarket.shop.core.entities.Season;
+import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;

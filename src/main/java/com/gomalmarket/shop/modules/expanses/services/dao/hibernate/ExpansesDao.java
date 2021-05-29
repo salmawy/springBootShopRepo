@@ -9,12 +9,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
-import org.hibernate.Session;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import com.gomalmarket.shop.core.entities.SafeOfDay;
+import com.gomalmarket.shop.core.entities.safe.SafeOfDay;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.expanses.enums.SafeTypeEnum;
@@ -365,44 +364,6 @@ public class ExpansesDao  implements  IExpansesDao{
 
 	
 
-	@Override
-	 public SafeOfDay getParentSafeOfDay(Date date) throws EmptyResultSetException, DataBaseException {
-		 
-
-			
-		  try { 
-			
-
-		  
-		  String query = "from  SafeOfDay  s "
-		  		+ "	where  "
-		  		+ " to_char(s.dayDate ,'dd/MM/YYYY') = (select max s1.dayDate from SafeOfDay where  s1.dayDate < :date_P  ) " ;							
-
-		  query += " order by s.dayDate  desc";
-			
-		  
-		  Query queryList = entityManger.createQuery(query);
-		  queryList.setParameter ("date_P", date,TemporalType.DATE);
- 
-		  List<Object> result =	 queryList.getResultList();
-		  
-		  if(result.size() == 0) {
-			  throw new  EmptyResultSetException("error.emptyRS,SafeOfDay"); }
-		  
-		  if(result.size() > 0) 
-		  {return (SafeOfDay) result.get(0);}
-		 } 
-		  catch(DataAccessException e) { throw new
-		  DataBaseException("error.dataBase.query,SafeOfDay ,"+e.getMessage()  );
-		  }
-		  finally { }
-		  
-		 
-		return null;
-		 
-		 
-		 
-	 } 
 
 	
 	

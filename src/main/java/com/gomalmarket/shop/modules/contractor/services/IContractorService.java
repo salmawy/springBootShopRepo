@@ -3,7 +3,7 @@ package com.gomalmarket.shop.modules.contractor.services;
 import java.util.Date;
 import java.util.List;
 
-import com.gomalmarket.shop.core.entities.Season;
+import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;

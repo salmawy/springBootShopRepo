@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.config.ShopAppContext;
-import com.gomalmarket.shop.core.entities.Contractor;
-import com.gomalmarket.shop.core.entities.ContractorAccount;
-import com.gomalmarket.shop.core.entities.ContractorAccountDetail;
-import com.gomalmarket.shop.core.entities.OutcomeType;
-import com.gomalmarket.shop.core.entities.Season;
+import com.gomalmarket.shop.core.entities.basic.Season;
+import com.gomalmarket.shop.core.entities.contractor.Contractor;
+import com.gomalmarket.shop.core.entities.contractor.ContractorAccount;
+import com.gomalmarket.shop.core.entities.contractor.ContractorAccountDetail;
+import com.gomalmarket.shop.core.entities.expanses.OutcomeType;
 import com.gomalmarket.shop.core.entities.repos.RepoSupplier;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;

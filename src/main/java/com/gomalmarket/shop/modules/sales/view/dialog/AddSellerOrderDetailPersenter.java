@@ -13,9 +13,9 @@ import org.controlsfx.glyphfont.FontAwesome;
 
 import com.gomalmarket.shop.core.Enum.ProductTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
-import com.gomalmarket.shop.core.entities.CustomerOrder;
-import com.gomalmarket.shop.core.entities.Product;
-import com.gomalmarket.shop.core.entities.Store;
+import com.gomalmarket.shop.core.entities.basic.Product;
+import com.gomalmarket.shop.core.entities.basic.Store;
+import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;

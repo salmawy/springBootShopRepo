@@ -24,14 +24,14 @@ import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTableActions;
-import com.gomalmarket.shop.core.entities.Contractor;
-import com.gomalmarket.shop.core.entities.Customer;
-import com.gomalmarket.shop.core.entities.Income;
-import com.gomalmarket.shop.core.entities.IncomeDetail;
-import com.gomalmarket.shop.core.entities.Loaner;
-import com.gomalmarket.shop.core.entities.Outcome;
-import com.gomalmarket.shop.core.entities.OutcomeDetail;
-import com.gomalmarket.shop.core.entities.Seller;
+import com.gomalmarket.shop.core.entities.contractor.Contractor;
+import com.gomalmarket.shop.core.entities.customers.Customer;
+import com.gomalmarket.shop.core.entities.expanses.Income;
+import com.gomalmarket.shop.core.entities.expanses.IncomeDetail;
+import com.gomalmarket.shop.core.entities.expanses.Outcome;
+import com.gomalmarket.shop.core.entities.expanses.OutcomeDetail;
+import com.gomalmarket.shop.core.entities.sellers.Seller;
+import com.gomalmarket.shop.core.entities.shopLoan.Loaner;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
@@ -476,16 +476,16 @@ private List<Column> prepareIncomeTableColumns(){
 			
 		
 			String name="";
-			if (detail.getType().getId()==IncomeTypeEnum.INTST_PAY) {
+			if (detail.getTypeId()==IncomeTypeEnum.INTST_PAY.getId()) {
 				Seller seller=(Seller) this.getBaseService().findBean(Seller.class, detail.getSellerId());
 				name=seller.getName();
 			}
-			else if (detail.getType().getId()==IncomeTypeEnum.IN_LOAN||detail.getType().getId()==IncomeTypeEnum.IN_PAY_LOAN)
+			else if (detail.getTypeId()==IncomeTypeEnum.IN_LOAN.getId()||detail.getTypeId()==IncomeTypeEnum.IN_PAY_LOAN.getId())
 			{
 				Loaner loaner=(Loaner) this.getBaseService().findBean(Loaner.class, detail.getSellerId());
 				name=loaner.getName();
 			}
-			else if(detail.getType().getId()==IncomeTypeEnum.CASH) {
+			else if(detail.getTypeId()==IncomeTypeEnum.CASH.getId()) {
 				totalCash+=detail.getAmount();
 
 			continue;
@@ -496,7 +496,7 @@ private List<Column> prepareIncomeTableColumns(){
 			row.setId(detail.getId());
 			row.setName(name);
 			row.setNotes(detail.getNotes());
-			row.setType(detail.getType().getName());
+			row.setType(detail.getTypeName());
 			tableData.add(row);
 		}
 		
@@ -677,20 +677,20 @@ private List<Column> prepareIncomeTableColumns(){
 
 			row.setReport(detail.getNotes());
 			row.setOrderTage(orderTag);
-			row.setType(detail.getType().getNameAr());
+			row.setType(detail.getTypeName());
 			row.setFridageName(detail.getFridage().getName());
 			totalAmount+=detail.getAmount();
 			String name=" ";
 			if(detail.getCustomerId()!=-1) {
 				
-	 if(detail.getType().getId()==OutcomeTypeEnum.K_L||detail.getType().getId()==OutcomeTypeEnum.K_V||detail.getType().getId()==OutcomeTypeEnum.K_S)
+	 if(detail.getTypeId()==OutcomeTypeEnum.K_L.getId()||detail.getTypeId()==OutcomeTypeEnum.K_V.getId()||detail.getTypeId()==OutcomeTypeEnum.K_S.getId())
 
 	 {
 		    Contractor contractor=(Contractor) this.getBaseService().getBean(Contractor.class, detail.getCustomerId());
 			name=contractor.getName();
 		 
 		 
-     } else if (detail.getType().getId()==OutcomeTypeEnum.OUT_LOAN||detail.getType().getId()==OutcomeTypeEnum.OUT_PAY_LOAN) {
+     } else if (detail.getTypeId()==OutcomeTypeEnum.OUT_LOAN.getId()||detail.getTypeId()==OutcomeTypeEnum.OUT_PAY_LOAN.getId()) {
 				
     	     Loaner loaner=(Loaner) this.getBaseService().getBean(Loaner.class, detail.getCustomerId());
 			name=loaner.getName();

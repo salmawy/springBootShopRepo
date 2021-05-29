@@ -1,7 +1,8 @@
 package com.gomalmarket.shop.core.entities.repos;
 
-import com.gomalmarket.shop.core.entities.Outcome;
-import com.gomalmarket.shop.core.entities.PurchasedCustomerInst;
+import com.gomalmarket.shop.core.entities.customers.PurchasedCustomerInst;
+import com.gomalmarket.shop.core.entities.expanses.Outcome;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

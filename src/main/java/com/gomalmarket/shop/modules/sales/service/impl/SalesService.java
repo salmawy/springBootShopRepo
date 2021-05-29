@@ -6,35 +6,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.logging.Level;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
-import com.gomalmarket.shop.core.Enum.SafeTransactionTypeEnum;
 import com.gomalmarket.shop.core.Enum.SellerTypeEnum;
 import com.gomalmarket.shop.core.config.ShopAppContext;
-import com.gomalmarket.shop.core.entities.CustomerOrder;
-import com.gomalmarket.shop.core.entities.Fridage;
-import com.gomalmarket.shop.core.entities.Income;
-import com.gomalmarket.shop.core.entities.IncomeDetail;
-import com.gomalmarket.shop.core.entities.IncomeType;
-import com.gomalmarket.shop.core.entities.Installment;
-import com.gomalmarket.shop.core.entities.SafeOfDay;
-import com.gomalmarket.shop.core.entities.Season;
-import com.gomalmarket.shop.core.entities.Seller;
-import com.gomalmarket.shop.core.entities.SellerLoanBag;
-import com.gomalmarket.shop.core.entities.SellerOrder;
-import com.gomalmarket.shop.core.entities.SellerOrderWeight;
+import com.gomalmarket.shop.core.entities.basic.Fridage;
+import com.gomalmarket.shop.core.entities.basic.Season;
+import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
+import com.gomalmarket.shop.core.entities.expanses.IncomeDetail;
+import com.gomalmarket.shop.core.entities.expanses.Installment;
+import com.gomalmarket.shop.core.entities.sellers.Seller;
+import com.gomalmarket.shop.core.entities.sellers.SellerLoanBag;
+import com.gomalmarket.shop.core.entities.sellers.SellerOrder;
+import com.gomalmarket.shop.core.entities.sellers.SellerOrderWeight;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
@@ -124,8 +112,7 @@ public class SalesService implements ISalesService {
 
 	public void saveSellerOrder(Seller seller, SellerOrder sellerOrder, double paidAmount) throws Exception {
 
-		this.initEntityDictionary();
-		seller = saveSeller(seller);
+ 		seller = saveSeller(seller);
 
 		switch (seller.getTypeId()) {
 
@@ -134,22 +121,9 @@ public class SalesService implements ISalesService {
 			sellerOrder.setSeller(seller);
 
 			this.getBaseService().addBean(sellerOrder);
-
-			IncomeDetail incomeDetail = new IncomeDetail();
-			incomeDetail.setAmount(paidAmount);
-			incomeDetail.setFridage(sellerOrder.getFridage());
-			incomeDetail.setResipeintName(shopAppContext.getCurrentUser().getUsername());
-			incomeDetail.setSellerId(seller.getId());
 			
- 			
-			
-			
-			incomeDetail.setTypeId(IncomeTypeEnum.CASH.getId());
-
-			incomeDetail.setSellerOrderId(sellerOrder.getId());
-
-			saveIncomeDetail(incomeDetail, sellerOrder.getOrderDate());
-
+			expansesServices.incomeTransaction(sellerOrder.getOrderDate(), sellerOrder.getTotalCost(), "", IncomeTypeEnum.CASH, seller.getId(), sellerOrder.getId(), sellerOrder.getFridage(), sellerOrder.getSeason());
+ 
 			break;
 		case SellerTypeEnum.permenant:
 			int bagId = saveAndUpdateSellerLoanBag(seller, sellerOrder.getSeason(), sellerOrder.getTotalCost(),
@@ -159,7 +133,7 @@ public class SalesService implements ISalesService {
 			this.getBaseService().addBean(sellerOrder);
 
 			if (paidAmount > 0)
-				saveSellerInstalment(seller.getId(), sellerOrder.getId(), bagId, sellerOrder.getFridage(),
+				saveSellerInstalment(seller.getId(), sellerOrder.getId(), bagId, sellerOrder.getFridage(),sellerOrder.getSeason(),
 						paidAmount, sellerOrder.getOrderDate(), "");
 			break;
 		}
@@ -200,7 +174,7 @@ public class SalesService implements ISalesService {
 		// =========================================================================================================================================
 		else if (newSeller.getTypeId() == oldOrder.getSeller().getTypeId()
 				&& newSeller.getTypeId() == SellerTypeEnum.permenant) {
-			initEntityDictionary();
+			 
 			editPermenantSellerOrder(newSeller, newOrder, paidAmount, oldOrder, seasonId);
 		}
 
@@ -209,26 +183,23 @@ public class SalesService implements ISalesService {
 	public void editCashSellerOrder(Seller seller, SellerOrder newOrder, double paidAmount, SellerOrder oldOrder)
 			throws Exception {
 		Map<String,Object> map=new HashMap<String, Object>();
-		this.getExpansesServices().initEntityDictionary();
-		IncomeDetail oldPaidAmountDetail=null;
+ 		IncomeDetail detail=null;
 		 Double oldPaidAmount = 0.0;
 
 		try {
 		    map=new HashMap<String, Object>();
 			map.put("sellerOrderId", oldOrder);
-			  oldPaidAmountDetail=	(IncomeDetail) this.getBaseService().findBean(IncomeDetail.class, map);
-			  oldPaidAmount = oldPaidAmountDetail.getAmount();
+			  detail=	(IncomeDetail) this.getBaseService().findBean(IncomeDetail.class, map);
+			  oldPaidAmount = detail.getAmount();
 
 		}catch (EmptyResultSetException e) {
 			// TODO: handle exception
 		}
  		if (oldPaidAmount!=paidAmount) {
  			 
- 				double amount=Math.abs(oldPaidAmountDetail.getAmount()-paidAmount);
- 	 			//add or subtract is relative to safe 
- 	 			int operationType=(paidAmount<oldPaidAmountDetail.getAmount() )?SafeTransactionTypeEnum.add:SafeTransactionTypeEnum.subtract;
+  	 			//add or subtract is relative to safe 
+  	 			this.getExpansesServices().editIncomeTransaction(newOrder.getOrderDate(), newOrder.getTotalCost(), "", IncomeTypeEnum.CASH, newOrder.getSeller().getId(), newOrder.getId(), newOrder.getFridage(), newOrder.getSeason(), detail.getId());
  				
- 				this.getExpansesServices().changeIncomeDetailAmount(oldPaidAmountDetail, amount, operationType);
  		 
  		}
 		 
@@ -244,7 +215,7 @@ public class SalesService implements ISalesService {
 	public void editPermenantSellerOrder(Seller seller, SellerOrder newOrder, double paidAmount, SellerOrder oldOrder,
 			int seasonId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		this.getExpansesServices().initEntityDictionary();
+		
 		IncomeDetail oldPaidAmountDetail = null;
 		Double oldPaidAmount = 0.0;
 
@@ -274,7 +245,7 @@ public class SalesService implements ISalesService {
 		newOrder.setSeller(seller);
 		seller=seller_;
 
-//========================================handel loanBag changed case============================================================================	
+//========================================handle loanBag changed case============================================================================	
 		int newLoanBagId = 0;
 
 		clearOrderFromSellerLoanBag(oldOrder.getSeller(), oldOrder.getSeason().getId(), oldOrder.getTotalCost(),
@@ -319,12 +290,8 @@ public class SalesService implements ISalesService {
 				oldPaidAmountDetail.setSellerId(seller.getId());
 				oldPaidAmountDetail.setSellerOrderId(newOrder.getId());
 			}
-			double amount = Math.abs(oldPaidAmountDetail.getAmount() - paidAmount);
-			// add or subtract is relative to safe
-			int operationType = (paidAmount < oldPaidAmountDetail.getAmount()) ? SafeTransactionTypeEnum.subtract
-					: SafeTransactionTypeEnum.add;
-
-			this.getExpansesServices().changeIncomeDetailAmount(oldPaidAmountDetail, amount, operationType);
+		 
+ 	 			this.getExpansesServices().editIncomeTransaction(newOrder.getOrderDate(), newOrder.getTotalCost(), "", IncomeTypeEnum.INTST_PAY, newOrder.getSeller().getId(), newOrder.getId(), newOrder.getFridage(), newOrder.getSeason(), oldPaidAmountDetail.getId());
 
 		}
 
@@ -339,7 +306,7 @@ public class SalesService implements ISalesService {
 
 		else if (oldPaidAmountDetail == null && paidAmount > 0.0) {
 
-			saveSellerInstalment(seller.getId(), oldOrder.getId(), newLoanBagId, oldOrder.getFridage(),
+			saveSellerInstalment(seller.getId(), oldOrder.getId(), newLoanBagId, oldOrder.getFridage(),newOrder.getSeason(),
 					paidAmount, oldOrder.getOrderDate(), "");
 
 		}
@@ -428,56 +395,8 @@ public class SalesService implements ISalesService {
 
 	}
 
-	public void saveIncomeDetail(IncomeDetail incomeDetail, Date date) throws DataBaseException {
-
-		Income income = findIncome(date);
-		incomeDetail.setIncome(income);
-		incomeDetail.setResipeintName(shopAppContext.getCurrentUser().getUsername());
-
-		income.setTotalAmount(income.getTotalAmount() + incomeDetail.getAmount());
-		this.getBaseService().addEditBean(incomeDetail);
-
-		this.getBaseService().addEditBean(income);
-
-	}
-
-	public Income findIncome(Date date) {
-
-		Income income = new Income();
-		income.setIncomeDate(date);
-		income.setTotalAmount(0.0);
-
-		try {
-
-			income = (Income) this.getSalesDao().getIncome(date).get(0);
-
-			return income;
-		} catch (DataBaseException | EmptyResultSetException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-			log.info( "error.emptyRS incomeDate of date " + date.toString());
-		}
-
-		try {
-			this.getBaseService().addBean(income);
-		} catch (DataBaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return income;
-
-	}
-
-	public Income updateincome(int id, double amount) throws DataBaseException, InvalidReferenceException {
-
-		Income income = (Income) this.getBaseService().findBean(Income.class, id);
-		income.setTotalAmount(income.getTotalAmount() + amount);
-
-		return income;
-
-	}
-
+ 
+ 
 	public SellerLoanBag findSellerLoanBag(Seller seller, int seasonId) throws DataBaseException {
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("sellerId", seller.getId());
@@ -507,7 +426,7 @@ public class SalesService implements ISalesService {
 	}
 
 	//@Override
-	public void saveSellerInstalment(int sellerId, int sellerOrderId, int sellerLoanBagId, Fridage fridage, double amount,
+	public void saveSellerInstalment(int sellerId, int sellerOrderId, int sellerLoanBagId, Fridage fridage,Season season, double amount,
 			Date date, String notes) throws DataBaseException, InvalidReferenceException {
 
 		Installment installment = new Installment();
@@ -520,25 +439,10 @@ public class SalesService implements ISalesService {
 
 		}
 		this.getBaseService().addBean(installment);
-		IncomeDetail incomeDetail = new IncomeDetail();
-		incomeDetail.setAmount(amount);
-		incomeDetail.setFridage(fridage);
-		incomeDetail.setResipeintName("");
-		incomeDetail.setNotes(notes);
-		incomeDetail.setSellerId(sellerId);
 		
+		expansesServices.incomeTransaction(date, amount, notes, IncomeTypeEnum.INTST_PAY, sellerId, sellerOrderId,installment.getId(), fridage, season);
+
  
-		
-		
-		
-		incomeDetail.setTypeId(IncomeTypeEnum.INTST_PAY.getId());
- 		incomeDetail.setInstallmentId(installment.getId());
-		if (sellerOrderId != 0) {
-			incomeDetail.setSellerOrderId(sellerOrderId);
-
-		}
-		saveIncomeDetail(incomeDetail, date);
-
 	}
 
 	private void deleteOldSellerOrder(SellerOrder order) throws DataBaseException {
@@ -756,19 +660,7 @@ public class SalesService implements ISalesService {
 
 	 
 
-	@Override
-public void initEntityDictionary() {
-	
-	try {
-		entityDictionary=new HashMap();
-		
-	}catch (Exception e) {
-		// TODO: handle exception
-	}
-	
-	
-}
-	
+ 
 	
 	@Override
 	public List getSellerOrderWeights(int  sellerOrderId) throws DataBaseException, EmptyResultSetException {

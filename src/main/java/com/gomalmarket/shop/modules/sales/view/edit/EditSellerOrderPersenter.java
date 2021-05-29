@@ -20,17 +20,16 @@ import java.util.logging.Logger;
 
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.springframework.context.ApplicationContext;
 
 import com.gomalmarket.shop.core.Enum.SellerTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
-import com.gomalmarket.shop.core.entities.CustomerOrder;
-import com.gomalmarket.shop.core.entities.IncomeDetail;
-import com.gomalmarket.shop.core.entities.Seller;
-import com.gomalmarket.shop.core.entities.SellerOrder;
-import com.gomalmarket.shop.core.entities.SellerOrderWeight;
+import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
+import com.gomalmarket.shop.core.entities.expanses.IncomeDetail;
+import com.gomalmarket.shop.core.entities.sellers.Seller;
+import com.gomalmarket.shop.core.entities.sellers.SellerOrder;
+import com.gomalmarket.shop.core.entities.sellers.SellerOrderWeight;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;

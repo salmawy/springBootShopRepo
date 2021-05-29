@@ -29,7 +29,7 @@ import com.gomalmarket.shop.core.Enum.ContractorTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
-import com.gomalmarket.shop.core.entities.ContractorAccountDetail;
+import com.gomalmarket.shop.core.entities.contractor.ContractorAccountDetail;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.contractor.action.ContractorAction;

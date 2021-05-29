@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gomalmarket.shop.core.JPAOrderBy;
 import com.gomalmarket.shop.core.Enum.JPAOrderByEnum;
-import com.gomalmarket.shop.core.entities.Season;
+import com.gomalmarket.shop.core.entities.basic.Season;
 
 /**
  * @author YeHia

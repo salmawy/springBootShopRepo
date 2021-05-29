@@ -3,8 +3,6 @@ package com.gomalmarket.shop.core.entities.repos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.gomalmarket.shop.core.entities.SeasonSafe;
-
 import lombok.Getter;
 
 @Component
@@ -26,8 +24,10 @@ public class RepoSupplier {
 	CustomerTypeRepo customerTypeRepo;
 	@Autowired
 	 FridageRepo fridageRepo;
-	@Autowired
-	IncLoanRepo incLoanRepo;
+	
+	//@Autowired
+	//IncLoanRepo incLoanRepo;
+	
 	@Autowired
 	IncomeDetailRepo incomeDetailRepo;
 	@Autowired
@@ -36,18 +36,22 @@ public class RepoSupplier {
 	IncomeTypeRepo incomeTypeRepo;
 	@Autowired
 	InstallmentRepo installmentRepo;
-	@Autowired
-	LoanAccountRepo loanAccountRepo;
+	//@Autowired
+	//LoanAccountRepo loanAccountRepo;
 	@Autowired
 	LoanerRepo loanerRepo;
-	@Autowired
-	LoanPayingRepo loanPayingRepo;
+	//@Autowired
+	//LoanPayingRepo loanPayingRepo;
+	
 	@Autowired
 	OutcomeDetailRepo outcomeDetailRepo;
-	@Autowired
-	OutcomeRepo outcomeRepo;
-	@Autowired 
-	OutcomeTypeRepo outcomeTypeRepo;
+	
+	//@Autowired
+	//OutcomeRepo outcomeRepo;
+	
+	
+	//@Autowired 
+	//OutcomeTypeRepo outcomeTypeRepo;
 	@Autowired
 	ProductRepo productRepo;
 	@Autowired
@@ -73,8 +77,8 @@ public class RepoSupplier {
 	@Autowired
 	VehicleTypeRepo vehicleTypeRepo;
 	
-	@Autowired
-	SafeOfDayRepo safeOfDayRepo;
+	//@Autowired
+	//SafeOfDayRepo safeOfDayRepo;
 	
 
 }

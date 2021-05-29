@@ -17,18 +17,15 @@ import java.util.logging.Logger;
 
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.springframework.context.ApplicationContext;
 
-import com.gomalmarket.shop.core.Enum.CustomerTypeEnum;
 import com.gomalmarket.shop.core.Enum.ProductTypeEnum;
-import com.gomalmarket.shop.core.Enum.VechileTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
-import com.gomalmarket.shop.core.entities.Customer;
-import com.gomalmarket.shop.core.entities.CustomerOrder;
-import com.gomalmarket.shop.core.entities.CustomerType;
-import com.gomalmarket.shop.core.entities.Product;
-import com.gomalmarket.shop.core.entities.Store;
-import com.gomalmarket.shop.core.entities.VehicleType;
+import com.gomalmarket.shop.core.entities.basic.Product;
+import com.gomalmarket.shop.core.entities.basic.Store;
+import com.gomalmarket.shop.core.entities.customers.Customer;
+import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
+import com.gomalmarket.shop.core.entities.customers.CustomerType;
+import com.gomalmarket.shop.core.entities.customers.VehicleType;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;

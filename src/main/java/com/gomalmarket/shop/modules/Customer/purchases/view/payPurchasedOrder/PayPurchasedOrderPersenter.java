@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
-import com.gomalmarket.shop.core.entities.Customer;
-import com.gomalmarket.shop.core.entities.Fridage;
-import com.gomalmarket.shop.core.entities.Season;
+import com.gomalmarket.shop.core.entities.basic.Fridage;
+import com.gomalmarket.shop.core.entities.basic.Season;
+import com.gomalmarket.shop.core.entities.customers.Customer;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.modules.Customer.action.CustomerBaseAction;

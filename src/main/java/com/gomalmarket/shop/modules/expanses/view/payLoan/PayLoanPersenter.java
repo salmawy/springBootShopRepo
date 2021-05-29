@@ -8,12 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.controlsfx.glyphfont.FontAwesome;
-import org.springframework.context.ApplicationContext;
 
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
-import com.gomalmarket.shop.core.entities.LoanAccount;
-import com.gomalmarket.shop.core.exception.DataBaseException;
-import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.expanses.action.ExpansesAction;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -233,29 +229,23 @@ private  boolean validateForm() {
 
            }
         
-        LoanAccount account=null;
-		try {
-			account = this.getExpansesServices().getLoanerAccount(name);
-		} catch (DataBaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (EmptyResultSetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+       // LoanAccount account=null;
+	//	account = null;//this.getExpansesServices().getLoanerAccount(name);
 
          if (safaBalance<Double.parseDouble(amount)) {
         
         	snackBar.show(this.getMessage("msg.err.notEnough.safeBalance"), 1000);
             return false;
         }
-       if (account == null) {
-    	   
-    	snackBar.show(this.getMessage("msg.err.notfound.name"), 1000);
-
-          return false;
-
-       }
+		/*
+		 * if (account == null) {
+		 * 
+		 * snackBar.show(this.getMessage("msg.err.notfound.name"), 1000);
+		 * 
+		 * return false;
+		 * 
+		 * }
+		 
        if (account.getDueAmount() > 0 && account.getType().equals("OUT_LOAN")) {
     	snackBar.show(this.getMessage("msg.err.amountShouldBecollestedFromLoaner")+" : "+account.getDueAmount(),1000);
 
@@ -268,7 +258,7 @@ private  boolean validateForm() {
            return false;
        }
    
-    	
+    	*/
     	return true;
     	
     }

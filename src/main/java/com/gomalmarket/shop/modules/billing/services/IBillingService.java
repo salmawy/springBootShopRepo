@@ -2,7 +2,7 @@ package com.gomalmarket.shop.modules.billing.services;
 
 import java.util.List;
 
-import com.gomalmarket.shop.core.entities.CustomerOrder;
+import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;

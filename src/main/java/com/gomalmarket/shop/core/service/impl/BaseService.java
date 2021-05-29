@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 
 import com.gomalmarket.shop.core.JPAOrderBy;
 import com.gomalmarket.shop.core.config.ShopAppContext;
-import com.gomalmarket.shop.core.entities.BaseEntity;
-import com.gomalmarket.shop.core.entities.Season;
-import com.gomalmarket.shop.core.entities.SellerOrderWeight;
+import com.gomalmarket.shop.core.entities.basic.BaseEntity;
+import com.gomalmarket.shop.core.entities.basic.Season;
+import com.gomalmarket.shop.core.entities.sellers.SellerOrderWeight;
 
 //import com.sps.passport.bean.ShipVisitSummeryNationality;
 

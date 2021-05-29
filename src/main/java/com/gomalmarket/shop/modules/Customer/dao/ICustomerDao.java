@@ -3,8 +3,8 @@ package com.gomalmarket.shop.modules.Customer.dao;
 import java.util.Date;
 import java.util.List;
 
-import com.gomalmarket.shop.core.entities.Fridage;
-import com.gomalmarket.shop.core.entities.Season;
+import com.gomalmarket.shop.core.entities.basic.Fridage;
+import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 

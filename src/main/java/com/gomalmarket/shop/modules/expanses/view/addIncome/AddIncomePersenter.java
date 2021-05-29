@@ -5,25 +5,18 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.springframework.context.ApplicationContext;
 
 import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
-import com.gomalmarket.shop.core.Enum.LoanTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
-import com.gomalmarket.shop.core.entities.Contractor;
-import com.gomalmarket.shop.core.entities.Income;
-import com.gomalmarket.shop.core.entities.IncomeDetail;
-import com.gomalmarket.shop.core.entities.LoanAccount;
-import com.gomalmarket.shop.core.exception.DataBaseException;
-import com.gomalmarket.shop.core.exception.EmptyResultSetException;
+import com.gomalmarket.shop.core.entities.contractor.Contractor;
+import com.gomalmarket.shop.core.entities.expanses.Income;
+import com.gomalmarket.shop.core.entities.expanses.IncomeDetail;
 import com.gomalmarket.shop.modules.expanses.action.ExpansesAction;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;

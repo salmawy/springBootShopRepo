@@ -2,9 +2,9 @@ package com.gomalmarket.shop.modules.sales.view.beans;
 
 import org.exolab.castor.dsml.Producer;
 
-import com.gomalmarket.shop.core.entities.CustomerOrder;
-import com.gomalmarket.shop.core.entities.Product;
-import com.gomalmarket.shop.core.entities.SellerOrderWeight;
+import com.gomalmarket.shop.core.entities.basic.Product;
+import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
+import com.gomalmarket.shop.core.entities.sellers.SellerOrderWeight;
 
 import lombok.Getter;
 import lombok.Setter;

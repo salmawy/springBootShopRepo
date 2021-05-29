@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -18,9 +17,6 @@ import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTableActions;
 import com.gomalmarket.shop.core.UIComponents.customTable.PredicatableTable;
-import com.gomalmarket.shop.core.entities.ShopLoan;
-import com.gomalmarket.shop.core.entities.LoanAccount;
-import com.gomalmarket.shop.core.entities.LoanPaying;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.expanses.action.ExpansesAction;
@@ -167,103 +163,79 @@ private void init() {
 
 
 
-private void loadInstallments(int id,String type) {
-	
-	installmentsCustomTable.getTable().getItems().clear();
-	
-	try {
-		
-		List installments=this.getExpansesServices().getLoanerInstalments(id, type);
-	   List data=new ArrayList();
-		for (Iterator iterator = installments.iterator(); iterator.hasNext();) {
-			LoanPaying paying = (LoanPaying) iterator.next();
-			InstalmelmentVB row=new InstalmelmentVB();
-			row.setId(paying.getId());
-			row.setAmount(paying.getPaidAmunt());
-			row.setInstDate(InstalmelmentVB.sdf.format(paying.getPayingDate()));
-			row.setNotes(paying.getNotes());
-			
-		
-			data.add(row);
-			
-		}
-	this.installmentsCustomTable.loadTableData(data);
-	
-	
-	} catch (EmptyResultSetException | DataBaseException e) {
-		logger.warning("not instalments Found for loanerID = "+id);
-	}
-	
-	
-	
-}
+	private void loadInstallments(int id, String type) {
+		/*
+		 * 
+		 * installmentsCustomTable.getTable().getItems().clear();
+		 * 
+		 * List installments=null;//this.getExpansesServices().getLoanerInstalments(id,
+		 * type); List data=new ArrayList(); for (Iterator iterator =
+		 * installments.iterator(); iterator.hasNext();) { LoanPaying paying =
+		 * (LoanPaying) iterator.next(); InstalmelmentVB row=new InstalmelmentVB();
+		 * row.setId(paying.getId()); row.setAmount(paying.getPaidAmunt());
+		 * row.setInstDate(InstalmelmentVB.sdf.format(paying.getPayingDate()));
+		 * row.setNotes(paying.getNotes());
+		 * 
+		 * 
+		 * data.add(row);
+		 * 
+		 * } this.installmentsCustomTable.loadTableData(data);
+		 * 
+		 * 
+		 * 
+		 */}
 
 
-private void loadDebts(int id,String type) {
-	
-	debtsAmountsCustomtable.getTable().getItems().clear();
-	
-	try {
-		
-		List installments=this.getExpansesServices().getLoanerDebts(id, type);
-	   List data=new ArrayList();
-		for (Iterator iterator = installments.iterator(); iterator.hasNext();) {
-			ShopLoan installment = (ShopLoan) iterator.next();
-			InstalmelmentVB row=new InstalmelmentVB();
-			row.setId(installment.getId());
-			row.setAmount(installment.getAmount());
-			row.setInstDate(InstalmelmentVB.sdf.format(installment.getLoanDate()));
-			row.setNotes(installment.getNotes());
-			
-		
-			data.add(row);
-			
-		}
-	this.debtsAmountsCustomtable.loadTableData(data);
-	
-	
-	} catch (EmptyResultSetException | DataBaseException e) {
-		logger.warning("not debts found  Found for loanerId = "+id);
-	}
-	
-	
-	
-}
+	private void loadDebts(int id, String type) {
+		/*
+		 * 
+		 * debtsAmountsCustomtable.getTable().getItems().clear();
+		 * 
+		 * List installments=null;//this.getExpansesServices().getLoanerDebts(id, type);
+		 * List data=new ArrayList(); for (Iterator iterator = installments.iterator();
+		 * iterator.hasNext();) { ShopLoan installment = (ShopLoan) iterator.next();
+		 * InstalmelmentVB row=new InstalmelmentVB(); row.setId(installment.getId());
+		 * row.setAmount(installment.getAmount());
+		 * row.setInstDate(InstalmelmentVB.sdf.format(installment.getLoanDate()));
+		 * row.setNotes(installment.getNotes());
+		 * 
+		 * 
+		 * data.add(row);
+		 * 
+		 * } this.debtsAmountsCustomtable.loadTableData(data);
+		 * 
+		 * 
+		 * 
+		 */}
 
-private void loadLoanerNames(String type) {
-	
-	//loanersCustomTable.getTable().getRoot().getChildren().clear();
-	
-	Map<String,Object> map=new HashMap<String, Object>();
-
-	map.put("type", type);
-	map.put("finished", 0);
-
-    try {
-		List data=(List) this.getBaseService().findAllBeans(LoanAccount.class, map,null);
-		List tableData=new ArrayList();
-		
-		for (Iterator iterator = data.iterator(); iterator.hasNext();) {
-			LoanAccount account = (LoanAccount) iterator.next();
-			LoanersNameVB row=new LoanersNameVB();
-			row.setAmount(account.getDueAmount());
-			row.setName(account.getLoaner().getName());
-			row.setId(account.getLoaner().getId());
-			tableData.add(row);
-		}
-		
-		this.loanersCustomTable.loadTableData(tableData);
-		
-	} catch (DataBaseException | EmptyResultSetException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} 
-	
-	
-	
-	
-	
-}
+	private void loadLoanerNames(String type) {
+		/*
+		 * 
+		 * //loanersCustomTable.getTable().getRoot().getChildren().clear();
+		 * 
+		 * Map<String,Object> map=new HashMap<String, Object>();
+		 * 
+		 * map.put("type", type); map.put("finished", 0);
+		 * 
+		 * try { List data=(List) this.getBaseService().findAllBeans(LoanAccount.class,
+		 * map,null); List tableData=new ArrayList();
+		 * 
+		 * for (Iterator iterator = data.iterator(); iterator.hasNext();) { LoanAccount
+		 * account = (LoanAccount) iterator.next(); LoanersNameVB row=new
+		 * LoanersNameVB(); row.setAmount(account.getDueAmount());
+		 * row.setName(account.getLoaner().getName());
+		 * row.setId(account.getLoaner().getId()); tableData.add(row); }
+		 * 
+		 * this.loanersCustomTable.loadTableData(tableData);
+		 * 
+		 * } catch (DataBaseException | EmptyResultSetException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 */}
 
 
 private void fitToAnchorePane(Node node) {

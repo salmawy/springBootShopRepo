@@ -11,10 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.controlsfx.glyphfont.FontAwesome;
-import org.springframework.context.ApplicationContext;
 
-import com.gomalmarket.shop.core.entities.Fridage;
-import com.gomalmarket.shop.core.entities.SellerLoanBag;
+import com.gomalmarket.shop.core.entities.basic.Fridage;
+import com.gomalmarket.shop.core.entities.sellers.SellerLoanBag;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.modules.sales.action.SalesAction;
@@ -267,7 +266,7 @@ private  boolean validateForm() throws DataBaseException {
 			Fridage fridage= getAppContext().getFridage();
 		 
 				try {
-					this.getSalesService().saveSellerInstalment(sellerId, 0, loanBag.getId(), fridage, amount, date, notes);
+					this.getSalesService().saveSellerInstalment(sellerId, 0, loanBag.getId(), fridage,getAppContext().getSeason(), amount, date, notes);
 				} catch (InvalidReferenceException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
