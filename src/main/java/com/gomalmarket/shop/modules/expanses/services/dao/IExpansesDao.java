@@ -20,4 +20,9 @@ public interface IExpansesDao {
 			throws EmptyResultSetException, DataBaseException;
 	List getSafeOfDay(Date date) throws EmptyResultSetException, DataBaseException;
  	public double getSafeBalanceOfday(int seasonId,Date date,SafeTypeEnum type) ;
+	 public List getOutcomeDetails(Date outcomeDate) throws EmptyResultSetException, DataBaseException ;
+	 public List getIncomeDetails(Date incomeDate) throws EmptyResultSetException, DataBaseException ;
+	 
+	 public List getOutcomeDetails(int dateId) throws EmptyResultSetException, DataBaseException ;
+	 public List getIncomeDetails(int dateId) throws EmptyResultSetException, DataBaseException ;
 }

@@ -20,17 +20,17 @@ import lombok.Setter;
 @Entity(name = "Income")
 @Setter
 @Getter
-public class Income extends BaseEntity  {
+public class Income   {
 	
  
 	@Id
 	@Column(name ="ID" )
 	private int id ;
-    @Column(name = "AMOUNT")
+    @Column(name = "AMOUNT",columnDefinition = " NUMBER(8) ")
     private Double totalAmount;
 
     @Column(name = "INCOME_DATE")
-    private Date date;
+    private Date incomeDate;
 
     @ManyToOne
     @JoinColumn(name = "SEASON_ID")
@@ -39,11 +39,9 @@ public class Income extends BaseEntity  {
     @Column(name = "SEASON_ID",insertable = false,updatable = false)
     private int seasonId;
     
+    
+   
 	 
     
-    @ManyToOne
-    @JoinColumn(name = "SAFE_ID",nullable = true)
-    private SafeOfDay safe;
-
-
+    
 }

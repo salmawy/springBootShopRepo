@@ -14,7 +14,7 @@ import java.util.Date;
  @Entity(name = "Outcome")
  @Setter
  @Getter
- public class Outcome extends BaseEntity {
+ public class Outcome  {
 	 
 		@Id
 		@Column(name ="ID" )
@@ -26,8 +26,8 @@ import java.util.Date;
      @Column(name = "Outcome_DATE")
      private Date outcomeDate;
 
-     @Column(name = "TOTAL_OUTCOME")
-     private Double totalAmount;
+     @Column(name = "AMOUNT",columnDefinition = " NUMBER(8) ")
+     private Double amount;
 
      @ManyToOne
      @JoinColumn(name = "SEASON_ID")
@@ -37,7 +37,7 @@ import java.util.Date;
      private int seasonId;
      
  
-
+   
 
  	 
 

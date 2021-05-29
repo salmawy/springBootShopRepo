@@ -260,7 +260,7 @@ this.getBaseService().addEditBean(incomeDetail);
 			newBalance -= amount;
 
 		SafeTracing tracing = new SafeTracing();
-		tracing.setSafeOfDay(safeOfDay);
+	//	tracing.setSafeOfDay(safeOfDay);
 		tracing.setAmount(amount);
 		tracing.setAfterAmount(newBalance);
 		tracing.setBeforAmount(safeOfDay.getBalance());
@@ -300,6 +300,30 @@ this.getBaseService().addEditBean(incomeDetail);
 
 			log.info(this.getClass().getName() + "=>delete tranasction completed succfully");
 	
+	}
+
+	@Override
+	public List getOutcomeDetails(Date outcomeDate) throws EmptyResultSetException, DataBaseException {
+		// TODO Auto-generated method stub
+		return getExpansesDao().getOutcomeDetails(outcomeDate);
+	}
+
+	@Override
+	public List getIncomeDetails(Date incomeDate) throws EmptyResultSetException, DataBaseException {
+		// TODO Auto-generated method stub
+		return getExpansesDao().getIncomeDetails(incomeDate);
+	}
+
+	@Override
+	public List getOutcomeDetails(int dateId) throws EmptyResultSetException, DataBaseException {
+		// TODO Auto-generated method stub
+		return getExpansesDao().getOutcomeDetails(dateId);
+	}
+
+	@Override
+	public List getIncomeDetails(int dateId) throws EmptyResultSetException, DataBaseException {
+		// TODO Auto-generated method stub
+		return getExpansesDao().getIncomeDetails(dateId);
 	}
 
 }

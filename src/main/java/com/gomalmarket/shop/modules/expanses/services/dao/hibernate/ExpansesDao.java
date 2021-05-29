@@ -164,16 +164,9 @@ public class ExpansesDao  implements  IExpansesDao{
 	
 	 
 	 @Override
-	 public List getIncomeDates(int seasonId) throws EmptyResultSetException, DataBaseException {
+	 public List getIncomeDates(int seasonId) throws EmptyResultSetException, DataBaseException { 
 		 
-
-			
-		 
-		  try { 
-			 
-			
-
-		  
+		  try {  
 			String hql="  from Income where season.id="+seasonId+" order by incomeDate desc";
 				
 		  Query queryList = entityManger.createQuery(hql);
@@ -199,7 +192,119 @@ public class ExpansesDao  implements  IExpansesDao{
 		 
 	 } 
 
-	
+	 public List getIncomeDetails(Date incomeDate) throws EmptyResultSetException, DataBaseException { 
+		 
+		  try {  
+			String hql="  from IncomeDetail where to_char(:incomeDate,'YYYYMMDD')=to_char(transactionDate,'YYYYMMDD')  order by transactionDate desc";
+				
+		  Query queryList = entityManger.createQuery(hql);
+		  queryList.setParameter("incomeDate", incomeDate, TemporalType.DATE);
+		  
+		  List<Object> result =	 queryList.getResultList();
+		  
+		  if(result.size() == 0) {
+			  throw new  EmptyResultSetException("error.emptyRS"); }
+		  
+		  if(result.size() > 0) 
+		  {return result;}
+		 } 
+		  catch(DataAccessException e) { throw new
+		  DataBaseException("error.dataBase.query,AgentFinancialStatus,"+e.getMessage()  );
+		  }
+		  finally { }
+		  
+		 
+		return null;
+		 
+		 
+		 
+	 } 
+
+	 public List getOutcomeDetails(Date outcomeDate) throws EmptyResultSetException, DataBaseException { 
+		 
+		  try {  
+			String hql="  from OutcomeDetail where to_char(:outcomeDate,'YYYYMMDD')=to_char(transactionDate,'YYYYMMDD')  order by transactionDate desc";
+				
+		  Query queryList = entityManger.createQuery(hql);
+		  queryList.setParameter("outcomeDate", outcomeDate, TemporalType.DATE);
+		  
+		  List<Object> result =	 queryList.getResultList();
+		  
+		  if(result.size() == 0) {
+			  throw new  EmptyResultSetException("error.emptyRS"); }
+		  
+		  if(result.size() > 0) 
+		  {return result;}
+		 } 
+		  catch(DataAccessException e) { throw new
+		  DataBaseException("error.dataBase.query,AgentFinancialStatus,"+e.getMessage()  );
+		  }
+		  finally { }
+		  
+		 
+		return null;
+		 
+		 
+		 
+	 } 
+	 public List getIncomeDetails(int dateId) throws EmptyResultSetException, DataBaseException { 
+		 
+		  try {  
+			String hql="  from IncomeDetail where  to_char(transactionDate,'YYYYMMDD') like :dateId   order by transactionDate desc";
+				
+		  Query queryList = entityManger.createQuery(hql);
+		  queryList.setParameter("dateId", String.valueOf(dateId));
+		  
+		  List<Object> result =	 queryList.getResultList();
+		  
+		  if(result.size() == 0) {
+			  throw new  EmptyResultSetException("error.emptyRS"); }
+		  
+		  if(result.size() > 0) 
+		  {return result;}
+		 } 
+		  catch(DataAccessException e) { throw new
+		  DataBaseException("error.dataBase.query,AgentFinancialStatus,"+e.getMessage()  );
+		  }
+		  finally { }
+		  
+		 
+		return null;
+		 
+		 
+		 
+	 } 
+
+	 public List getOutcomeDetails(int dateId) throws EmptyResultSetException, DataBaseException { 
+		 
+		  try {  
+			String hql="  from OutcomeDetail where to_char(transactionDate,'YYYYMMDD') like  :dateId    order by transactionDate desc";
+				
+		  Query queryList = entityManger.createQuery(hql);
+		  queryList.setParameter("dateId", String.valueOf(dateId));
+		  
+		  List<Object> result =	 queryList.getResultList();
+		  
+		  if(result.size() == 0) {
+			  throw new  EmptyResultSetException("error.emptyRS"); }
+		  
+		  if(result.size() > 0) 
+		  {return result;}
+		 } 
+		  catch(DataAccessException e) { throw new
+		  DataBaseException("error.dataBase.query,AgentFinancialStatus,"+e.getMessage()  );
+		  }
+		  finally { }
+		  
+		 
+		return null;
+		 
+		 
+		 
+	 } 
+
+	 
+	 
 	 
 	 public List getOutcomeMonthes(int seasonId) throws EmptyResultSetException, DataBaseException {
 		 

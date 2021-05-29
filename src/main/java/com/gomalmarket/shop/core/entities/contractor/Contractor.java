@@ -35,8 +35,7 @@ public class Contractor extends BaseEntity {
 	@Column(name ="PHONE" )
 	private String phone;
 
-	@Column(name ="TYPE_NAME" )
-	private String typeName;
+	 
 
 	@Column(name ="OWNER_ID" )
 	private int ownerId;
@@ -45,6 +44,9 @@ public class Contractor extends BaseEntity {
 	private int typeId;
 	
 	
+	@ManyToOne
+	@JoinColumn(name ="TYPE_ID",insertable = false,updatable = false )
+	private ContractorType type;
 
 	
 

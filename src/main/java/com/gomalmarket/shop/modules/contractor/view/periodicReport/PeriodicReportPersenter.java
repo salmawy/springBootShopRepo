@@ -29,7 +29,7 @@ import com.gomalmarket.shop.core.Enum.ContractorTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
-import com.gomalmarket.shop.core.entities.contractor.ContractorAccountDetail;
+import com.gomalmarket.shop.core.entities.contractor.ContractorTransaction;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.contractor.action.ContractorAction;
@@ -340,10 +340,10 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 		  
 
 					
-					ContractorAccountDetail transaction = (ContractorAccountDetail) iterator.next();
+					ContractorTransaction transaction = (ContractorTransaction) iterator.next();
 					ContractorDataVB viewBean=new ContractorDataVB();
-					viewBean.setDate(ContractorDataVB.sdf.format(transaction.getDetailDate()));
-					viewBean.setName(transaction.getContractorAccount().getContractor().getName());
+					viewBean.setDate(ContractorDataVB.sdf.format(transaction.getTransactionDate()));
+					viewBean.setName(transaction.getContractor().getName());
 
 					viewBean.setId(transaction.getId());
 					viewBean.setAmount(transaction.getAmount());

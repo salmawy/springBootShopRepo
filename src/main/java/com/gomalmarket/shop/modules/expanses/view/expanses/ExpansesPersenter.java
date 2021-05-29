@@ -456,14 +456,13 @@ private List<Column> prepareIncomeTableColumns(){
   }
   
  
-   private void  loadIncomeData(int incomeId) {
+   private void  loadIncomeData(int dateId) {
 		
 
 	   try {
 		
-		   Map<String,Object> map=new HashMap<String, Object>();
-		   map.put("incomeId", incomeId);
-			List data=	this.getBaseService().findAllBeans(IncomeDetail.class, map, null);
+		   
+			List data=	getExpansesServices().getIncomeDetails(dateId);
 	List tableData=new ArrayList();
 	double totalCash=0.0;
 	double totalAmount=0.0;
@@ -567,7 +566,7 @@ private List<Column> prepareIncomeTableColumns(){
 			}
 //-----------------amount --------------------------------------------------------------------------------------------------------
 
-			outcomeDayAmount.put(temp.getId(), temp.getTotalAmount());
+			outcomeDayAmount.put(temp.getId(), temp.getAmount());
 			
 //-----------------days --------------------------------------------------------------------------------------------------------
 			parentKey	=monthSDF.format(temp.getOutcomeDate());
@@ -660,9 +659,8 @@ private List<Column> prepareIncomeTableColumns(){
 		 
 		 
 		 
-		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("outcomeId", outcomeId);
-		List data=	this.getBaseService().findAllBeans(OutcomeDetail.class, map, null);
+	 
+		List data=	this.getExpansesServices().getOutcomeDetails(outcomeId);
 		List tableData=new ArrayList();
 		double totalAmount=0.0;
 		

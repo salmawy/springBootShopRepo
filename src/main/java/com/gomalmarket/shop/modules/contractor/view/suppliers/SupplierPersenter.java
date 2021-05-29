@@ -25,7 +25,7 @@ import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTableActions;
 import com.gomalmarket.shop.core.UIComponents.customTable.PredicatableTable;
 import com.gomalmarket.shop.core.entities.contractor.Contractor;
-import com.gomalmarket.shop.core.entities.contractor.ContractorAccountDetail;
+import com.gomalmarket.shop.core.entities.contractor.ContractorTransaction;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
@@ -438,12 +438,12 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 
 		List order=new ArrayList(Arrays.asList(Order.desc("detailDate")));
  			try {
-			List transactions=	this.getBaseService().findAllBeansWithDepthMapping(ContractorAccountDetail.class, map,order);
+			List transactions=	this.getBaseService().findAllBeansWithDepthMapping(ContractorTransaction.class, map,order);
 		for (Iterator iterator = transactions.iterator(); iterator.hasNext();) {
 			
-			ContractorAccountDetail transaction = (ContractorAccountDetail) iterator.next();
+			ContractorTransaction transaction = (ContractorTransaction) iterator.next();
 			ContractorDataVB viewBean=new ContractorDataVB();
-			viewBean.setDate(ContractorDataVB.sdf.format(transaction.getDetailDate()));
+			viewBean.setDate(ContractorDataVB.sdf.format(transaction.getTransactionDate()));
 			viewBean.setId(transaction.getId());
 			viewBean.setAmount(transaction.getAmount());
 			viewBean.setNotes(transaction.getReport());

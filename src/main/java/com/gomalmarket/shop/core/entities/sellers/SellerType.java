@@ -14,8 +14,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class SellerType  {
-	@GeneratedValue
-	@Id
+ 	@Id
 	@Column(name ="ID" )
 	private int id ;
 	@Column(name = "NAME")

@@ -23,7 +23,13 @@ public interface IExpansesServices {
 	 public List getIncomeDays(String month) throws EmptyResultSetException, DataBaseException ;
 	 public void incomeTransaction(Date date,double amount, String notes, IncomeTypeEnum type, int sellerId, int orderId, Fridage fridage,Season season) throws DataBaseException;
 	 public void incomeTransaction(Date date,double amount, String notes, IncomeTypeEnum type, int sellerId, int orderId, Integer installmentId, Fridage fridage,Season season) throws DataBaseException;
-
+	 public List getOutcomeDetails(Date outcomeDate) throws EmptyResultSetException, DataBaseException ;
+	 public List getIncomeDetails(Date incomeDate) throws EmptyResultSetException, DataBaseException ;
+	
+	 public List getOutcomeDetails(int dateId) throws EmptyResultSetException, DataBaseException ;
+	 public List getIncomeDetails(int dateId) throws EmptyResultSetException, DataBaseException ;
+	
+	 
 	 public void outcomeTransaction(Date date, double amount, String notes, OutcomeTypeEnum type, int customerId,
 				int orderId, Fridage fridage, Season season) throws DataBaseException;
 	

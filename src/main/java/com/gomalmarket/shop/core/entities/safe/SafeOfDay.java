@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity(name = "SafeOfDay")
 @Setter
 @Getter
-public class SafeOfDay extends BaseEntity {
+public class SafeOfDay  {
 	
 	
 	@Id
@@ -29,7 +29,7 @@ public class SafeOfDay extends BaseEntity {
 	 @Column(name = "DAY_DATE")
 	 private Date dayDate;
 	
-    @Column(name = "BALANCE")
+    @Column(name = "BALANCE",columnDefinition = " NUMBER(8) ")
     private Double balance;
 
 

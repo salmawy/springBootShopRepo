@@ -22,9 +22,9 @@ public class SafeTracing extends BaseEntity {
 	@Id
 	@Column(name ="ID" )
 	private int id ;
-	@ManyToOne
-	@JoinColumn(name = "SAFE_ID")
-	private SafeOfDay SafeOfDay;
+	
+	
+ 
 
 	@Column(name = "AMOUNT")
 	private double amount;

@@ -19,11 +19,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-@Table(name ="CONTRACTOR_ACCOUNT_DETAILS")
-@Entity(name ="ContractorAccountDetail")
+@Table(name ="CONTRACTOR_Transactions")
+@Entity(name ="ContractorTransaction")
 @Setter
 @Getter
-public class ContractorAccountDetail extends BaseEntity {
+public class ContractorTransaction extends BaseEntity {
 
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
@@ -35,8 +35,8 @@ public class ContractorAccountDetail extends BaseEntity {
 	@Column(name ="ID" )
 	private int id ;
 
-	@Column(name = "DETAIL_DATE")
-	private Date detailDate;
+	@Column(name = "TRANSACTION_DATE")
+	private Date transactionDate;
 
 	@Column(name = "AMOUNT")
 	private Double amount;
@@ -55,8 +55,8 @@ public class ContractorAccountDetail extends BaseEntity {
 	private Season season;
 
 	@ManyToOne
-	@JoinColumn(name = "CONTRACTOR_ACCOUNT_ID")
-	private  ContractorAccount contractorAccount;
+	@JoinColumn(name = "CONTRACTOR_ID")
+	private  Contractor contractor;
 	
 	 
 
