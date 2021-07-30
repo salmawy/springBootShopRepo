@@ -8,11 +8,9 @@ import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 
 public interface IContractorDao {
 
-	List getContractorAccount(int contractorId, int seasonId, int typeId)
-			throws DataBaseException, EmptyResultSetException, com.gomalmarket.shop.core.exception.DataBaseException, com.gomalmarket.shop.core.exception.EmptyResultSetException;
-
+	public List getNotSettledContractors(int contractorId,int typeId) throws DataBaseException, EmptyResultSetException ;
 	List<String> getSuggestedContractorName(String searchString, int ownerId, int typeId);
 
-	List getContractorAccount(String name, int seasonId, int typeId, Date fromDate, Date toDate, int paid,int ownerId)
+	List getContractorTransactions(String name, int typeId, Date fromDate, Date toDate, int paid,int ownerId)
 			throws DataBaseException, EmptyResultSetException;
 }

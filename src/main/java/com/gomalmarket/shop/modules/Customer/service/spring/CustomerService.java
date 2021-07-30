@@ -154,11 +154,10 @@ public class CustomerService implements ICustomerService {
 		 
 //========================save customer Order into Database ========================================================	
 		 customerOrder.setCustomer(customer);
-	//	 this.getBaseService().addBean(customerOrder);
-		 String orderTag=(customerOrder.getCustomer().getName()+"_"+sdf.format(customerOrder.getOrderDate())+"_"+customerOrder.getOrderTag()+"_" +customerOrder.getId());
+ 		 String orderTag=(customerOrder.getCustomer().getName()+"_"+sdf.format(customerOrder.getOrderDate())+"_"+customerOrder.getOrderTag()+"_" +customerOrder.getId());
 		customerOrder.setOrderTag(orderTag);
-	//	this.getBaseService().addEditBean(customerOrder);
-		repoSupplier.getCustomerOrderRepo().save(customerOrder);
+  		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getCustomerOrderRepo(), customerOrder);
+
 //=============================== save outcome transactions=====================================
  		
  
@@ -189,8 +188,8 @@ public class CustomerService implements ICustomerService {
 				return customer;
 			} catch (DataBaseException | EmptyResultSetException e) {
 				
-				repoSupplier.getCustomerRepo().save(customer);
-		 
+ 		  		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getCustomerRepo(), customer);
+
 
 				
 			}
@@ -236,7 +235,7 @@ public void editCustomerOrder(CustomerOrder newOrder,CustomerOrder oldOrder) thr
 	if(!newOrder.getNolun().equals(oldOrder.getNolun() )) {
 		map=new HashMap<String, Object>();
 		map.put("orderId",oldOrder.getId() );
-		map.put("typeId",OutcomeTypeEnum.NOLOUN );
+		map.put("typeId",OutcomeTypeEnum.NOLOUN.getId() );
 
 		try {
 			
@@ -257,7 +256,7 @@ public void editCustomerOrder(CustomerOrder newOrder,CustomerOrder oldOrder) thr
 		
 		map=new HashMap<String, Object>();
 		map.put("orderId",oldOrder.getId() );
-		map.put("type.id",OutcomeTypeEnum.TIPS );
+		map.put("type.id",OutcomeTypeEnum.TIPS.getId() );
 
 		try {
 				//change outcome detail 
@@ -271,10 +270,9 @@ public void editCustomerOrder(CustomerOrder newOrder,CustomerOrder oldOrder) thr
 	 }
 	
  
-	 //getBaseService().mergeEntity(newOrder);
-	 
-	repoSupplier.getCustomerOrderRepo().save(newOrder);
-	    
+ 	 
+ 		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getCustomerOrderRepo(), newOrder);
+
  
     
 }

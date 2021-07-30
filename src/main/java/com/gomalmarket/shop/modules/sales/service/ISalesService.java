@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.gomalmarket.shop.core.Enum.SellerTypeEnum;
 import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.entities.sellers.Seller;
@@ -32,5 +33,7 @@ public interface ISalesService {
  	List getSellersLoanSummary(Date fromDate, Date toDate, int seasonId)
 			throws EmptyResultSetException, DataBaseException;
  	List getSellerOrderWeights(int orderId) throws DataBaseException, EmptyResultSetException;
-	
+	SellerLoanBag findSellerLoanBag(Seller seller, int seasonId) throws DataBaseException;
+	Seller saveSeller(Seller seller) throws DataBaseException, InvalidReferenceException;
+ 	
 }

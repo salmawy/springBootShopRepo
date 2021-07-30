@@ -40,14 +40,19 @@ public class SellerOrderWeight extends BaseEntity {
     private int packageNumber;
 
     @ManyToOne
-    @JoinColumn(name = "CUSTOMER_ORDER_ID",nullable = true)
+    @JoinColumn(name = "CUSTOMER_ORDER_ID",insertable = false,updatable = false)
     private CustomerOrder customerOrder;
 
     
     @ManyToOne
     @JoinColumn(name = "SELLER_ORDER_ID")
     private SellerOrder sellerOrder;
-
+  
+    
+    @Column(name = "CUSTOMER_ORDER_ID",nullable = true)
+    private Integer customerOrderId;
+    
+    
     
      @Column(name = "SELLER_ORDER_ID",insertable = false,updatable = false)
     private int sellerOrderId;
@@ -55,7 +60,11 @@ public class SellerOrderWeight extends BaseEntity {
     
     
     @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID")
+    @JoinColumn(name = "PRODUCT_ID",insertable = false,updatable = false)
     private Product product;
- 
+   
+    
+    @Column(name = "PRODUCT_ID")
+    private Integer productId;
+    
 }

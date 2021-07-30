@@ -1,10 +1,28 @@
 package com.gomalmarket.shop.core.Enum;
 
-public class SellerTypeEnum {
+public enum SellerTypeEnum implements EnumClass<Integer> {
 	
-	public final static int permenant=2;
-	public final static int cash=1;
+	  permenant(2),
+ cash(1);
 
-	
+	SellerTypeEnum(Integer value) {
+		this.id = value;
+	}
+
+	private final Integer id;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public static SellerTypeEnum fromId(String id) {
+		for (SellerTypeEnum at : SellerTypeEnum.values()) {
+			if (at.getId().equals(Integer.parseInt(id))) {
+				return at;
+			}
+		}
+		return null;
+	}
+
 
 }

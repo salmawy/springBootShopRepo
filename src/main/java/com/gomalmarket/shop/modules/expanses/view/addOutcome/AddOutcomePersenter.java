@@ -8,16 +8,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.controlsfx.glyphfont.FontAwesome;
-import org.springframework.context.ApplicationContext;
 
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
-import com.gomalmarket.shop.core.entities.expanses.Outcome;
 import com.gomalmarket.shop.core.entities.expanses.OutcomeDetail;
 import com.gomalmarket.shop.core.entities.expanses.OutcomeType;
 import com.gomalmarket.shop.core.exception.DataBaseException;
@@ -86,7 +85,7 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
     private JFXButton saveBtn;
     
     
-    private List requirerdTypes;
+    private List<OutcomeTypeEnum> requirerdTypes;
 	    
 	    private JFXDatePicker datePicker;
  	   private  int id;
@@ -263,15 +262,24 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
 		
 			
 			List outcomeTypes=new ArrayList();
+			
+ 			
+			
 			try {
 				outcomeTypes = this.getBaseService().findAllBeans(OutcomeType.class);
+				
+ 				
+				
 			} catch (DataBaseException |EmptyResultSetException e) {		}
 			
 			
 			for (Iterator iterator = outcomeTypes.iterator(); iterator.hasNext();) {
 				OutcomeType type = (OutcomeType) iterator.next();
-				if(requirerdTypes.contains(type.getId()))
-				outcomeType_combo.getItems().add(new ComboBoxItem(type.getId(),type.getNameAr(),type));
+			Optional<OutcomeTypeEnum> op=	 requirerdTypes.stream().filter(e -> e.getId()==type.getId()).findAny();
+			
+			
+			if (op.isPresent())
+			outcomeType_combo.getItems().add(new ComboBoxItem(type.getId(),type.getNameAr(),type));
 
 			}
 			

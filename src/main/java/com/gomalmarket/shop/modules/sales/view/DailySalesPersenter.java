@@ -284,8 +284,8 @@ public class DailySalesPersenter extends SalesAction implements Initializable, C
 		
 		sellerType_CB=new JFXComboBox();
 		sellerType_CB.getStyleClass().add("comboBox");
-		sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.cash,this.getMessage("seller.type.cash")));
-		sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.permenant,this.getMessage("seller.type.permenant")));
+		sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.cash.getId(),this.getMessage("seller.type.cash")));
+		sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.permenant.getId(),this.getMessage("seller.type.permenant")));
 		sellerType_CB.getSelectionModel().selectFirst();
 		sellerType_CB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>()
         {
@@ -294,7 +294,7 @@ public class DailySalesPersenter extends SalesAction implements Initializable, C
             {
             	
             	ComboBoxItem item=sellerType_CB.getSelectionModel().getSelectedItem();
-            	if(item.getId()==SellerTypeEnum.cash) {
+            	if(item.getId()==SellerTypeEnum.cash.getId()) {
             		
             		name.setDisable(true);
             		name.setText("");
@@ -531,7 +531,7 @@ private void addOrderDetail() {
 		AddSellerOrderDetailView form=new AddSellerOrderDetailView();
 		URL u=	 getClass().getClassLoader().getResource("appResources/custom.css");
 
-		Scene scene1= new Scene(form.getView(), 350, 420);
+		Scene scene1= new Scene(form.getView(), 400, 420);
 		Stage popupwindow=new Stage();
 		popupwindow.setResizable(false);
 	    String css =u.toExternalForm();
@@ -849,7 +849,7 @@ List data=new ArrayList();
 			SellerOrderVB viewBean=new SellerOrderVB();
 			double paidAmount=getPaidAmount(order.getId());
 	
-			String sellerTypeText=(order.getSeller().getTypeId()==SellerTypeEnum.cash)?this.getMessage("seller.type.cash"):this.getMessage("seller.type.permenant");
+			String sellerTypeText=(order.getSeller().getTypeId()==SellerTypeEnum.cash.getId())?this.getMessage("seller.type.cash"):this.getMessage("seller.type.permenant");
 			viewBean.setId(order.getId());
 			viewBean.setSellerName(order.getSeller().getName());
 			viewBean.setPaidAmount(paidAmount);
@@ -875,7 +875,7 @@ private double getPaidAmount(int orderId) {
 
 	
 	Map<String,Object>map=new HashMap<String,Object>();
-	map.put("sellerOrderId", orderId);
+	map.put("orderId", orderId);
 	try {
 		IncomeDetail income=	(IncomeDetail)this.getBaseService().findAllBeans(IncomeDetail.class, map, null).get(0);
 	return income.getAmount();
@@ -911,7 +911,7 @@ private void addEditOrder(int orderId) {
 	EditSellerOrderView form=new EditSellerOrderView();
 	URL u=	 getClass().getClassLoader().getResource("appResources/custom.css");
 
-	Scene scene1= new Scene(form.getView(), 1100, 500);
+	Scene scene1= new Scene(form.getView(), 1200, 500);
 	Stage popupwindow=new Stage();
 	popupwindow.setResizable(true);
     String css =u.toExternalForm();

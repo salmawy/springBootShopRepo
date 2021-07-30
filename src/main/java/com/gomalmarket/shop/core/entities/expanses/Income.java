@@ -9,14 +9,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.gomalmarket.shop.core.entities.basic.BaseEntity;
 import com.gomalmarket.shop.core.entities.basic.Season;
-import com.gomalmarket.shop.core.entities.safe.SafeOfDay;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Table(name = "INCOMES")
+@Table(name = "INCOME")
 @Entity(name = "Income")
 @Setter
 @Getter

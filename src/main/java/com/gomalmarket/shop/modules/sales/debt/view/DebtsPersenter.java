@@ -155,7 +155,7 @@ public class DebtsPersenter extends SalesAction implements CustomTableActions,In
 		
 		sellerType_CB.getStyleClass().add("comboBox");
 		sellerType_CB.setPromptText(this.getMessage("seller.type"));
-		sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.permenant,this.getMessage("seller.type.permenant")));
+		sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.permenant.getId(),this.getMessage("seller.type.permenant")));
 		sellerType_CB.getSelectionModel().selectFirst();
 		
 //=========================================================================================================================================
@@ -197,6 +197,7 @@ public class DebtsPersenter extends SalesAction implements CustomTableActions,In
 				SellerLoanBag bag = (SellerLoanBag) iterator.next();
 				SellerDebtVB row=new SellerDebtVB();
 				row.setId(bag.getId());
+				row.setSellerId(bag.getSellerId());
 				row.setSellerName(bag.getSeller().getName());
 
 				row.setDueAmount(bag.getCurrentLoan());
@@ -544,13 +545,15 @@ this.orderDataCustomTable.loadTableData(data);
 		 
 				
 				
- 		SellerDebtVB seller=(SellerDebtVB)	((TreeItem<SellerDebtVB>) sellersPredicatableTable.getTable().getSelectionModel().getSelectedItem()).getValue();
+ 		SellerDebtVB sellerLoanBag=(SellerDebtVB)	((TreeItem<SellerDebtVB>) sellersPredicatableTable.getTable().getSelectionModel().getSelectedItem()).getValue();
 		 	// =(item.getValue());
 
 		
 		  request=new HashMap<String,Object>();
-		  request.put("id", seller.getId());
-		  request.put("name", seller.getSellerName().get()); 
+		  request.put("loanBagId", sellerLoanBag.getId());
+		  request.put("sellerId", sellerLoanBag.getSellerId());
+
+		  request.put("name", sellerLoanBag.getSellerName().get()); 
 		  request.put("action", 1);
 		 
 		

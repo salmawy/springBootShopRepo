@@ -27,7 +27,7 @@ public class ContractorTransaction extends BaseEntity {
 
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
-			pkColumnValue = "CONTRACTOR_ACCOUNT_DETAIL_ID",
+			pkColumnValue = "CONTRACTOR_TRANSACTIONS_ID",
 			valueColumnName = "ID_TABLE_VALUE",allocationSize = 1)
 	@GeneratedValue(strategy =  GenerationType.TABLE,generator = "TABLE_GENERATOR")
 
@@ -49,6 +49,9 @@ public class ContractorTransaction extends BaseEntity {
 
 	@Column(name = "PAID")
 	private int paid;
+	
+	@Column(name = "SETTLEDMENT_DATE")
+	private Date settlementDate;
 
 	@ManyToOne
 	@JoinColumn(name = "SEASON_ID")

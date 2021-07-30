@@ -28,6 +28,7 @@ import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
 import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
 import com.gomalmarket.shop.core.entities.expanses.IncomeDetail;
 import com.gomalmarket.shop.core.entities.sellers.Seller;
+import com.gomalmarket.shop.core.entities.sellers.SellerLoanBag;
 import com.gomalmarket.shop.core.entities.sellers.SellerOrder;
 import com.gomalmarket.shop.core.entities.sellers.SellerOrderWeight;
 import com.gomalmarket.shop.core.exception.DataBaseException;
@@ -192,8 +193,8 @@ public void initialize(URL arg0, ResourceBundle arg1) {
 	
 	sellerType_CB=new JFXComboBox();
 	sellerType_CB.getStyleClass().add("comboBox");
-	sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.cash,this.getMessage("seller.type.cash")));
-	sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.permenant,this.getMessage("seller.type.permenant")));
+	sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.cash.getId(),this.getMessage("seller.type.cash")));
+	sellerType_CB.getItems().add(new ComboBoxItem(SellerTypeEnum.permenant.getId(),this.getMessage("seller.type.permenant")));
 	sellerType_CB.getSelectionModel().selectFirst();
 	sellerType_CB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>()
     {
@@ -323,7 +324,7 @@ public void initialize(URL arg0, ResourceBundle arg1) {
 		if(mode==edit_mode)
 	  	loadOrderData();
 
-		sellerTypeChangeHandler();
+		//sellerTypeChangeHandler();
 
 	
 }
@@ -347,28 +348,41 @@ private void save() {
  	   seller.setAddress(address.getText());
  	   seller.setPhone(phone.getText());
  	   seller.setTypeId(type);
+ 	   
+ 	   
+ 	   
+ 	  seller= this.getSalesService().saveSeller(seller);
+ 	   
  
  	   SellerOrder order=new SellerOrder();
  	   order.setOrderDate(orderDate);
  	   order.setFridage(this.getAppContext().getFridage());
  	   order.setSeason(getAppContext().getSeason());
  	   order.setTotalCost(Double.parseDouble(totalAmount.getText()));
+ 	   
+ 	   
+ 	   
+ 	   
+ 	   
+ 	   
  	  
  	   List orderDetails=orderDetail_CT.getTable().getItems();
- 	   Set<SellerOrderWeight>orerDetail=new HashSet<SellerOrderWeight>();
+ 	   List<SellerOrderWeight>orerDetail=new ArrayList<SellerOrderWeight>();
  	   for (Iterator iterator = orderDetails.iterator(); iterator.hasNext();) {
 			SellerOrderDetailVB row = (SellerOrderDetailVB) iterator.next();
 			SellerOrderWeight temp=new SellerOrderWeight();
 			temp.setAmount(row.getAmount());
 			
- 			temp.setCustomerOrder(row.getCustomerOrder());
-			
+ 			//temp.setCustomerOrder(row.getCustomerOrder());
+ 			temp.setCustomerOrderId(row.getCustomerOrderId());
+
 			temp.setGrossQuantity(row.getGrossWeight());
 			temp.setNetQuantity(row.getNetWeight());
 			temp.setPackageNumber(row.getCount());
 			
- 			temp.setProduct(row.getProduct());
-			
+ 			//temp.setProduct(row.getProduct());
+ 			temp.setProductId(row.getProductId());
+
 			temp.setUnitePrice(row.getUnitePrice());
 			orerDetail.add(temp);
 			
@@ -390,7 +404,7 @@ private void save() {
  	   
  	   }catch (Exception ex) {
 	    	   alert(AlertType.ERROR, this.getMessage("msg.err"),this.getMessage("msg.err"), this.getMessage("msg.err.general"));
-
+ex.printStackTrace();
 	
 		}
  	   
@@ -781,7 +795,7 @@ private void	trackRestValue(){
 		}
 		
 		
-		this.loadOrderDetail(orderId);
+	//	this.loadOrderDetail(orderId);
 		
 		
 		
@@ -796,7 +810,7 @@ private void	trackRestValue(){
 	
 		
 		Map<String,Object>map=new HashMap<String,Object>();
-		map.put("sellerOrderId", orderId);
+		map.put("orderId", orderId);
 		try {
 			IncomeDetail income=	(IncomeDetail)this.getBaseService().findAllBeans(IncomeDetail.class, map, null).get(0);
 		return income.getAmount();
@@ -829,12 +843,18 @@ private void	trackRestValue(){
 private void loadOrderDetail(int orderId) {
 	
 	SellerOrder order;
+	List orderWeights;
+
 	try {
 		order = (SellerOrder) this.getBaseService().findBean(SellerOrder.class, orderId);
-	
+		
+		Map<String,Object>params=new HashMap<String, Object>();
+		params.put("sellerOrderId", order.getId());
+		 orderWeights =   this.getBaseService().findAllBeans(SellerOrderWeight.class, params);
+
 	List data=new ArrayList();
 	
-	for (Iterator iterator = order.getOrderWeights().iterator(); iterator.hasNext();) {
+	for (Iterator iterator =orderWeights.iterator(); iterator.hasNext();) {
 		SellerOrderWeight weight = (SellerOrderWeight) iterator.next();
 		SellerOrderDetailVB viewBean=new SellerOrderDetailVB();
 		viewBean.setAmount(weight.getAmount());
@@ -864,6 +884,9 @@ private void loadOrderDetail(int orderId) {
 this.orderDetail_CT.loadTableData(data);
 	
 	} catch (DataBaseException | InvalidReferenceException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (EmptyResultSetException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
@@ -903,7 +926,7 @@ this.orderDetail_CT.loadTableData(data);
 	private void sellerTypeChangeHandler() {
 		
 		ComboBoxItem item=sellerType_CB.getSelectionModel().getSelectedItem();
-    	if(item.getId()==SellerTypeEnum.cash) {
+    	if(item.getId()==SellerTypeEnum.cash.getId()) {
     		
     		name.setDisable(true);
     		name.setText("");

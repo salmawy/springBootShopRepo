@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.repository.CrudRepository;
+
 import com.gomalmarket.shop.core.JPAOrderBy;
 import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.entities.sellers.SellerOrderWeight;
@@ -56,6 +58,7 @@ public interface IBaseService
 	public Season getCurrentSeason() throws DataBaseException, EmptyResultSetException ;
 
 	void mergeEntity(Object entity);
+	void saveEntity(CrudRepository repo ,Object entity);
 
 	List findAllBeans(Class<SellerOrderWeight> beanClass, Map<String, Object> ParamtersMap) throws DataBaseException, EmptyResultSetException;
 

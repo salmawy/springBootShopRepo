@@ -11,7 +11,7 @@ import lombok.Getter;
 public class RepoSupplier {
 	
 	@Autowired
-	ContractorTransactionRepo contractorAccountDetailRepo; 
+	ContractorTransactionRepo contractorTransactionRepo; 
  
 	@Autowired
 	ContractorRepo contractorRepo;

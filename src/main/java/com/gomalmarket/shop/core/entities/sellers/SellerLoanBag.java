@@ -42,11 +42,17 @@ public class SellerLoanBag extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "SELLER_ID")
     private Seller seller;
-
+     
+    @Column(name = "SELLER_ID",updatable = false,insertable = false)
+    private Integer sellerId;
+     
+     
     @ManyToOne
     @JoinColumn(name = "SEASON_ID")
     private Season season;
-
+   
+    @Column(name = "SEASON_ID",updatable = false,insertable = false)
+    private Integer seasonId;
 
     public SellerLoanBag() {
         this.currentLoan = 0.0;

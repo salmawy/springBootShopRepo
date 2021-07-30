@@ -15,15 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
-import com.gomalmarket.shop.core.Enum.SafeTransactionTypeEnum;
 import com.gomalmarket.shop.core.config.ShopAppContext;
 import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.entities.expanses.IncomeDetail;
 import com.gomalmarket.shop.core.entities.expanses.OutcomeDetail;
 import com.gomalmarket.shop.core.entities.repos.RepoSupplier;
-import com.gomalmarket.shop.core.entities.safe.SafeOfDay;
-import com.gomalmarket.shop.core.entities.safe.SafeTracing;
 import com.gomalmarket.shop.core.entities.safe.SeasonSafe;
 import com.gomalmarket.shop.core.entities.shopLoan.Loaner;
 import com.gomalmarket.shop.core.exception.DataBaseException;
@@ -56,8 +53,7 @@ public class ExpansesServices implements IExpansesServices {
 
 	@Autowired
 	RepoSupplier repoSupplier;
-///	private ResourceBundle settingsBundle = ResourceBundle.getBundle("ApplicationSettings_ar");
-	private Map<String, Object> entitDictionary;
+ 	private Map<String, Object> entitDictionary;
 
 	@Override
 	public List getOutcome(Date date) throws EmptyResultSetException, DataBaseException {
@@ -118,12 +114,22 @@ public class ExpansesServices implements IExpansesServices {
 
 	public void outcomeTransaction(Date date, double amount, String notes, OutcomeTypeEnum type, int customerId,
 			int orderId, Fridage fridage, Season season) throws DataBaseException {
+		
+		Date day=new Date(date.getTime());
+		day.setHours(0);
+		day.setMinutes(0);
+		day.setSeconds(0);
+		
+		
  		OutcomeDetail outcomeDetail = new OutcomeDetail();
 		outcomeDetail.setAmount(amount);
 		outcomeDetail.setFridageId(fridage.getId());
 		outcomeDetail.setSpenderName(shopAppContext.getCurrentUser().getUsername());
 		outcomeDetail.setCustomerId(customerId);
 		outcomeDetail.setTypeId(type.getId());
+		outcomeDetail.setTransactionDate(date);
+		outcomeDetail.setTransactionDay(day);
+		outcomeDetail.setSeasonId(season.getId());
 
 		outcomeDetail.setOrderId(orderId);
 		outcomeDetail.setSpenderName(shopAppContext.getCurrentUser().getUsername());
@@ -164,7 +170,8 @@ public class ExpansesServices implements IExpansesServices {
 	}
 
  
-	 public void incomeTransaction(Date date,double amount, String notes, IncomeTypeEnum type, int sellerId, int orderId, Integer installmentId, Fridage fridage,Season season) throws DataBaseException
+	 public void incomeTransaction(Date date,double amount, String notes, IncomeTypeEnum type, int sellerId, 
+			 int orderId, Integer installmentId, Fridage fridage,Season season) throws DataBaseException
 	 {
 
 			IncomeDetail incomeDetail = new IncomeDetail();
@@ -175,9 +182,14 @@ public class ExpansesServices implements IExpansesServices {
 			incomeDetail.setTypeId(type.getId());
 			incomeDetail.setInstallmentId(installmentId);
 			incomeDetail.setSellerOrderId(orderId);
-	this.getBaseService().addEditBean(incomeDetail);
-	 //		recalculateSafeBalance(season);
+			incomeDetail.setTransactionDate(date);
+			incomeDetail.setTransactionDay(date);
+			incomeDetail.setSeasonId(season.getId());
 
+			
+ 	 		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getIncomeDetailRepo(), incomeDetail);
+
+ 
 			log.info(this.getClass().getName() + "=>tranasction completed succfully");
 
 		}
@@ -191,9 +203,14 @@ public class ExpansesServices implements IExpansesServices {
 		incomeDetail.setResipeintName(shopAppContext.getCurrentUser().getUsername());
 		incomeDetail.setSellerId(sellerId);
 		incomeDetail.setTypeId(type.getId());
+		incomeDetail.setTransactionDate(date);
+		incomeDetail.setTransactionDay(date);
+		incomeDetail.setSeasonId(season.getId());
 
 		incomeDetail.setSellerOrderId(orderId);
-this.getBaseService().addEditBean(incomeDetail);
+ 	 		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getIncomeDetailRepo(), incomeDetail);
+
+//this.getBaseService().addEditBean(incomeDetail);
  //		recalculateSafeBalance(season);
 
 		log.info(this.getClass().getName() + "=>tranasction completed succfully");
@@ -249,33 +266,7 @@ this.getBaseService().addEditBean(incomeDetail);
 	
 	
 	
-	public void changeSafeBalance(SafeOfDay safeOfDay, double amount, int transactionType, String transactionName,
-			int transactionId) throws DataBaseException {
-		
-		
-		double newBalance = safeOfDay.getBalance();
-		if (transactionType == SafeTransactionTypeEnum.add)
-			newBalance += amount;
-		else if (transactionType == SafeTransactionTypeEnum.subtract)
-			newBalance -= amount;
-
-		SafeTracing tracing = new SafeTracing();
-	//	tracing.setSafeOfDay(safeOfDay);
-		tracing.setAmount(amount);
-		tracing.setAfterAmount(newBalance);
-		tracing.setBeforAmount(safeOfDay.getBalance());
-		tracing.setTransactionType(transactionType);
-		tracing.setTransactionId(transactionId);
-
-		tracing.setTransactionName(transactionName);
-
-		safeOfDay.setBalance(newBalance);
-		this.getBaseService().addBean(tracing);
-		this.getBaseService().addEditBean(safeOfDay);
-		entitDictionary.put(safeOfDay.getClass().getName(), safeOfDay);
-
-	}
-
+ 
   @Override
 	public List getIncomeDates(Season season) throws EmptyResultSetException, DataBaseException {
 

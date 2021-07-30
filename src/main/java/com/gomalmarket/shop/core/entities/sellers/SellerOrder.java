@@ -1,15 +1,25 @@
 package com.gomalmarket.shop.core.entities.sellers;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Date;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.entities.basic.Season;
 
-import java.util.Date;
-import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 @Table(name = "SELLER_ORDERS")
 @Entity(name = "SellerOrder")
@@ -42,15 +52,20 @@ public class SellerOrder  {
     @Column(name = "SCIENCERE")
     private int sciencere;
 
-    @Column(name = "SELLER_LOAN_BAG_ID")
+    @Column(name = "SELLER_LOAN_BAG_ID",insertable = false,updatable = false)
     private Integer sellerLoanBagId;
+    
+   
+    @ManyToOne
+    @JoinColumn(name = "SELLER_LOAN_BAG_ID",nullable = true)
+    private SellerLoanBag sellerLoanBag ;
 
     @ManyToOne
     @JoinColumn(name = "SELLER_ID")
     private Seller seller;
 
-    @OneToMany(mappedBy = "sellerOrder" )
-    private Set<SellerOrderWeight> orderWeights;
+    @OneToMany(mappedBy = "sellerOrder" ,cascade = {CascadeType.ALL})
+    private List<SellerOrderWeight> orderWeights;
 
     @ManyToOne
     @JoinColumn(name = "FRIDAGE_ID")

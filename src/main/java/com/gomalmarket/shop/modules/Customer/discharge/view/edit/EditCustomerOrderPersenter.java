@@ -655,8 +655,8 @@ public class EditCustomerOrderPersenter extends CustomerBaseAction implements In
 				customer.setType(customerType); 
 				customer.setPhone(phoneValue);
 				customer.setAddress(addressValue);
-				getAppContext().getRepoSupplier().getCustomerRepo().save(customer);
-				
+ 		 		this.getBaseService().saveEntity(this.getAppContext().getRepoSupplier().getCustomerRepo(), customer);
+
 				
 				order.setProduct(product);
 				order.setVehicleType(vechileType);

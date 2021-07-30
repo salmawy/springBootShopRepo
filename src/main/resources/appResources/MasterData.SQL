@@ -285,7 +285,7 @@ Insert into SHOP2020.ID_TABLE
 Insert into SHOP2020.ID_TABLE
    (ID_TABLE_NAME, ID_TABLE_VALUE)
  Values
-   ('CONTRACTOR_ACCOUNT_DETAIL_ID', 18728);
+   ('CONTRACTOR_TRANSACTIONS_ID', 18728);
 Insert into SHOP2020.ID_TABLE
    (ID_TABLE_NAME, ID_TABLE_VALUE)
  Values
@@ -394,3 +394,63 @@ AS
    (  SELECT SUM (balance) AS balance, SOD.SEASON_ID AS season_id
         FROM SAFE_OF_DAY sod
     GROUP BY SOD.SEASON_ID);
+
+
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from safe_transactions st)
+
+where ID_TABLE_NAME like 'SAFE_TRANSACTION_ID'
+;
+
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from CUSTOMER_ORDERS st)
+
+where ID_TABLE_NAME like 'CUSTOMER_ORDER_ID'
+;
+
+commit;
+
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from CONTRACTOR_TRANSACTIONS st)
+where ID_TABLE_NAME like 'CONTRACTOR_TRANSACTIONS_ID';
+commit;
+
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from CONTRACTORS st)
+where ID_TABLE_NAME like 'CONTRACTOR_ID';
+commit;
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from SELLER_ORDER_WEIGHTs st)
+where ID_TABLE_NAME like 'SELLER_ORDER_WEIGHT_ID';
+commit;
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from SELLER_ORDERs st)
+where ID_TABLE_NAME like 'SELLER_ORDER_ID';
+commit;
+
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from SELLER_LOAN_BAGs st)
+where ID_TABLE_NAME like 'SELLER_LOAN_BAG_ID';
+commit;
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from SELLERs st)
+where ID_TABLE_NAME like 'SELLER_ID';
+commit;
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from PURCHASED_CUSTMER_INSTS st)
+where ID_TABLE_NAME like 'PURCHASED_CUSTMER_INSTS_ID';
+commit;
+
+update id_table set ID_TABLE_VALUE=(
+select max (ST.ID )+1 from INSTALLMENTs st)
+where ID_TABLE_NAME like 'INSTALLMENT_ID';
+commit;

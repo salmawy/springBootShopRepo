@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import com.gomalmarket.shop.core.JPAOrderBy;
@@ -189,5 +190,12 @@ public class BaseService implements IBaseService {
 	public List<Object> findAllBeansWithDepthMapping(Class beanClass, Map propertyMap, List<String> nOrder)
 			throws DataBaseException, EmptyResultSetException {
 		return this.getBaseDao().findAllBeansWithDepthMapping(beanClass, propertyMap, nOrder);
+	}
+
+	@Override
+	public void saveEntity(CrudRepository repo, Object entity) {
+		setChangeInformation(entity);
+		repo.save(entity);
+		
 	}
 }

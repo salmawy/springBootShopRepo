@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -24,31 +25,28 @@ public class ContractorDao   implements IContractorDao{
 EntityManager entityManager;
 	
 	@Override
-	public List getContractorAccount(int contractorId,int seasonId,int typeId) throws DataBaseException, EmptyResultSetException {
+	public List getNotSettledContractors(int contractorId,int typeId) throws DataBaseException, EmptyResultSetException {
 		
-		
-
-		
- 		  try { 
-		  
-	
-
-
+		 
+ 		  try { 	
+ 
 		  String q ="select "
-		  		+ " cad.contractorAccount.contractor.id,cad.contractorAccount.contractor.name ,"
-		  		+ " sum (cad.amount) "
+		  		+ " ca.contractor.id, "
+		  		+ "ca.contractor.name ,"
+		  		+ "ca.amount "
 		  		
 		  		+ " from "
-		  		+ " ContractorAccountDetail cad  "
-		  		+ " where  cad.season.id= "+seasonId ;
+		  		+ " ContractorAccount ca ,Contractor c "
+		  		+ " where   ca.id=c.id ";
+		
 		  if(contractorId!=0)
-			  q +="	and cad.contractorAccount.contractor.id ="+contractorId;
+			  q +="	and ca.contractor.id ="+contractorId;
+		  
 		  if(typeId!=0)
-			  q +="	and cad.contractorAccount.contractor.typeId ="+typeId;
+			  q +="	and ca.typeId ="+typeId;
 		
 		  
-		  q +="	group by cad.contractorAccount.contractor.name ,cad.contractorAccount.contractor.id";
-
+ 
 		  Query query= this.entityManager.createQuery(q);
 
 		  List result =query.getResultList();
@@ -113,10 +111,7 @@ EntityManager entityManager;
 
 
 @Override
-public List getContractorAccount(String name, int seasonId, int typeId, Date fromDate, Date toDate, int paid,int ownerId) throws EmptyResultSetException, DataBaseException {
-
-	
-	
+public List getContractorTransactions(String name, int typeId, Date fromDate, Date toDate, int paid,int ownerId) throws EmptyResultSetException, DataBaseException {
 
 	
  	  try { 
@@ -128,28 +123,28 @@ public List getContractorAccount(String name, int seasonId, int typeId, Date fro
 	  		+ " cad "
  	  		
 	  		+ " from "
-	  		+ " ContractorAccountDetail cad  "
-	  		+ " where  cad.season.id= "+seasonId ;
+	  		+ " ContractorTransaction cad   "
+	  		+ " where 1=1" ;
 	  if(paid!=-1)
 		  q +="	and cad.paid="+paid;
 	  if( typeId!=0 )
-		  q +="	and cad.contractorAccount.contractor.typeId ="+typeId;
+		  q +="	and cad.contractor.typeId ="+typeId;
     if( ownerId!=0 )
-			  q +="	and cad.contractorAccount.contractor.ownerId ="+ownerId;
+			  q +="	and cad.contractor.ownerId ="+ownerId;
 		  
 	  if(toDate!=null&&fromDate!=null) {
-		  q +="	and cad.detailDate >= :fromDate";
-		  q +="	and cad.detailDate <= :toDate";
+		  q +="	and cad.transactionDate >= :fromDate";
+		  q +="	and cad.transactionDate <= :toDate";
  
 	  }
 	  if(name!=null&&name!="")
-		  q +="	and cad.contractorAccount.contractor.name like  '%"+typeId+"%'";
+		  q +="	and cad.contractor.name like  '%"+name+"%'";
 	  
  
 	  Query queryList = entityManager.createQuery(q);
 	  if(toDate!=null&&fromDate!=null) {
-		  queryList.setParameter("fromDate", fromDate);
-		  queryList.setParameter("toDate", toDate);
+		  queryList.setParameter("fromDate", fromDate,TemporalType.DATE);
+		  queryList.setParameter("toDate", toDate,TemporalType.DATE);
 
 		  
 	  }
@@ -166,7 +161,7 @@ public List getContractorAccount(String name, int seasonId, int typeId, Date fro
 	  {return result;}
 	 } 
 	  catch(DataAccessException e) { throw new
-	  DataBaseException("error.dataBase.query,ContractorAccountDetail,"+e.getMessage()  );
+	  DataBaseException("error.dataBase.query,ContractorTransaction,"+e.getMessage()  );
 	  }
 	  finally {
 		  

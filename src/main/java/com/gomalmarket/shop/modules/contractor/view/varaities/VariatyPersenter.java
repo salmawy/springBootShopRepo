@@ -147,7 +147,7 @@ private void LoadLaboursNames(int ownerId) {
 	//contractorPredicatableTable.getTable().getRoot().getChildren().clear();
 
 	try {
-			List contractors=this.getContractorService().getContractorAccount(0, getAppContext().getSeason().getId(), contractorTypeId);
+			List contractors=this.getContractorService().getNotSettledContractors(0,  contractorTypeId);
 		    List tableData=new ArrayList();
 			
 		    
@@ -352,15 +352,15 @@ private List prepareContractorHeaderNodes(){
 		
  		List tableData=new ArrayList();
 		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("contractorAccount.contractor.id", id);
-		map.put("contractorAccount.contractor.typeId", contractorTypeId);
-		map.put("season.id", getAppContext().getSeason().getId());
-		map.put("contractorAccount.contractor.ownerId", ownerId);
+		map.put("contractor.id", id);
+		map.put("contractor.typeId", contractorTypeId);
+	//	map.put("season.id", getAppContext().getSeason().getId());
+		map.put("contractor.ownerId", ownerId);
 
 	if(paid>-1)
 		map.put("paid", paid);
 
-		List order=new ArrayList(Arrays.asList(Order.desc("detailDate")));
+		List order=new ArrayList(Arrays.asList(Order.desc("transactionDate")));
 			try {
 			List transactions=	this.getBaseService().findAllBeansWithDepthMapping(ContractorTransaction.class, map,order);
 		for (Iterator iterator = transactions.iterator(); iterator.hasNext();) {
@@ -411,14 +411,14 @@ private List prepareContractorHeaderNodes(){
 	private void calculateTotalShopAmount() {
 		
 		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("contractorAccount.contractor.typeId =", contractorTypeId);
+		map.put("contractor.typeId =", contractorTypeId);
 		map.put("season.id =", getAppContext().getSeason().getId());
 		map.put("paid=", 1);
-		map.put("contractorAccount.contractor.ownerId= ", owner_combo.getSelectionModel().getSelectedItem().getId());
+		map.put("contractor.ownerId= ", owner_combo.getSelectionModel().getSelectedItem().getId());
 
 		Double amount=0.0;
 		try {
-			 amount=(Double) this.getBaseService().aggregate("ContractorAccountDetail", "sum", "amount", map);
+			 amount=(Double) this.getBaseService().aggregate("ContractorTransaction", "sum", "amount", map);
 		} catch (DataBaseException | EmptyResultSetException e) {
 			// TODO Auto-generated catch block
 			amount=0.0;

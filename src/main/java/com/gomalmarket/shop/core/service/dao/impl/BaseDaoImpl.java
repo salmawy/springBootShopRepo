@@ -365,7 +365,7 @@ public class BaseDaoImpl implements IBaseDao {
 	     
 	        List result=  entityManger.createQuery(query).getResultList();
 	        
-	        if(result.size() == 0) {
+	        if(result!=null&&result.get(0)!=null&&result.size() == 0) {
 				  throw new  EmptyResultSetException("error.emptyRS"); }
 			 
 			  if(result.size() > 0) 

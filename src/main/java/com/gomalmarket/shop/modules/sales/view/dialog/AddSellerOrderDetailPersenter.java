@@ -82,8 +82,7 @@ public class AddSellerOrderDetailPersenter extends SalesAction implements Initia
 	    private   JFXTextField unitePrice;
 	    private   JFXTextField amount;
 	    private Map<String, Double> orderWithDrawalQuantity;
-	    private Map<String, Object> orderDataMap;
-	    private Map<Integer, Double> OrderDetailCash;
+ 	    private Map<Integer, Double> OrderDetailCash;
 	    
 	    public AddSellerOrderDetailPersenter() {
 	    	
@@ -800,7 +799,8 @@ private void packageNumberTracker() {
 	
 			
 			try {
-				double withDrawaled=Double.parseDouble(String.valueOf(this.getSalesService().aggregate("SellerOrderWeight", "sum", columnName, m)));
+				Object tmp=this.getSalesService().aggregate("SellerOrderWeight", "sum", columnName, m);
+				double withDrawaled=Double.parseDouble((tmp==null)?"0.0":String.valueOf(tmp));
  
 				double avaliableQuantity=(order.getGrossweight() - withDrawaled);
 			return(quantity<=avaliableQuantity);

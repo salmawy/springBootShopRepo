@@ -333,7 +333,7 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 		  
 		  int seasonId=getAppContext().getSeason().getId(); 
 		  try {  
-			 List result=this.getContractorService().getContractorAccount(name, seasonId, typeId, fromDateValue, toDateValue, paid, ownerId);
+			 List result=this.getContractorService().getContractorTransactions(name, typeId, fromDateValue, toDateValue, paid, ownerId);
 
 		  for (Iterator iterator = result.iterator(); iterator.hasNext();) {
 			 

@@ -168,7 +168,7 @@ public class PayOffSalerOrderPersenter extends SalesAction implements Initializa
 	    
 	  int action=(int) request.get("action");
 	  String name=(String) request.get("name");
-	   sellerId=(int) request.get("id");
+	   sellerId=(int) request.get("sellerId");
 
 	  name_TF.setText(name);
 	  switch (action) {

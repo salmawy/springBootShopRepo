@@ -210,7 +210,7 @@ public class InventoryDao   implements  IInventoryDao{
  	  try { 
  	 
 	  String query =
-	  " select sum(amount) from ContractorAccountDetail"
+	  " select sum(amount) from ContractorTransaction"
 	  + " where seasonId= "+seasonId
 	  + " and paid=1";
 	 

@@ -14,7 +14,8 @@ public class SellerDebtVB extends  RecursiveTreeObject<SellerDebtVB>  {
 	private StringProperty sellerName;
 	private DoubleProperty dueAmount;
 	private DoubleProperty totalOrdersCost;
-	
+	private int sellerId ;
+
 	
 	
 	
@@ -67,6 +68,16 @@ public class SellerDebtVB extends  RecursiveTreeObject<SellerDebtVB>  {
 
 	public void setTotalOrdersCost(DoubleProperty totalOrdersCost) {
 		this.totalOrdersCost = totalOrdersCost;
+	}
+
+
+	public int getSellerId() {
+		return sellerId;
+	}
+
+
+	public void setSellerId(int sellerId) {
+		this.sellerId = sellerId;
 	}
 
 

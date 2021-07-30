@@ -52,9 +52,9 @@ public class ContractorService implements IContractorService {
 	ShopAppContext appContext;
 
 	@Override
-	public List getContractorAccount(int contractorId, int seasonId, int typeId)
+	public List getNotSettledContractors(int contractorId, int typeId)
 			throws DataBaseException, EmptyResultSetException {
-		return this.getContractorDao().getContractorAccount(contractorId, seasonId, typeId);
+		return this.getContractorDao().getNotSettledContractors(contractorId, typeId);
 	}
 
 	@Override
@@ -118,10 +118,10 @@ public class ContractorService implements IContractorService {
 	}
 
 	@Override
-	public List getContractorAccount(String name, int seasonId, int typeId, Date fromDate, Date toDate, int paid,
+	public List getContractorTransactions(String name, int typeId, Date fromDate, Date toDate, int paid,
 			int ownerId) throws DataBaseException, EmptyResultSetException {
 		// TODO Auto-generated method stub
-		return this.getContractorDao().getContractorAccount(name, seasonId, typeId, fromDate, toDate, paid, ownerId);
+		return this.getContractorDao().getContractorTransactions(name, typeId, fromDate, toDate, paid, ownerId);
 	}
 
 }

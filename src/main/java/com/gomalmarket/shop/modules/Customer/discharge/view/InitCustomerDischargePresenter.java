@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.controlsfx.glyphfont.FontAwesome;
-import org.springframework.context.ApplicationContext;
 
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
@@ -423,7 +422,7 @@ private void fitToAnchorePane(Node node) {
     		loadData(date);
     		
     		
-      	    this.bookDatePicker.setValue(getBaseService().convertToLocalDateViaMilisecond(new Date()));
+      	    this.bookDatePicker.setValue(getBaseService().convertToLocalDateViaMilisecond(date));
      	
     	} catch (DataBaseException | EmptyResultSetException e) {
     		// TODO Auto-generated catch block
@@ -441,7 +440,8 @@ private void fitToAnchorePane(Node node) {
     	EditCustomerOrderView form=new EditCustomerOrderView();
     	URL u=	 getClass().getClassLoader().getResource("appResources/custom.css");
 
-    	Scene scene1= new Scene(form.getView(), 1000, 400);
+    	Scene scene1= new Scene(form.getView(), 1200, 400);
+    	
     	Stage popupwindow=new Stage();
     	popupwindow.setMinHeight(400);
     	popupwindow.setMinWidth(900);
