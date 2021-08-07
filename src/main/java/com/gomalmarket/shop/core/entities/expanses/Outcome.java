@@ -40,7 +40,7 @@ import lombok.Setter;
      @Column(name = "SEASON_ID",insertable = false,updatable = false)
      private int seasonId;
      
- 
+     
    
 
  	 

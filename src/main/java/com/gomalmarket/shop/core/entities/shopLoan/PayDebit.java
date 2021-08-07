@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @DiscriminatorValue("PAY_DEBIT")
 public class PayDebit extends ShopLoanTransaction {
-	
+	//installments of debts shop has paid 
 	
 	@OneToOne
 	@JoinColumn(name = "OUTCOME_DETAIL_ID",insertable = false,updatable = false,nullable = true)

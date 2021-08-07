@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
+import com.gomalmarket.shop.core.Enum.LoanTransactionTypeEnum;
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.entities.basic.Season;
@@ -13,6 +14,7 @@ import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.modules.expanses.enums.SafeTypeEnum;
+import com.gomalmarket.shop.modules.expanses.view.beans.LoanTransaction;
 
 public interface IExpansesServices {
 	 public List getOutcome(Date date) throws EmptyResultSetException, DataBaseException ;
@@ -50,4 +52,6 @@ public interface IExpansesServices {
 	void deleteIncomeDetailTransaction(IncomeDetail incomeDetail) throws DataBaseException;
 	
 	public double getSafeBalanceOfday(int seasonId,Date date,SafeTypeEnum type);
+	List<LoanTransaction> getLoanTransactions(int loanerId, LoanTransactionTypeEnum type)
+			throws EmptyResultSetException, DataBaseException;
 }

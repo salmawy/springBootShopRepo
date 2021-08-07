@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import com.gomalmarket.shop.core.entities.basic.BaseEntity;
 import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.entities.basic.Season;
 
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Entity(name = "SellerOrder")
 @Setter
 @Getter
-public class SellerOrder  {
+public class SellerOrder extends BaseEntity {
 	@TableGenerator(name = "TABLE_GENERATOR",table = "ID_TABLE",
 			pkColumnName = "ID_TABLE_NAME",
 			pkColumnValue = "SELLER_ORDER_ID",
@@ -56,15 +57,16 @@ public class SellerOrder  {
     private Integer sellerLoanBagId;
     
    
-    @ManyToOne
-    @JoinColumn(name = "SELLER_LOAN_BAG_ID",nullable = true)
+    @ManyToOne(cascade = {CascadeType.PERSIST , CascadeType.MERGE })
+    @JoinColumn(name = "SELLER_LOAN_BAG_ID", nullable = true)
     private SellerLoanBag sellerLoanBag ;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name = "SELLER_ID")
     private Seller seller;
 
-    @OneToMany(mappedBy = "sellerOrder" ,cascade = {CascadeType.ALL})
+   
+    @OneToMany(mappedBy = "sellerOrder" ,cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH})
     private List<SellerOrderWeight> orderWeights;
 
     @ManyToOne

@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -12,6 +13,8 @@ import java.util.logging.Logger;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
+import com.gomalmarket.shop.core.Enum.LoanTransactionTypeEnum;
+import com.gomalmarket.shop.core.Enum.LoanTypeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
@@ -20,6 +23,7 @@ import com.gomalmarket.shop.core.UIComponents.customTable.PredicatableTable;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.expanses.action.ExpansesAction;
+import com.gomalmarket.shop.modules.expanses.view.beans.LoanTransaction;
 import com.gomalmarket.shop.modules.expanses.view.beans.LoanersNameVB;
 import com.gomalmarket.shop.modules.expanses.view.payLoan.PayLoanView;
 import com.gomalmarket.shop.modules.sales.debt.view.beans.InstalmelmentVB;
@@ -72,11 +76,9 @@ public class LoansPersenter extends ExpansesAction implements Initializable , Cu
 	    
 	    @FXML
 	    private JFXTextField name_TF;
-
-	    private final String inLoan="IN_LOAN";
-	    private final String outLoan="OUT_LOAN";
-	    private CustomTable<InstalmelmentVB>installmentsCustomTable;
-	    private CustomTable<InstalmelmentVB>debtsAmountsCustomtable;
+	
+	    private CustomTable<LoanTransaction>PayeesCustomTable;
+	    private CustomTable<LoanTransaction>debtsAmountsCustomtable;
 	    private PredicatableTable<LoanersNameVB>loanersCustomTable;
 
 	@Override
@@ -97,20 +99,20 @@ private void init() {
 	List installementsColumns=prepareInstallmentColumns();
 	List loanerNamesHeaderNodes=prepareLoanersNamesHeaderNodes();
 	
-	installmentsCustomTable=new CustomTable<InstalmelmentVB>(installementsColumns, null, null, null, null, CustomTable.tableCard, InstalmelmentVB.class);
+	PayeesCustomTable=new CustomTable<LoanTransaction>(installementsColumns, null, null, null, null, CustomTable.tableCard, LoanTransaction.class);
 	loanersCustomTable=new PredicatableTable<LoanersNameVB>(loanersNameColumns, loanerNamesHeaderNodes, null, this, PredicatableTable.headTableCard, LoanersNameVB.class);
-	debtsAmountsCustomtable=new CustomTable<InstalmelmentVB>(installementsColumns, null, null, null, null, CustomTable.tableCard, InstalmelmentVB.class);
+	debtsAmountsCustomtable=new CustomTable<LoanTransaction>(installementsColumns, null, null, null, null, CustomTable.tableCard, LoanTransaction.class);
 	loanersCustomTable.getCutomTableComponent().setPrefSize(300, 300);
 	debtsAmountsCustomtable.getCutomTableComponent().setPrefHeight(200);
-	installmentsCustomTable.getCutomTableComponent().setPrefHeight(200);
+	PayeesCustomTable.getCutomTableComponent().setPrefHeight(200);
 
-	fitToAnchorePane(installmentsCustomTable.getCutomTableComponent());
+	fitToAnchorePane(PayeesCustomTable.getCutomTableComponent());
 	fitToAnchorePane(loanersCustomTable.getCutomTableComponent());
 	fitToAnchorePane(debtsAmountsCustomtable.getCutomTableComponent());
 	
 	debtTable_loc.getChildren().addAll(debtsAmountsCustomtable.getCutomTableComponent());
 	loanersTable_loc.getChildren().addAll(loanersCustomTable.getCutomTableComponent());
-	installmentsTable.getChildren().addAll(installmentsCustomTable.getCutomTableComponent());
+	installmentsTable.getChildren().addAll(PayeesCustomTable.getCutomTableComponent());
 //==================================================================================================================	
 	
 
@@ -163,52 +165,52 @@ private void init() {
 
 
 
-	private void loadInstallments(int id, String type) {
-		/*
-		 * 
-		 * installmentsCustomTable.getTable().getItems().clear();
-		 * 
-		 * List installments=null;//this.getExpansesServices().getLoanerInstalments(id,
-		 * type); List data=new ArrayList(); for (Iterator iterator =
-		 * installments.iterator(); iterator.hasNext();) { LoanPaying paying =
-		 * (LoanPaying) iterator.next(); InstalmelmentVB row=new InstalmelmentVB();
-		 * row.setId(paying.getId()); row.setAmount(paying.getPaidAmunt());
-		 * row.setInstDate(InstalmelmentVB.sdf.format(paying.getPayingDate()));
-		 * row.setNotes(paying.getNotes());
-		 * 
-		 * 
-		 * data.add(row);
-		 * 
-		 * } this.installmentsCustomTable.loadTableData(data);
-		 * 
-		 * 
-		 * 
-		 */}
+	private void loadPayees(int loanerId, LoanTypeEnum type) throws EmptyResultSetException, DataBaseException {
+		
+		List <LoanTransaction>transactions=null;
+		
+		  //detect type of loan 
+		if(type.equals(LoanTypeEnum.IN_LOAN)) {
+			transactions=getExpansesServices().getLoanTransactions(loanerId, LoanTransactionTypeEnum.PAY_DEBIT);
+			
+		}
+		else if (type.equals(LoanTypeEnum.OUT_LOAN)) {
+			
+			transactions=getExpansesServices().getLoanTransactions(loanerId, LoanTransactionTypeEnum.PAY_CREDIT);
+
+		}
+		
+		  PayeesCustomTable.getTable().getItems().clear();
+		  this.PayeesCustomTable.loadTableData(transactions);		 
+		  
+		  
+		  
+		 }
 
 
-	private void loadDebts(int id, String type) {
-		/*
-		 * 
-		 * debtsAmountsCustomtable.getTable().getItems().clear();
-		 * 
-		 * List installments=null;//this.getExpansesServices().getLoanerDebts(id, type);
-		 * List data=new ArrayList(); for (Iterator iterator = installments.iterator();
-		 * iterator.hasNext();) { ShopLoan installment = (ShopLoan) iterator.next();
-		 * InstalmelmentVB row=new InstalmelmentVB(); row.setId(installment.getId());
-		 * row.setAmount(installment.getAmount());
-		 * row.setInstDate(InstalmelmentVB.sdf.format(installment.getLoanDate()));
-		 * row.setNotes(installment.getNotes());
-		 * 
-		 * 
-		 * data.add(row);
-		 * 
-		 * } this.debtsAmountsCustomtable.loadTableData(data);
-		 * 
-		 * 
-		 * 
-		 */}
+	private void loadDebts(int loanerId, LoanTypeEnum type) throws EmptyResultSetException, DataBaseException {
+		
+		List <LoanTransaction>transactions=null;
+		
+		  //detect type of loan 
+		if(type.equals(LoanTypeEnum.IN_LOAN)) {
+			transactions=getExpansesServices().getLoanTransactions(loanerId, LoanTransactionTypeEnum.LOAN_DEBET);
+			
+		}
+		else if (type.equals(LoanTypeEnum.OUT_LOAN)) {
+			
+			transactions=getExpansesServices().getLoanTransactions(loanerId, LoanTransactionTypeEnum.LOAN_CREDIT);
 
-	private void loadLoanerNames(String type) {
+		}
+		
+		  debtsAmountsCustomtable.getTable().getItems().clear();
+		  this.debtsAmountsCustomtable.loadTableData(transactions);		 
+		  
+		  
+		  
+		 }
+
+	private void loadLoanerNames(LoanTypeEnum type) {
 		/*
 		 * 
 		 * //loanersCustomTable.getTable().getRoot().getChildren().clear();
@@ -257,7 +259,7 @@ void initiateInLoanPage(){
 
 	
     map=new HashMap<String, Object>();
-    loadLoanerNames(inLoan);
+    loadLoanerNames(LoanTypeEnum.IN_LOAN);
 	map.put("type=", "'"+inLoan+"'");
 	map.put("finished=", 0);
     
@@ -405,14 +407,14 @@ public void rowSelected(Object table) {
 	
 	
 	debtsAmountsCustomtable.getTable().getItems().clear();
-	installmentsCustomTable.getTable().getItems().clear();
+	PayeesCustomTable.getTable().getItems().clear();
 
 	
 	JFXTreeTableView<LoanersNameVB>	mytable=(JFXTreeTableView<LoanersNameVB>) table;
 	LoanersNameVB loaner=	mytable.getSelectionModel().getSelectedItem().getValue();
-	String type=(loanType_combo.getSelectionModel().getSelectedItem().getId()==1)?inLoan:outLoan;
+	LoanTypeEnum type=(loanType_combo.getSelectionModel().getSelectedItem().getId()==1)?LoanTypeEnum.IN_LOAN:LoanTypeEnum.OUT_LOAN;
 	loadDebts(loaner.getId(), type);
-	loadInstallments(loaner.getId(), type);
+	loadPayees(loaner.getId(), type);
 	
 }   
     

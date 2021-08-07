@@ -495,7 +495,7 @@ private List<Column> prepareIncomeTableColumns(){
 			row.setId(detail.getId());
 			row.setName(name);
 			row.setNotes(detail.getNotes());
-			row.setType(detail.getTypeName());
+			row.setType(detail.getType().getName());
 			tableData.add(row);
 		}
 		
@@ -675,7 +675,7 @@ private List<Column> prepareIncomeTableColumns(){
 
 			row.setReport(detail.getNotes());
 			row.setOrderTage(orderTag);
-			row.setType(detail.getTypeName());
+			row.setType(detail.getOutcomeType().getNameAr());
 			row.setFridageName(detail.getFridage().getName());
 			totalAmount+=detail.getAmount();
 			String name=" ";

@@ -35,5 +35,6 @@ public interface ISalesService {
  	List getSellerOrderWeights(int orderId) throws DataBaseException, EmptyResultSetException;
 	SellerLoanBag findSellerLoanBag(Seller seller, int seasonId) throws DataBaseException;
 	Seller saveSeller(Seller seller) throws DataBaseException, InvalidReferenceException;
+	void recalculeAdSaveSellerLoanBag(int seasonId, Seller seller);
  	
 }

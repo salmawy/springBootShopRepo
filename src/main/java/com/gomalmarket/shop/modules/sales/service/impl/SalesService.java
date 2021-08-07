@@ -3,7 +3,6 @@ package com.gomalmarket.shop.modules.sales.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -94,17 +93,12 @@ public class SalesService implements ISalesService {
 		return this.getSalesDao().getSellersOrders(orderDate);
 	}
 
- 
-	
-	
-	
 	public void saveSellerOrder(Seller seller, SellerOrder sellerOrder, double paidAmount) throws Exception {
 		this.entityDictionary = new HashMap<String, Object>();
 		seller = saveSeller(seller);
 
-		
-		if(seller.getTypeId()==SellerTypeEnum.cash.getId()) {
-			//sellerOrder.setSellerLoanBag(0);
+		if (seller.getTypeId() == SellerTypeEnum.cash.getId()) {
+			// sellerOrder.setSellerLoanBag(0);
 			sellerOrder.setSeller(seller);
 
 			this.getBaseService().addBean(sellerOrder);
@@ -113,27 +107,34 @@ public class SalesService implements ISalesService {
 					IncomeTypeEnum.CASH, seller.getId(), sellerOrder.getId(), sellerOrder.getFridage(),
 					sellerOrder.getSeason());
 
-		}
-		else if(seller.getTypeId()==SellerTypeEnum.permenant.getId()) {
-			
-		 	  SellerLoanBag loanBag=this.findSellerLoanBag(seller, this.shopAppContext.getSeason().getId());
+		} else if (seller.getTypeId() == SellerTypeEnum.permenant.getId()) {
 
-		 	  sellerOrder.setSellerLoanBag(loanBag);
+			SellerLoanBag loanBag = this.findSellerLoanBag(seller, this.shopAppContext.getSeason().getId());
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getSellerLoanBagRepo(),
+					loanBag);
+
+			sellerOrder.setSellerLoanBag(loanBag);
 			sellerOrder.setSeller(seller);
-  	 		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getSellerOrderRepo(), sellerOrder);
+
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getSellerOrderRepo(),
+					sellerOrder);
+			sellerOrder.getOrderWeights().stream().forEach(e -> {
+				e.setSellerOrder(sellerOrder);
+				this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getSellerOrderWeightRepo(),
+						e);
+			});
 
 			if (paidAmount > 0)
-				saveSellerInstalment(seller.getId(), sellerOrder.getId(), sellerOrder.getSellerLoanBag().getId(), sellerOrder.getFridage(),
-						sellerOrder.getSeason(), paidAmount, sellerOrder.getOrderDate(), "");
-			 
-		}
-		
-		 
+				saveSellerInstalment(seller.getId(), sellerOrder.getId(), sellerOrder.getSellerLoanBag().getId(),
+						sellerOrder.getFridage(), sellerOrder.getSeason(), paidAmount, sellerOrder.getOrderDate(), "");
+			
+			recalculeSellerLoanBag(loanBag);
 
-		 
+		}
+
 		// to update seller order detail by new after saving into database and take new
 		// its new id from database
-		//this.getBaseService().addEditBeans(orderdetail);
+		// this.getBaseService().addEditBeans(orderdetail);
 		log.info("tranasction completed succfully");
 
 	}
@@ -160,12 +161,18 @@ public class SalesService implements ISalesService {
 		// =========================================================================================================================================
 		else if (newSeller.getTypeId() == oldOrder.getSeller().getTypeId()
 				&& newSeller.getTypeId() == SellerTypeEnum.permenant.getId()) {
-
-			editPermenantSellerOrder(newSeller, newOrder, paidAmount, oldOrder, seasonId);
+			/*
+			 * editPermenantSellerOrder(Seller seller,int newSeasonId,double totalCost, Date
+			 * orderDate, double paidAmount,String
+			 * notes,List<SellerOrderWeight>newOrderWeights, int sellerOrderId, int
+			 * seasonId) throws Exception {
+			 */
+			editPermenantSellerOrder(newSeller, newOrder.getSeason().getId(),newOrder.getTotalCost(),newOrder.getOrderDate(), paidAmount,newOrder.getNotes(),newOrder.getOrderWeights(), oldOrder.getId(), seasonId);
 		}
 
 	}
-@Transactional
+
+	@Transactional
 	public void editCashSellerOrder(Seller seller, SellerOrder editedOrder, double paidAmount, SellerOrder order)
 			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -190,17 +197,25 @@ public class SalesService implements ISalesService {
 
 		}
 
- 		order.setTotalCost(editedOrder.getTotalCost());
- 		order.setNotes(editedOrder.getNotes());
- 		order.setOrderDate(editedOrder.getOrderDate());
- 		order.setOrderWeights(editedOrder.getOrderWeights());
- 		 
- 		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getSellerOrderRepo(), order);
- 		
- 	}
-@Transactional
-	public void editPermenantSellerOrder(Seller seller, SellerOrder editedOrder, double paidAmount,
-			SellerOrder sellerOrder, int seasonId) throws Exception {
+		order.setTotalCost(editedOrder.getTotalCost());
+		order.setNotes(editedOrder.getNotes());
+		order.setOrderDate(editedOrder.getOrderDate());
+		order.setOrderWeights(editedOrder.getOrderWeights());
+
+		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getSellerOrderRepo(), order);
+
+	}
+
+	@Transactional
+	public void editPermenantSellerOrder(Seller seller,int newSeasonId,double totalCost, Date orderDate,  double paidAmount,String notes,List<SellerOrderWeight>newOrderWeights,
+			int  sellerOrderId, int seasonId) throws Exception {
+		
+		Season newSeason=this.getShopAppContext().getRepoSupplier().getSeasonRepo().findById(newSeasonId).get();
+		SellerOrder sellerOrder =this.getShopAppContext().getRepoSupplier().getSellerOrderRepo().findById(sellerOrderId).get();
+
+		
+		
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		IncomeDetail oldPaidAmountDetail = null;
@@ -235,12 +250,10 @@ public class SalesService implements ISalesService {
 //========================================handle loanBag changed case============================================================================	
 		int newLoanBagId = 0;
 
-		clearOrderFromSellerLoanBag(sellerOrder, editedOrder.getSeason().getId(), editedOrder.getTotalCost(),
-				oldPaidAmount);
-		newLoanBagId = saveAndUpdateSellerLoanBag(sellerOrder, editedOrder.getSeason(), editedOrder.getTotalCost(),
-				paidAmount);
-		// newOrder.setSellerLoanBagId(newLoanBagId);
-
+		 
+		SellerLoanBag loanBag= this.findSellerLoanBag(seller_, newSeasonId);
+		
+ 
 //=====================================get installment and update it ============================================================================
 
 		if (oldPaidAmountDetail != null && paidAmount > 0.0) {
@@ -249,14 +262,16 @@ public class SalesService implements ISalesService {
 			Installment installment = (Installment) this.getBaseService().findBean(Installment.class, params);
 			installment.setSellerLoanBagId(sellerOrder.getSellerLoanBag().getId());
 			installment.setAmount(paidAmount);
-			this.getBaseService().addEditBean(installment);
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getInstallmentRepo(), installment);
+			
+			//this.getBaseService().addEditBean(installment);
 		} else if (paidAmount == 0.0 && oldPaidAmountDetail != null) {
 			params = new HashMap<String, Object>();
 			params.put("sellerOrderId", sellerOrder.getId());
 			Installment installment = (Installment) this.getBaseService().findBean(Installment.class, params);
-
-			this.getBaseService().deleteBean(installment);
-
+			
+			this.getShopAppContext().getRepoSupplier().getInstallmentRepo().delete(installment);
+ 
 		}
 
 		// ===============================change income detail
@@ -277,9 +292,9 @@ public class SalesService implements ISalesService {
 				oldPaidAmountDetail.setSellerOrderId(sellerOrder.getId());
 			}
 
-			this.getExpansesServices().editIncomeTransaction(editedOrder.getOrderDate(), editedOrder.getTotalCost(), "",
+			this.getExpansesServices().editIncomeTransaction(orderDate, totalCost, "",
 					IncomeTypeEnum.INTST_PAY, sellerOrder.getSeller().getId(), sellerOrder.getId(),
-					editedOrder.getFridage(), sellerOrder.getSeason(), oldPaidAmountDetail.getId());
+					sellerOrder.getFridage(), sellerOrder.getSeason(), oldPaidAmountDetail.getId());
 
 		}
 
@@ -294,14 +309,14 @@ public class SalesService implements ISalesService {
 
 		else if (oldPaidAmountDetail == null && paidAmount > 0.0) {
 
-			saveSellerInstalment(seller.getId(), sellerOrder.getId(), newLoanBagId, sellerOrder.getFridage(),
-					editedOrder.getSeason(), paidAmount, sellerOrder.getOrderDate(), "");
+			saveSellerInstalment(seller.getId(), sellerOrder.getId(), loanBag.getId(), sellerOrder.getFridage(),
+					newSeason, paidAmount, sellerOrder.getOrderDate(), "");
 
 		}
 		// ============================================ detail
 		// ================================================================
 
- 		/*
+		/*
 		 * for (Iterator iterator = editedOrder.getOrderWeights().iterator();
 		 * iterator.hasNext();) { SellerOrderWeight temp = (SellerOrderWeight)
 		 * iterator.next(); temp.setSellerOrder(newOrder); orderdetail.add(temp);
@@ -311,24 +326,30 @@ public class SalesService implements ISalesService {
 
 		// to update seller order detail by new after saving into database and take new
 		// its new id from database
-		// this.getBaseService().addEditBeans(orderdetail);
-		
-		 params=new HashMap<String, Object>();
+
+		params = new HashMap<String, Object>();
 		params.put("sellerOrderId", sellerOrder.getId());
-		List<SellerOrderWeight> deleteOrderdetail=this.getBaseService().findAllBeans(SellerOrderWeight.class,params);
-		
+		List<SellerOrderWeight> deleteOrderdetail = this.getBaseService().findAllBeans(SellerOrderWeight.class, params);
+
 		this.getShopAppContext().getRepoSupplier().getSellerOrderWeightRepo().deleteAll(deleteOrderdetail);
 
-		sellerOrder.setOrderWeights(editedOrder.getOrderWeights());
-		sellerOrder.setOrderDate(editedOrder.getOrderDate());
-		sellerOrder.setNotes(editedOrder.getNotes());
-		sellerOrder.setTotalCost(editedOrder.getTotalCost());
-		sellerOrder.setFridage(editedOrder.getFridage());
+		//sellerOrder.setOrderWeights(editedOrder.getOrderWeights());
+		sellerOrder.setOrderDate(orderDate);
+		sellerOrder.setNotes(notes);
+		sellerOrder.setTotalCost(totalCost);
 		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getSellerOrderRepo(), sellerOrder);
-
+ 		
+		
+		newOrderWeights.stream().forEach(e -> {
+			e.setSellerOrder(sellerOrder);
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getSellerOrderWeightRepo(),e);
+		});
+		recalculeSellerLoanBag(loanBag);
+		this.baseService.saveEntity(this.getShopAppContext().getRepoSupplier().getSellerLoanBagRepo(),loanBag);
+		
 	}
 
-	public int saveAndUpdateSellerLoanBag(SellerOrder sellerOrder, Season season, double orderCost, double paidAmount)
+	public int saveAndUpdateSellerLoanBag(SellerOrder sellerOrder,   double orderCost, double paidAmount)
 			throws DataBaseException {
 		double currentloan = 0;
 		// SellerLoanBag bag = findSellerLoanBag(seller, season.getId());
@@ -368,7 +389,6 @@ public class SalesService implements ISalesService {
 
 	}
 
-	
 	@Override
 	public Seller saveSeller(Seller seller) throws DataBaseException, InvalidReferenceException {
 
@@ -395,8 +415,6 @@ public class SalesService implements ISalesService {
 
 	}
 
-	
-	
 	@Override
 	public SellerLoanBag findSellerLoanBag(Seller seller, int seasonId) throws DataBaseException {
 		Map<String, Object> m = new HashMap<String, Object>();
@@ -405,7 +423,7 @@ public class SalesService implements ISalesService {
 
 		try {
 			SellerLoanBag bag = (SellerLoanBag) this.getBaseService().findAllBeans(SellerLoanBag.class, m, null).get(0);
-  			return bag;
+			return bag;
 
 		} catch (DataBaseException | EmptyResultSetException e) {
 			// TODO Auto-generated catch block
@@ -416,7 +434,7 @@ public class SalesService implements ISalesService {
 		bag.setSeller(seller);
 		bag.setSeason(shopAppContext.getSeason());
 
- 		String key = hashDisctionaryEntityKey(SellerLoanBag.class, bag.getId());
+		String key = hashDisctionaryEntityKey(SellerLoanBag.class, bag.getId());
 		entityDictionary.put(key, bag);
 
 		return bag;
@@ -436,7 +454,7 @@ public class SalesService implements ISalesService {
 			installment.setSellerOrderId(sellerOrderId);
 
 		}
- 	 		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getInstallmentRepo(), installment);
+		this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getInstallmentRepo(), installment);
 
 //Date date,double amount, String notes, IncomeTypeEnum type, int sellerId, int orderId, Integer installmentId, Fridage fridage,Season season
 		expansesServices.incomeTransaction(date, amount, notes, IncomeTypeEnum.INTST_PAY, sellerId, sellerOrderId,
@@ -446,8 +464,8 @@ public class SalesService implements ISalesService {
 
 	private void deleteOldSellerOrder(SellerOrder order) throws DataBaseException {
 		Seller seller = order.getSeller();
-		
-		if(seller.getTypeId()==SellerTypeEnum.cash.getId()) {
+
+		if (seller.getTypeId() == SellerTypeEnum.cash.getId()) {
 
 			Map<String, Object> map = new HashMap<String, Object>();
 
@@ -469,11 +487,10 @@ public class SalesService implements ISalesService {
 
 			this.getBaseService().deleteBean(order);
 
-		}
-		else if(seller.getTypeId()==SellerTypeEnum.permenant.getId()) {
-		Map	<String, Object> map = new HashMap<String, Object>();
+		} else if (seller.getTypeId() == SellerTypeEnum.permenant.getId()) {
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("orderId", order.getId());
-			
+
 			try {
 				IncomeDetail incomeDetail = (IncomeDetail) this.getBaseService().findBean(IncomeDetail.class, map);
 				getExpansesServices().deleteIncomeDetailTransaction(incomeDetail);
@@ -489,8 +506,8 @@ public class SalesService implements ISalesService {
 
 			// =========================delete installment============================
 			try {
-				
-				map=new HashMap<String, Object>();
+
+				map = new HashMap<String, Object>();
 				map.put("sellerOrderId", order.getId());
 				Installment installment = (Installment) this.getBaseService().findBean(Installment.class, map);
 
@@ -505,16 +522,15 @@ public class SalesService implements ISalesService {
 			Seller seller_ = order.getSeller();
 			int seasonId = order.getSeason().getId();
 			this.getShopAppContext().getRepoSupplier().getSellerOrderRepo().delete(order);
-			recalculeSellerLoanBag(seasonId, seller_);
+			recalculeAdSaveSellerLoanBag(seasonId, seller_);
 
 		}
-		
- 
+
 		log.info("tranasction completed succfully");
 
 	}
-
-	public void recalculeSellerLoanBag(int seasonId, Seller seller) {
+@Override
+	public void recalculeAdSaveSellerLoanBag(int seasonId, Seller seller) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("season.id=", seasonId);
 		map.put("seller.id=", seller.getId());
@@ -539,13 +555,44 @@ public class SalesService implements ISalesService {
 			bag.setDueLoan(ordersCost);
 			bag.setCurrentLoan(temp);
 
-			this.getBaseService().addEditBean(bag);
-
+		//	this.getBaseService().addEditBean(bag);
+			this.getBaseService().saveEntity(this.shopAppContext.getRepoSupplier().getSellerLoanBagRepo(), bag);
 		} catch (DataBaseException | EmptyResultSetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+	}
+	public SellerLoanBag recalculeSellerLoanBag(SellerLoanBag loanBag) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("season.id=", loanBag.getSeasonId());
+		map.put("seller.id=", loanBag.getSellerId());
+
+		Double ordersCost = 0.0;
+		Double totalPaidAmount = 0.0;
+
+		try {
+
+ 			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("sellerLoanBagId=", loanBag.getId());
+
+			ordersCost = (Double) aggregate("SellerOrder", "sum", "totalCost", map);
+			ordersCost = (ordersCost == null) ? 0.0 : ordersCost;
+
+			totalPaidAmount = (Double) aggregate("Installment", "sum", "amount", map2);
+			totalPaidAmount = (totalPaidAmount == null) ? 0.0 : totalPaidAmount;
+
+			double temp = (loanBag.getPriorLoan() + ordersCost) - totalPaidAmount;
+			loanBag.setPaidAmount(totalPaidAmount);
+			loanBag.setDueLoan(ordersCost);
+			loanBag.setCurrentLoan(temp);
+
+ 
+		} catch (DataBaseException | EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+return loanBag;
 	}
 
 	public double getSellerLoan(int sellerId, int seasonId) {

@@ -34,10 +34,9 @@ public class SafeTransaction extends BaseEntity  {
 	@Id
 	@Column(name = "ID")
 	private int id;
+	
 
-	@Column(name = "TYPE_NAME")
-	private String typeName;
-
+	
 	@Column(name = "AMOUNT")
 	private Double amount;
 
@@ -47,9 +46,8 @@ public class SafeTransaction extends BaseEntity  {
 	@Column(name = "NOTES")
 	private String notes;
 
-	@Column(name = "TYPE_ID")
-	private int typeId;
-
+	
+	
 	@Column(name = "ORDER_ID")
 	private Integer orderId;
 

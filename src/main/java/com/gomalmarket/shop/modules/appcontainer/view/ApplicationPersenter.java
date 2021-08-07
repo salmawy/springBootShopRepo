@@ -464,7 +464,7 @@ private void fitToAnchorePane(Node node) {
 	  panelPathes.put("dailySelling_btn",new String [] { "com.gomalmarket.shop.modules.sales.view.DailySalesView",getMessage("title.seller.dailySales")});
 	  panelPathes.put("sellerDebts_btn", new String [] {"com.gomalmarket.shop.modules.sales.debt.view.DebtsView",getMessage("title.seller.debts")});
 	  panelPathes.put("Expanses_btn", new String [] {"com.gomalmarket.shop.modules.expanses.view.expanses.ExpansesView",getMessage("title.expanses.Safe")});
-	  panelPathes.put("shopDebts_btn",new String [] { "com.gomalmarket.shop.modules.shopLoans.view.debit.DebitorView",getMessage("title.expanses.shopDebts")});
+	  panelPathes.put("shopDebts_btn",new String [] { "com.gomalmarket.shop.modules.expanses.view.loan.LoansView",getMessage("title.expanses.shopDebts")});
 	  panelPathes.put("notes_btn", new String [] {"com.gomalmarket.shop.modules.contractor.view.notes.NotesView",getMessage("title.withdrawls.notes")});
 	  panelPathes.put("varaities_btn",new String [] { "com.gomalmarket.shop.modules.contractor.view.varaities.VaraityView",getMessage("title.withdrawls.varaities")});
 	  panelPathes.put("suppliers_btn",new String [] { "com.gomalmarket.shop.modules.contractor.view.suppliers.SupplierView",getMessage("title.withdrawls.suppliers")});

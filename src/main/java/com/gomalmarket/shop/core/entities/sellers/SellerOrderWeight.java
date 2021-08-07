@@ -44,11 +44,7 @@ public class SellerOrderWeight extends BaseEntity {
     private CustomerOrder customerOrder;
 
     
-    @ManyToOne
-    @JoinColumn(name = "SELLER_ORDER_ID")
-    private SellerOrder sellerOrder;
   
-    
     @Column(name = "CUSTOMER_ORDER_ID",nullable = true)
     private Integer customerOrderId;
     
@@ -57,6 +53,11 @@ public class SellerOrderWeight extends BaseEntity {
      @Column(name = "SELLER_ORDER_ID",insertable = false,updatable = false)
     private int sellerOrderId;
     
+     @ManyToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE} )
+     @JoinColumn(name = "SELLER_ORDER_ID")
+     private SellerOrder sellerOrder;
+   
+     
     
     
     @ManyToOne

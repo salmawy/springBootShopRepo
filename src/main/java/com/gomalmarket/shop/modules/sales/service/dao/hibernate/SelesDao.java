@@ -256,14 +256,17 @@ public List getSellersLoanSummary(Date fromDate,Date toDate,int seasonId) throws
 		 		"                          and INST.INSTALLMENT_DATE between :fromDate and :toDate   ),0)as AMOUNT ,     \r\n" + 
 		 		"                          SLB.CURRENT_LOAN  ,S.NAME   \r\n" + 
 		 		"                      from seller_loan_bagS slb  , sellerS s    \r\n" + 
-		 		"                      where SLB.SEASON_ID=:seasonId   \r\n" + 
+		 		"                      where SLB.SEASON_ID=:seasonId "
+		 		+ "	 and slb.CHANGE_DATE between :fromDate and :toDate"
+		 		+ ""
+		 		+ "  \r\n" + 
 		 		"                      and SLB.CURRENT_LOAN>0  and s.id=SLB.SELLER_ID    \r\n" + 
 		 		"                      group by SLB.SELLER_ID,slb.PRIOR_LOAN,slb.id,SLB.CURRENT_LOAN,S.NAME\r\n" + 
 		 		"                        order by CURRENT_LOAN desc ";
 
 		 Query  query = entityManger.createNativeQuery(sql);
-	  query.setParameter("fromDate", fromDate);
-	  query.setParameter("toDate", toDate);
+	  query.setParameter("fromDate", fromDate,TemporalType.DATE);
+	  query.setParameter("toDate", toDate,TemporalType.DATE);
 	  query.setParameter("seasonId", seasonId);
 
 	   

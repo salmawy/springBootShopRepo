@@ -267,6 +267,8 @@ private  boolean validateForm() throws DataBaseException {
 		 
 				try {
 					this.getSalesService().saveSellerInstalment(sellerId, 0, loanBag.getId(), fridage,getAppContext().getSeason(), amount, date, notes);
+				this.getSalesService().recalculeAdSaveSellerLoanBag(seasonId, loanBag.getSeller());
+				
 				} catch (InvalidReferenceException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
