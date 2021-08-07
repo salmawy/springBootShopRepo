@@ -454,3 +454,94 @@ update id_table set ID_TABLE_VALUE=(
 select max (ST.ID )+1 from INSTALLMENTs st)
 where ID_TABLE_NAME like 'INSTALLMENT_ID';
 commit;
+
+
+
+ 
+/* Formatted on 8/7/2021 6:03:59 PM (QP5 v5.365) */
+CREATE OR REPLACE FORCE VIEW SHOP2020.IN_LOAN_ACCOUNTS
+(
+    AMOUNT,
+    LOANER_ID,
+    NAME,
+    TYPE
+)
+AS
+      SELECT SUM (LOAN_DEBIT_AMOUNT - PAY_DEBIT_AMOUNT)     AMOUNT,
+             ID                                             AS LOANER_ID,
+             NAME,
+             'IN_LOAN'                                      AS TYPE
+        FROM (  SELECT SUM (TRX.AMOUNT)     LOAN_DEBIT_AMOUNT,
+                       0                    PAY_DEBIT_AMOUNT,
+                       L.ID,
+                       L.NAME
+                  FROM SHOP_LOANS_TRANSACTIONS TRX, LOANERS L
+                 WHERE     TRX.LOANER_ID = L.ID
+                       AND TRX.FINISHED = 0
+                       AND TRX.TRANSACTION_TYPE LIKE 'LOAN_DEBIT'
+              GROUP BY L.ID, L.NAME
+              UNION
+                SELECT 0                    LOAN_DEBIT_AMOUNT,
+                       SUM (TRX.AMOUNT)     PAY_DEBIT_AMOUNT,
+                       L.ID,
+                       L.NAME
+                  FROM SHOP_LOANS_TRANSACTIONS TRX, LOANERS L
+                 WHERE     TRX.LOANER_ID = L.ID
+                       AND TRX.FINISHED = 0
+                       AND TRX.TRANSACTION_TYPE LIKE 'PAY_DEBIT'
+              GROUP BY L.ID, L.NAME)
+    GROUP BY ID, NAME
+      HAVING (SUM (LOAN_DEBIT_AMOUNT - PAY_DEBIT_AMOUNT) <> 0);
+
+      
+      
+ 
+/* Formatted on 8/7/2021 6:04:41 PM (QP5 v5.365) */
+CREATE OR REPLACE FORCE VIEW SHOP2020.OUT_LOAN_ACCOUNTS
+(
+    AMOUNT,
+    LOANER_ID,
+    NAME,
+    TYPE
+)
+AS
+      SELECT SUM (LOAN_CREDIT_AMOUNT - PAY_CREDIT_AMOUNT)     AMOUNT,
+             ID                                               AS LOANER_ID,
+             NAME,
+             'OUT_LOAN'                                       AS TYPE
+        FROM (  SELECT SUM (TRX.AMOUNT)     LOAN_CREDIT_AMOUNT,
+                       0                    PAY_CREDIT_AMOUNT,
+                       L.ID,
+                       L.NAME
+                  FROM SHOP_LOANS_TRANSACTIONS TRX, LOANERS L
+                 WHERE     TRX.LOANER_ID = L.ID
+                       AND TRX.FINISHED = 0
+                       AND TRX.TRANSACTION_TYPE LIKE 'LOAN_CREDIT'
+              GROUP BY L.ID, L.NAME
+              UNION
+                SELECT 0                    LOAN_CREDIT_AMOUNT,
+                       SUM (TRX.AMOUNT)     PAY_CREDIT_AMOUNT,
+                       L.ID,
+                       L.NAME
+                  FROM SHOP_LOANS_TRANSACTIONS TRX, LOANERS L
+                 WHERE     TRX.LOANER_ID = L.ID
+                       AND TRX.FINISHED = 0
+                       AND TRX.TRANSACTION_TYPE LIKE 'PAY_CREDIT'
+              GROUP BY L.ID, L.NAME)
+    GROUP BY ID, NAME;
+
+    
+    DROP VIEW SHOP2020.LOAN_ACCOUNTS;
+
+/* Formatted on 8/7/2021 6:04:54 PM (QP5 v5.365) */
+CREATE OR REPLACE FORCE VIEW SHOP2020.LOAN_ACCOUNTS
+(
+    AMOUNT,
+    LOANER_ID,
+    NAME,
+    TYPE
+)
+AS
+    SELECT "AMOUNT", "LOANER_ID", "NAME", "TYPE" FROM IN_LOAN_ACCOUNTS
+    UNION
+    SELECT "AMOUNT", "LOANER_ID", "NAME", "TYPE" FROM OUT_LOAN_ACCOUNTS;

@@ -300,7 +300,7 @@ public class ExpansesServices implements IExpansesServices {
 
 			PayCredit t = (PayCredit) e;
 			return LoanTransaction.builder().amount(t.getAmount()).id(t.getId()).notes(t.getNotes())
-					.transactionDate(t.getTransactionDate()).description(LoanTransactionTypeEnum.PAY_CREDIT.getId())
+					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate())).description(LoanTransactionTypeEnum.PAY_CREDIT.getId())
 					.build();
 		}).collect(Collectors.toList());
 
@@ -320,7 +320,7 @@ public class ExpansesServices implements IExpansesServices {
 
 			PayDebit t = (PayDebit) e;
 			return LoanTransaction.builder().amount(t.getAmount()).id(t.getId()).notes(t.getNotes())
-					.transactionDate(t.getTransactionDate()).description(LoanTransactionTypeEnum.PAY_DEBIT.getId())
+					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate())).description(LoanTransactionTypeEnum.PAY_DEBIT.getId())
 					.build();
 		}).collect(Collectors.toList());
 
@@ -340,7 +340,7 @@ public class ExpansesServices implements IExpansesServices {
 
 			LoanCredit t = (LoanCredit) e;
 			return LoanTransaction.builder().amount(t.getAmount()).id(t.getId()).notes(t.getNotes())
-					.transactionDate(t.getTransactionDate()).description(LoanTransactionTypeEnum.LOAN_CREDIT.getId())
+					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate())).description(LoanTransactionTypeEnum.LOAN_CREDIT.getId())
 					.build();
 		}).collect(Collectors.toList());
 
@@ -359,7 +359,7 @@ public class ExpansesServices implements IExpansesServices {
 
 			LoanDebit t = (LoanDebit) e;
 			return LoanTransaction.builder().amount(t.getAmount()).id(t.getId()).notes(t.getNotes())
-					.transactionDate(t.getTransactionDate()).description(LoanTransactionTypeEnum.LOAN_DEBET.getId())
+					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate())).description(LoanTransactionTypeEnum.LOAN_DEBET.getId())
 					.build();
 		}).collect(Collectors.toList());
 

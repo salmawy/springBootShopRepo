@@ -1,6 +1,6 @@
 package com.gomalmarket.shop.modules.expanses.view.beans;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,11 +17,12 @@ import lombok.Setter;
 public class LoanTransaction {
 	
 	private int id;
-	private Date transactionDate;
+	private String transactionDate;
 	private String notes;
 	private String description;
 	private double amount;
-	
+	public static final SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
+
 	
 	
 	

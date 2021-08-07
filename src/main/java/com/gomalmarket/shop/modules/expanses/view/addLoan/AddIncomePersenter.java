@@ -1,4 +1,4 @@
-package com.gomalmarket.shop.modules.expanses.view.addIncome;
+package com.gomalmarket.shop.modules.expanses.view.addLoan;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -42,22 +42,22 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 	Logger logger = Logger.getLogger(this.getClass().getName());	
 
 	    @FXML
-	    private JFXComboBox<ComboBoxItem> incomeType_combo;
+	    private JFXComboBox<ComboBoxItem> loanType_combo;
 
 	    @FXML
 	    private JFXButton cancel_btn;
 
 	    @FXML
-	    private JFXTextField incomeAmount_TF;
+	    private JFXTextField amount_TF;
 
 	    @FXML
-	    private Label incomeName_label;
+	    private Label loanerName_label;
 
 	    @FXML
-	    private Label incomeType_label;
+	    private Label type_label;
 
 	    @FXML
-	    private JFXTextField incomeName_TF;
+	    private JFXTextField loanerName_TF;
 
   
 	    @FXML
@@ -82,7 +82,7 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 	    private HBox datePicker_loc1;
 
 	    @FXML
-	    private Label incomeAmount_label;
+	    private Label amount_label;
 
 	    @FXML
 	    private HBox datePicker_loc;
@@ -91,7 +91,7 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 	    private JFXButton saveBtn;
 //---------------------------------------------------------------------------------------------
     
-	List<ComboBoxItem> incomeTypes;
+	List<ComboBoxItem> loanTypes;
 	int incomeDetailId;
 	final 	int Add=0;
 	final 	int edit=1;
@@ -101,7 +101,7 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 
     	incomeDetailId=(int) request.get("incomeDetailId");
     	mode=(incomeDetailId==0)?Add:edit;
-    	incomeTypes=new ArrayList<ComboBoxItem>(Arrays.asList(new ComboBoxItem(IncomeTypeEnum.IN_PAY_LOAN.getId(),this.getMessage(" label.pay.inloan") )));
+    	loanTypes=new ArrayList<ComboBoxItem>(Arrays.asList(new ComboBoxItem(IncomeTypeEnum.IN_PAY_LOAN.getId(),this.getMessage(" label.pay.inloan") )));
     
     
     }
@@ -145,17 +145,17 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 	   	date_label.setText(getMessage("label.date"));
  //==============================================================================================================
  
-			incomeType_combo.getItems().addAll(incomeTypes);
+			loanType_combo.getItems().addAll(loanTypes);
 			
-			incomeType_combo.getSelectionModel().selectFirst();
+			loanType_combo.getSelectionModel().selectFirst();
 			
 			 
 //==============================================================================================================
 
 		
-		incomeAmount_label.setText(this.getMessage("label.money.amount"));
-		incomeType_label.setText(this.getMessage("label.safe.income.kind"));
- 		incomeName_label.setText(this.getMessage("label.name"));
+		amount_label.setText(this.getMessage("label.money.amount"));
+		type_label.setText(this.getMessage("label.safe.income.kind"));
+ 		loanerName_label.setText(this.getMessage("label.name"));
 
 		 //==============================================================================================================
 		saveBtn.setText(this.getMessage("button.save"));
@@ -200,8 +200,8 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 	 
 		boolean validateInForm() {
 			
-			   String name = incomeName_TF.getText(); 
-			   String inAmount = incomeAmount_TF.getText();
+			   String name = loanerName_TF.getText(); 
+			   String inAmount = amount_TF.getText();
 			 
 			  if (name.isEmpty()) {
 				  
@@ -260,8 +260,8 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 					IncomeDetail detail=(IncomeDetail) this.getBaseService().findBean(Income.class, incomeDetailId);
 					Contractor contractor=(Contractor) this.getBaseService().findBean(Contractor.class, detail.getSellerId());
 					this.note_TA.setText(detail.getNotes());
-					this.incomeName_TF.setText(contractor.getName());
-					this.incomeAmount_TF.setText(String.valueOf(detail.getAmount()));
+					this.loanerName_TF.setText(contractor.getName());
+					this.amount_TF.setText(String.valueOf(detail.getAmount()));
 					datePicker.setValue(this.getBaseService().convertToLocalDateViaMilisecond(detail.getChangeDate()));
 					
 					
@@ -296,8 +296,8 @@ public class AddIncomePersenter extends ExpansesAction implements Initializable 
 				  
 				  
 				  int typeId =
-				  incomeType_combo.getSelectionModel().getSelectedItem().getId(); double
-				  amount = Double.parseDouble(this.incomeAmount_TF.getText());
+				  loanType_combo.getSelectionModel().getSelectedItem().getId(); double
+				  amount = Double.parseDouble(this.amount_TF.getText());
 				  String notes =  note_TA.getText();
 				  
 			/*	  try {
