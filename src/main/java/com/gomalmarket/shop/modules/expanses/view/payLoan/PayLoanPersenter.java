@@ -67,7 +67,7 @@ public class PayLoanPersenter extends ExpansesAction implements Initializable {
 	    private AnchorPane root_pane;
 
 	    @FXML
-	    private JFXComboBox<ComboBoxItem> loanType_combo;
+	    private JFXComboBox<ComboBoxItem<Integer>> loanType_combo;
 
 	    @FXML
 	    private Pane coloredPane;
@@ -158,12 +158,12 @@ public class PayLoanPersenter extends ExpansesAction implements Initializable {
 	        {
 	        	
 	        	ComboBoxItem item=loanType_combo.getSelectionModel().getSelectedItem();
-	        	if(item.getId()==1) {
+	        	if(item.getId().equals(1)) {
 	          title_label.setText(getMessage("label.inLoan"));
  	        		coloredPane.setStyle("-fx-background-color: #00A65A");
 	        		
 	        	}
-	        	else if(item.getId()==2) {
+	        	else if(item.getId().equals(2)) {
 	  	          title_label.setText(getMessage("label.outLoan"));
 
  	        		coloredPane.setStyle("-fx-background-color: #DD4B39");

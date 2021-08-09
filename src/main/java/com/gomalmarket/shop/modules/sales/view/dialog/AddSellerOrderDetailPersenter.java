@@ -59,9 +59,9 @@ public class AddSellerOrderDetailPersenter extends SalesAction implements Initia
 
 	    private JFXButton save_btn;
 	    private JFXButton cancel_btn;
-	    private  JFXComboBox<ComboBoxItem> productType;
-	    private  JFXComboBox<ComboBoxItem> customer_cb;
-	    private  JFXComboBox<ComboBoxItem> store_cb;
+	    private  JFXComboBox<ComboBoxItem<Integer>> productType;
+	    private  JFXComboBox<ComboBoxItem<Integer>> customer_cb;
+	    private  JFXComboBox<ComboBoxItem<Integer>> store_cb;
 	    private JFXSnackbar snackBar;
 
 	    private Label productTypeLabel=new Label(this.getMessage("label.product"));
@@ -203,7 +203,7 @@ public class AddSellerOrderDetailPersenter extends SalesAction implements Initia
                     final Number oldvalue, final Number newvalue)
             {
             	clearInputForm();
-            	ComboBoxItem item=productType.getSelectionModel().getSelectedItem();
+            	ComboBoxItem<Integer> item=productType.getSelectionModel().getSelectedItem();
             	fillInputForm(item.getId());
             	loadCustomerOrders();
             	
@@ -211,7 +211,7 @@ public class AddSellerOrderDetailPersenter extends SalesAction implements Initia
         });
 		
 		
-		store_cb=new <ComboBoxItem> JFXComboBox();
+		store_cb=new <ComboBoxItem<Integer>> JFXComboBox();
 		store_cb.getStyleClass().add("comboBox");
 
 		store_cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>()

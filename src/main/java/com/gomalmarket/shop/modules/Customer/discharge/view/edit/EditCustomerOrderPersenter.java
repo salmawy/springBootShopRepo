@@ -78,11 +78,11 @@ public class EditCustomerOrderPersenter extends CustomerBaseAction implements In
 	private JFXTextField code_TF;
 	private JFXTextArea notes_TA;
 	private Validator myValidator;
-	private JFXComboBox<ComboBoxItem> productTyp_CB;
-	private JFXComboBox<ComboBoxItem> storeLocation_CB;
-	private JFXComboBox<ComboBoxItem> vehicleType_CB;
+	private JFXComboBox<ComboBoxItem<Integer>> productTyp_CB;
+	private JFXComboBox<ComboBoxItem<Integer>> storeLocation_CB;
+	private JFXComboBox<ComboBoxItem<Integer>> vehicleType_CB;
 
-	private JFXComboBox<ComboBoxItem> cutomerBox;
+	private JFXComboBox<ComboBoxItem<Integer>> cutomerBox;
 	private Image errIcon;
 	private CustomerOrder oldOrder;
 	private int orderId;

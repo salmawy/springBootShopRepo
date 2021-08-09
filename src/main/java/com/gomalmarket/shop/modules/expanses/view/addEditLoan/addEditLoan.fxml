@@ -13,7 +13,7 @@
          <children>
             <Pane fx:id="coloredPane" prefHeight="46.0" prefWidth="390.0" style="-fx-background-color: #00A65A;">
                <children>
-                  <Label fx:id="title_label" layoutX="138.0" layoutY="13.0" text="Title" textFill="WHITE">
+                  <Label fx:id="title_label" alignment="CENTER" contentDisplay="CENTER" layoutX="-12.0" layoutY="13.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="20.0" prefWidth="400.0" text="Titleafsfsdfsdfasfasdfasdasdas" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>

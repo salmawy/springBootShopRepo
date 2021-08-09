@@ -63,10 +63,10 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
     private JFXButton cancel_Btn;
 
     @FXML
-    private JFXComboBox<ComboBoxItem> customerType_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> customerType_CB;
 
     @FXML
-    private JFXComboBox<ComboBoxItem> invoiceStatus_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> invoiceStatus_CB;
 
     @FXML
     private Label customerType_label;
@@ -90,7 +90,7 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
     private JFXButton search_Btn;
 
     @FXML
-    private JFXComboBox<ComboBoxItem> customerName_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> customerName_CB;
 
     @FXML
     private AnchorPane gridLocation_Panel;
@@ -101,9 +101,9 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
    
  	    private CustomTable<InvoiceViewbean> invoiceCustomeTable;
 
-		private List<ComboBoxItem> customerTypes;
-		private List<ComboBoxItem> invoiceStatus;
-		private List <ComboBoxItem> customers;
+		private List<ComboBoxItem<Integer>> customerTypes;
+		private List<ComboBoxItem<Integer>> invoiceStatus;
+		private List <ComboBoxItem<Integer>> customers;
 
 		
 		private JFXDatePicker fromDate;
@@ -168,17 +168,17 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
 				e.printStackTrace();
 			}			
 //=============================================================================================================================================
-	    	customerTypes=new ArrayList<ComboBoxItem>();
-	    	customerTypes.add(new ComboBoxItem(CustomerTypeEnum.kareem,this.getMessage("customer.type.karrem")));
-	    	customerTypes.add(new ComboBoxItem(CustomerTypeEnum.mahmed,this.getMessage("customer.type.mahmed")));
-	    	customerTypes.add(new ComboBoxItem(CustomerTypeEnum.normal,this.getMessage("customer.type.normal")));
-	    	customerTypes.add(new ComboBoxItem(CustomerTypeEnum.purchases,this.getMessage("customer.type.purchaes")));
+	    	customerTypes=new ArrayList<ComboBoxItem<Integer>>();
+	    	customerTypes.add(new ComboBoxItem<Integer>(CustomerTypeEnum.kareem,this.getMessage("customer.type.karrem")));
+	    	customerTypes.add(new ComboBoxItem<Integer>(CustomerTypeEnum.mahmed,this.getMessage("customer.type.mahmed")));
+	    	customerTypes.add(new ComboBoxItem<Integer>(CustomerTypeEnum.normal,this.getMessage("customer.type.normal")));
+	    	customerTypes.add(new ComboBoxItem<Integer>(CustomerTypeEnum.purchases,this.getMessage("customer.type.purchaes")));
 			
 			
-			invoiceStatus=new ArrayList<ComboBoxItem>();
-			invoiceStatus.add(new ComboBoxItem(InvoiceStatusEnum.UNDER_EDIT,getMessage("invoice.status.underEdit")  ));
-			invoiceStatus.add(new ComboBoxItem(InvoiceStatusEnum.UNDER_DELIVERY, getMessage("invoice.status.underDelivery") ));
-			invoiceStatus.add(new ComboBoxItem(InvoiceStatusEnum.ARCHIVED, getMessage("invoice.status.archvied") ));
+			invoiceStatus=new ArrayList<ComboBoxItem<Integer>>();
+			invoiceStatus.add(new ComboBoxItem<Integer>(InvoiceStatusEnum.UNDER_EDIT,getMessage("invoice.status.underEdit")  ));
+			invoiceStatus.add(new ComboBoxItem<Integer>(InvoiceStatusEnum.UNDER_DELIVERY, getMessage("invoice.status.underDelivery") ));
+			invoiceStatus.add(new ComboBoxItem<Integer>(InvoiceStatusEnum.ARCHIVED, getMessage("invoice.status.archvied") ));
 		
 					}
 	    
@@ -550,7 +550,7 @@ private void setCustomerParentKey( String key ) {
 		 * System.out.println(comboBoxItem); } }
 		 */
 	
- 		  List<ComboBoxItem> result = customers.stream()  
+ 		  List<ComboBoxItem<Integer>> result = customers.stream()  
 		  .filter(customer -> customer.getParentKey().equals(key)) .collect(Collectors.toList());
 		  
 		  customerName_CB.getItems().setAll(result);

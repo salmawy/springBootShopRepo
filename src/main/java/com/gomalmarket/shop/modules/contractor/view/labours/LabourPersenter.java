@@ -119,7 +119,7 @@ public class LabourPersenter extends ContractorAction implements Initializable {
 	    private JFXRadioButton shop_radioBtn;
 
 	    @FXML
-	    private JFXComboBox<ComboBoxItem> owner_combo;
+	    private JFXComboBox<ComboBoxItem<Integer>> owner_combo;
 	private PredicatableTable<ContractorVB> contractorPredicatableTable;
 
 	private CustomTable<ContractorDataVB> transactionsCustomeTable;
@@ -176,10 +176,10 @@ public class LabourPersenter extends ContractorAction implements Initializable {
 	owner_combo.setPromptText(this.getMessage("label.owner"));
 	owner_combo.getStyleClass().add("comboBox");
 	for (Iterator iterator = this.owners.iterator(); iterator.hasNext();) {
-		ComboBoxItem object = (ComboBoxItem) iterator.next();
+		ComboBoxItem<Integer> object = (ComboBoxItem<Integer>) iterator.next();
 	owner_combo.getItems().add(object);}
 	owner_combo.getSelectionModel().selectFirst();
-	LoadLaboursNames(((ComboBoxItem)owners.get(0)).getId());
+	LoadLaboursNames(((ComboBoxItem<Integer>)owners.get(0)).getId());
 	
 //=========================================================================================================================================
 	calculateTotalShopAmount();

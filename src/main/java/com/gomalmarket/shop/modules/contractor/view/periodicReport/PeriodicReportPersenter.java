@@ -61,7 +61,7 @@ public class PeriodicReportPersenter extends ContractorAction implements Initial
     private JFXButton cancel_Btn;
 
     @FXML
-    private JFXComboBox<ComboBoxItem> type_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> type_CB;
 
     @FXML
     private Label owner_label;
@@ -79,7 +79,7 @@ public class PeriodicReportPersenter extends ContractorAction implements Initial
     private Label fromDate_label;
 
     @FXML
-    private JFXComboBox<ComboBoxItem> owner_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> owner_CB;
 
     @FXML
     private Label toDate_label;
@@ -91,7 +91,7 @@ public class PeriodicReportPersenter extends ContractorAction implements Initial
     private JFXButton search_Btn;
 
     @FXML
-    private JFXComboBox<ComboBoxItem> paidType_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> paidType_CB;
 
     @FXML
     private Label type_label;
@@ -110,8 +110,8 @@ public class PeriodicReportPersenter extends ContractorAction implements Initial
 	 
 
 	
-private List<ComboBoxItem> contractorTypes;
-private List<ComboBoxItem> paidTypes;
+private List<ComboBoxItem<Integer>> contractorTypes;
+private List<ComboBoxItem<Integer>> paidTypes;
 private final int shopPaid=1;
 private final int kareemPaid=0;
 private final int allPaid=-1;
@@ -120,13 +120,13 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 
 	public PeriodicReportPersenter() {
 		
-		contractorTypes=new ArrayList<ComboBoxItem>();
-		contractorTypes.add(new ComboBoxItem(ContractorTypeEnum.LABOUR,getMessage("button.labour")  ));
-		contractorTypes.add(new ComboBoxItem(ContractorTypeEnum.SUPPLIER_, getMessage("button.suppliers") ));
-		contractorTypes.add(new ComboBoxItem(ContractorTypeEnum.VARAITY, getMessage("button.varaties") ));
+		contractorTypes=new ArrayList<ComboBoxItem<Integer>>();
+		contractorTypes.add(new ComboBoxItem<Integer>(ContractorTypeEnum.LABOUR,getMessage("button.labour")  ));
+		contractorTypes.add(new ComboBoxItem<Integer>(ContractorTypeEnum.SUPPLIER_, getMessage("button.suppliers") ));
+		contractorTypes.add(new ComboBoxItem<Integer>(ContractorTypeEnum.VARAITY, getMessage("button.varaties") ));
 
 		
-		paidTypes=new ArrayList<ComboBoxItem>();
+		paidTypes=new ArrayList<ComboBoxItem<Integer>>();
 		paidTypes.add(new ComboBoxItem(allPaid,getMessage("label.all")  ));
 		paidTypes.add(new ComboBoxItem(kareemPaid, getMessage("label.owner.name.kareem") ));
 		paidTypes.add(new ComboBoxItem(shopPaid, getMessage("label.shop") ));

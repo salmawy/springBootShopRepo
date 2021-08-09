@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -46,5 +48,8 @@ public class ShopLoanTransaction {
 	
 	@Column(name = "NOTES")
 	private String notes;
+	@ManyToOne
+	@JoinColumn(name = "LOANER_ID",insertable = false,updatable = false)
+	private Loaner loaner;
 	
 }

@@ -98,7 +98,7 @@ public class PurchasesPersenter extends SalesAction implements Initializable, Cu
     private   JFXTextField paidAmount;
     private   JFXTextField restAmount;
 
-    private  JFXComboBox<ComboBoxItem> sellerType_CB;
+    private  JFXComboBox<ComboBoxItem<Integer>> sellerType_CB;
     private CustomTable <SellerOrderDetailVB> orderDetail_CT;
 
     private Label sellerTypeLabel=new Label(this.getMessage("seller.type"));

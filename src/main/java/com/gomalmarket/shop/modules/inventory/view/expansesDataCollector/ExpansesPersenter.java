@@ -101,7 +101,7 @@ public class ExpansesPersenter extends SalesAction implements Initializable, Cus
     private   JFXTextField paidAmount;
     private   JFXTextField restAmount;
 
-    private  JFXComboBox<ComboBoxItem> sellerType_CB;
+    private  JFXComboBox<ComboBoxItem<Integer>> sellerType_CB;
     private CustomTable <SellerOrderDetailVB> orderDetail_CT;
 
     private Label sellerTypeLabel=new Label(this.getMessage("seller.type"));

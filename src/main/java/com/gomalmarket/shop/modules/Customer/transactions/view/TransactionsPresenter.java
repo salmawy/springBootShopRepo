@@ -119,7 +119,7 @@ public class TransactionsPresenter extends CustomerBaseAction  implements Initia
 	 
 	    
 	    @FXML
-	    private JFXComboBox<ComboBoxItem> customerTypes_CB;
+	    private JFXComboBox<ComboBoxItem<Integer>> customerTypes_CB;
 
 
 	  
@@ -136,10 +136,10 @@ public class TransactionsPresenter extends CustomerBaseAction  implements Initia
 			customerType_label.setText(this.getMessage("label.customer.Type"));
 			customerTypes_CB.getStyleClass().add("comboBox");
 			
-			customerTypes_CB.getItems().add(new ComboBoxItem(CustomerTypeEnum.kareem,this.getMessage("customer.type.karrem")));
-			customerTypes_CB.getItems().add(new ComboBoxItem(CustomerTypeEnum.mahmed,this.getMessage("customer.type.mahmed")));
-			customerTypes_CB.getItems().add(new ComboBoxItem(CustomerTypeEnum.normal,this.getMessage("customer.type.normal")));
-			customerTypes_CB.getItems().add(new ComboBoxItem(CustomerTypeEnum.purchases,this.getMessage("customer.type.purchaes")));
+			customerTypes_CB.getItems().add(new ComboBoxItem<Integer>(CustomerTypeEnum.kareem,this.getMessage("customer.type.karrem")));
+			customerTypes_CB.getItems().add(new ComboBoxItem<Integer>(CustomerTypeEnum.mahmed,this.getMessage("customer.type.mahmed")));
+			customerTypes_CB.getItems().add(new ComboBoxItem<Integer>(CustomerTypeEnum.normal,this.getMessage("customer.type.normal")));
+			customerTypes_CB.getItems().add(new ComboBoxItem<Integer>(CustomerTypeEnum.purchases,this.getMessage("customer.type.purchaes")));
 		
 			
 			customerTypes_CB.getSelectionModel().select(0);
@@ -353,7 +353,7 @@ private void fitToAnchorePane(Node node) {
 	
 @FXML 
 private void customerTypeSelected(ActionEvent event) {
-	ComboBoxItem item= customerTypes_CB.getSelectionModel().getSelectedItem();
+	ComboBoxItem<Integer> item= customerTypes_CB.getSelectionModel().getSelectedItem();
 	
 	int typeId= item.getId();
 	List <CustomerNameViewBean>data=loadCustomerNames(typeId);

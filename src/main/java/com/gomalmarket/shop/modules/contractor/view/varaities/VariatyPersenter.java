@@ -68,7 +68,7 @@ public class VariatyPersenter extends ContractorAction implements Initializable 
 	    private Pane shop_coloredPane;
 
 	    @FXML
-	    private JFXComboBox<ComboBoxItem> owner_combo;
+	    private JFXComboBox<ComboBoxItem<Integer>> owner_combo;
 
 	    @FXML
 	    private AnchorPane contractorTable_loc;
@@ -135,7 +135,7 @@ public class VariatyPersenter extends ContractorAction implements Initializable 
 		ComboBoxItem object = (ComboBoxItem) iterator.next();
 	owner_combo.getItems().add(object);}
 	owner_combo.getSelectionModel().selectFirst();
-	LoadLaboursNames(((ComboBoxItem)owners.get(0)).getId());
+	LoadLaboursNames(((ComboBoxItem<Integer>)owners.get(0)).getId());
 	
 //=========================================================================================================================================
 	calculateTotalShopAmount();

@@ -61,7 +61,7 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
     private AnchorPane root_pane;
 
     @FXML
-    private JFXComboBox<ComboBoxItem> outcomeType_combo;
+    private JFXComboBox<ComboBoxItem<Integer>> outcomeType_combo;
 
     @FXML
     private Label outcomeType_label;
@@ -179,7 +179,7 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
 			try {
 				OutcomeDetail detail= 	(OutcomeDetail)getBaseService().findBean(OutcomeDetail.class, id);
 				//-----------------------------------------------------------------------------
-			List <ComboBoxItem>types=	outcomeType_combo.getItems();
+			List <ComboBoxItem<Integer>>types=	outcomeType_combo.getItems();
 				
  				int i=0;
 				for ( i = 0; i < types.size(); i++) {

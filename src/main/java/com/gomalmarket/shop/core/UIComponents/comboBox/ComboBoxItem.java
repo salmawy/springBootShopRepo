@@ -7,16 +7,16 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ComboBoxItem {
+public class ComboBoxItem<T> {
 	
-	private int id ;
+	private T id ;
 	private String text;
 	private String parentKey;
 	
 	 private Object valueObject;
 	
 	
-public ComboBoxItem(int value,String text) {
+public ComboBoxItem(T value,String text) {
 		this.text=text;
 		this.id=value;
 		
@@ -24,7 +24,7 @@ public ComboBoxItem(int value,String text) {
 }
 
 
-public ComboBoxItem(int value,String text,Object valueObject) {
+public ComboBoxItem(T value,String text,Object valueObject) {
 	this.text=text;
 	this.id=value;
 	this.setValueObject(valueObject);
@@ -33,7 +33,7 @@ public ComboBoxItem(int value,String text,Object valueObject) {
 
 
 
-public ComboBoxItem(int value,String text,String parentKey) {
+public ComboBoxItem(T value,String text,String parentKey) {
 	this.text=text;
 	this.id=value;
 	this.parentKey=parentKey;
@@ -41,7 +41,7 @@ public ComboBoxItem(int value,String text,String parentKey) {
 
 }	
 
-public ComboBoxItem(int value,String text,String parentKey,Object valueObject) {
+public ComboBoxItem(T value,String text,String parentKey,Object valueObject) {
 	this.text=text;
 	this.id=value;
 	this.parentKey=parentKey;

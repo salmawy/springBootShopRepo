@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
@@ -24,6 +22,7 @@ import com.gomalmarket.shop.core.entities.shopLoan.LoanAccount;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.expanses.action.ExpansesAction;
+import com.gomalmarket.shop.modules.expanses.view.addEditLoan.AddEditLoanPersenter;
 import com.gomalmarket.shop.modules.expanses.view.beans.LoanTransaction;
 import com.gomalmarket.shop.modules.expanses.view.beans.LoanersNameVB;
 import com.gomalmarket.shop.modules.expanses.view.payLoan.PayLoanView;
@@ -45,10 +44,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
-@Slf4j
-public class LoansPersenter extends ExpansesAction implements Initializable, CustomTableActions {
 
- 
+@Slf4j
+public class LoansPersenter extends ExpansesAction implements Initializable {
+
 	@FXML
 	private Label loanType_label;
 
@@ -62,7 +61,7 @@ public class LoansPersenter extends ExpansesAction implements Initializable, Cus
 	private Label totalDebtValue_label;
 
 	@FXML
-	private JFXComboBox<ComboBoxItem> loanType_combo;
+	private JFXComboBox<ComboBoxItem<String>> loanType_combo;
 
 	@FXML
 	private Pane coloredPane;
@@ -77,9 +76,18 @@ public class LoansPersenter extends ExpansesAction implements Initializable, Cus
 	private JFXTextField name_TF;
 
 	private CustomTable<LoanTransaction> PayeesCustomTable;
-	private CustomTable<LoanTransaction> debtsAmountsCustomtable;
+	private CustomTable<LoanTransaction> debitsCustomtable;
 	private PredicatableTable<LoanersNameVB> loanersCustomTable;
 
+	
+	private JFXButton addDebitBtn;
+	private JFXButton editDebitBtn;
+	private JFXButton deleteDebitBtn;
+	
+	
+	private JFXButton addPayeeBtn;
+	private JFXButton editPayeeBtn;
+	private JFXButton deletePayeeBtn;
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		log.info(
@@ -93,40 +101,42 @@ public class LoansPersenter extends ExpansesAction implements Initializable, Cus
 //==================================================================================================================	
 
 		List loanersNameColumns = prepareLoanersNamesColumns();
-		List installementsColumns = preparePayeesColumns();
+		List payeesColumns = preparePayeesColumns();
 		List loanerNamesHeaderNodes = prepareLoanersNamesHeaderNodes();
+		List debitsHeaderNodes = prepareDebitsHeaderNodes();
+		List payeesHeaderNodes = preparePayeesHeaderNodes();
 
-		PayeesCustomTable = new CustomTable<LoanTransaction>(installementsColumns, null, null, null, null,
-				CustomTable.tableCard, LoanTransaction.class);
+		PayeesCustomTable = new CustomTable<LoanTransaction>(payeesColumns, payeesHeaderNodes, null, null, null,
+				CustomTable.headTableCard, LoanTransaction.class);
 		loanersCustomTable = new PredicatableTable<LoanersNameVB>(loanersNameColumns, loanerNamesHeaderNodes, null,
-				this, PredicatableTable.headTableCard, LoanersNameVB.class);
-		debtsAmountsCustomtable = new CustomTable<LoanTransaction>(installementsColumns, null, null, null, null,
-				CustomTable.tableCard, LoanTransaction.class);
+				getLoanersTablesAction(), PredicatableTable.headTableCard, LoanersNameVB.class);
+		debitsCustomtable = new CustomTable<LoanTransaction>(payeesColumns, debitsHeaderNodes, null, null, null,
+				CustomTable.headTableCard, LoanTransaction.class);
 		loanersCustomTable.getCutomTableComponent().setPrefSize(300, 300);
-		debtsAmountsCustomtable.getCutomTableComponent().setPrefHeight(200);
+		debitsCustomtable.getCutomTableComponent().setPrefHeight(200);
 		PayeesCustomTable.getCutomTableComponent().setPrefHeight(200);
 
 		fitToAnchorePane(PayeesCustomTable.getCutomTableComponent());
 		fitToAnchorePane(loanersCustomTable.getCutomTableComponent());
-		fitToAnchorePane(debtsAmountsCustomtable.getCutomTableComponent());
+		fitToAnchorePane(debitsCustomtable.getCutomTableComponent());
 
-		debtTable_loc.getChildren().addAll(debtsAmountsCustomtable.getCutomTableComponent());
+		debtTable_loc.getChildren().addAll(debitsCustomtable.getCutomTableComponent());
 		loanersTable_loc.getChildren().addAll(loanersCustomTable.getCutomTableComponent());
 		installmentsTable.getChildren().addAll(PayeesCustomTable.getCutomTableComponent());
 //==================================================================================================================	
 
-		loanType_combo.getItems().add(new ComboBoxItem(1, this.getMessage("label.inLoan")));
-		loanType_combo.getItems().add(new ComboBoxItem(2, this.getMessage("label.outLoan")));
+		loanType_combo.getItems().add(new ComboBoxItem<String>(LoanTypeEnum.IN_LOAN.getId(), this.getMessage("label.inLoan")));
+		loanType_combo.getItems().add(new ComboBoxItem<String>(LoanTypeEnum.OUT_LOAN.getId(), this.getMessage("label.outLoan")));
 		loanType_combo.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov, final Number oldvalue, final Number newvalue) {
 
-				ComboBoxItem item = loanType_combo.getSelectionModel().getSelectedItem();
-				if (item.getId() == 1) {
+				ComboBoxItem<String> item = loanType_combo.getSelectionModel().getSelectedItem();
+				if (item.getId().equals(LoanTypeEnum.IN_LOAN.getId())) {
 
 					initiateInLoanPage();
 					coloredPane.setStyle("-fx-background-color: #00A65A");
 
-				} else if (item.getId() == 2) {
+				} else if (item.equals(LoanTypeEnum.OUT_LOAN.getId())) {
 
 					initiateOutLoanPage();
 					coloredPane.setStyle("-fx-background-color: #DD4B39");
@@ -187,8 +197,8 @@ public class LoansPersenter extends ExpansesAction implements Initializable, Cus
 
 		}
 
-		debtsAmountsCustomtable.getTable().getItems().clear();
-		this.debtsAmountsCustomtable.loadTableData(transactions);
+		debitsCustomtable.getTable().getItems().clear();
+		this.debitsCustomtable.loadTableData(transactions);
 
 	}
 
@@ -255,7 +265,7 @@ public class LoansPersenter extends ExpansesAction implements Initializable, Cus
 		addBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.PLUS));
 		addBtn.getStyleClass().setAll("btn", "btn-primary"); // (2)
 		addBtn.setOnAction(e -> {
-			payLoan();
+			payLoan(null);
 
 		});
 
@@ -266,8 +276,110 @@ public class LoansPersenter extends ExpansesAction implements Initializable, Cus
 
 	}
 
-	private void payLoan() {
+	private List preparePayeesHeaderNodes() {
+		// button.purchases.confirm button.save
 
+		 addPayeeBtn = new JFXButton(this.getMessage("button.add"));
+		addPayeeBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.PLUS));
+		addPayeeBtn.getStyleClass().setAll("btn", "btn-primary"); // (2)
+		addPayeeBtn.setOnAction(e -> {
+			payLoan(null);
+
+		});
+
+		editPayeeBtn = new JFXButton(this.getMessage("button.edit"));
+		editPayeeBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.EDIT));
+		editPayeeBtn.setDisable(true);
+		editPayeeBtn.getStyleClass().setAll("btn", "btn-primary", "btn-sm");
+		editPayeeBtn.setOnAction(e -> {
+			LoanTransaction loanTransaction = (LoanTransaction) this.PayeesCustomTable.getTable().getSelectionModel()
+					.getSelectedItem();
+
+			payLoan(loanTransaction);
+
+		});
+		 
+		deletePayeeBtn = new JFXButton(this.getMessage("button.delete"));
+		deletePayeeBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.REMOVE));
+		deletePayeeBtn.setDisable(true);
+		deletePayeeBtn.getStyleClass().setAll("btn", "btn-danger", "btn-sm");
+		deletePayeeBtn.setOnAction(e -> {
+			LoanTransaction loanTransaction = (LoanTransaction) this.PayeesCustomTable.getTable().getSelectionModel()
+					.getSelectedItem();
+
+			payLoan(loanTransaction);
+
+		});
+
+		List buttons = new ArrayList<JFXButton>(Arrays.asList(addPayeeBtn, editPayeeBtn, deletePayeeBtn));
+
+		return buttons;
+
+	}
+
+	private List prepareDebitsHeaderNodes() {
+		// button.purchases.confirm button.save
+	 
+		
+		
+		  addDebitBtn = new JFXButton(this.getMessage("button.add"));
+		  addDebitBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.PLUS));
+		  addDebitBtn.getStyleClass().setAll("btn", "btn-primary"); // (2)
+		  addDebitBtn.setOnAction(e -> {
+			payLoan(null);
+
+		});
+
+		  editDebitBtn = new JFXButton(this.getMessage("button.edit"));
+		  editDebitBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.EDIT));
+		  editDebitBtn.setDisable(true);
+		  editDebitBtn.getStyleClass().setAll("btn", "btn-primary", "btn-sm");
+		  editDebitBtn.setOnAction(e -> {
+			LoanTransaction loanTransaction = (LoanTransaction) this.debitsCustomtable.getTable().getSelectionModel()
+					.getSelectedItem();
+
+			payLoan(loanTransaction);
+
+		});
+
+		  deleteDebitBtn = new JFXButton(this.getMessage("button.delete"));
+		  deleteDebitBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.REMOVE));
+		  deleteDebitBtn.setDisable(true);
+		  deleteDebitBtn.getStyleClass().setAll("btn", "btn-danger", "btn-sm");
+		  deleteDebitBtn.setOnAction(e -> {
+			LoanTransaction loanTransaction = (LoanTransaction) this.debitsCustomtable.getTable().getSelectionModel()
+					.getSelectedItem();
+
+			payLoan(loanTransaction);
+
+		});
+
+		// editBtn.getStyleClass().add("control-button");
+		List buttons = new ArrayList<JFXButton>(Arrays.asList(addDebitBtn, editDebitBtn, deleteDebitBtn));
+
+		return buttons;
+	}
+
+	private void payLoan(LoanTransaction loanTransaction) {
+		
+		this.request=new HashMap<String, Object>();
+		this.response=new HashMap<String, Object>();
+		int mode=(loanTransaction!=null)?AddEditLoanPersenter.Mode_Edit:AddEditLoanPersenter.Mode_Add;
+		LoanTransaction editedTrx=loanTransaction;
+		LoanTypeEnum loanType=LoanTypeEnum.fromId(this.loanType_combo.getSelectionModel().getSelectedItem().getId());
+		request.put("mode", mode);
+		request.put("editedTrx", editedTrx);
+		request.put("loanType", loanType);
+		request.put("mode", mode);
+	 
+		
+		
+		
+		
+		
+		
+		
+		
 		PayLoanView form = new PayLoanView();
 		URL u = getClass().getClassLoader().getResource("appResources/custom.css");
 
@@ -341,41 +453,102 @@ public class LoansPersenter extends ExpansesAction implements Initializable, Cus
 
 	}
 
-	@Override
-	public void rowSelected() {
-		// TODO Auto-generated method stub
+	 
+ 
+	public CustomTableActions getDebitsTableAction() {
+
+		CustomTableActions d = new CustomTableActions() {
+
+			@Override
+			public void rowSelected(Object o) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void rowSelected() {
+				editDebitBtn.setDisable(false);
+				deleteDebitBtn.setDisable(false);
+
+			}
+		};
+
+		return d;
 
 	}
+	public CustomTableActions getPayeesTablesAction() {
 
-	@Override
-	public void rowSelected(Object table) {
+		CustomTableActions d = new CustomTableActions() {
 
-		debtsAmountsCustomtable.getTable().getItems().clear();
-		PayeesCustomTable.getTable().getItems().clear();
+			@Override
+			public void rowSelected(Object o) {
+				// TODO Auto-generated method stub
 
-		JFXTreeTableView<LoanersNameVB> mytable = (JFXTreeTableView<LoanersNameVB>) table;
-		LoanersNameVB loaner = mytable.getSelectionModel().getSelectedItem().getValue();
-		LoanTypeEnum type = (loanType_combo.getSelectionModel().getSelectedItem().getId() == 1) ? LoanTypeEnum.IN_LOAN
-				: LoanTypeEnum.OUT_LOAN;
-		try {
-			loadDebts(loaner.getId(), type);
-		} catch (EmptyResultSetException e1) {
-			// TODO Auto-generated catch block
-			log.info("no Debits found");
-		} catch (DataBaseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
-			loadPayees(loaner.getId(), type);
-		} catch (EmptyResultSetException e) {
-			// TODO Auto-generated catch block
-			log.info("no Payees found");
+			}
 
-		} catch (DataBaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			@Override
+			public void rowSelected() {
+				editPayeeBtn.setDisable(false);
+				deletePayeeBtn.setDisable(false);
+				
+
+			}
+		};
+
+		return d;
+
+	}
+	public CustomTableActions getLoanersTablesAction() {
+
+		CustomTableActions d = new CustomTableActions() {
+
+			@Override
+			public void rowSelected(Object table) {
+
+
+				debitsCustomtable.getTable().getItems().clear();
+				PayeesCustomTable.getTable().getItems().clear();
+
+				editPayeeBtn.setDisable(true);
+				deletePayeeBtn.setDisable(true);
+				editDebitBtn.setDisable(true);
+				deleteDebitBtn.setDisable(true);
+				
+				JFXTreeTableView<LoanersNameVB> mytable = (JFXTreeTableView<LoanersNameVB>) table;
+				LoanersNameVB loaner = mytable.getSelectionModel().getSelectedItem().getValue();
+				LoanTypeEnum type = (loanType_combo.getSelectionModel().getSelectedItem().getId().equals(LoanTypeEnum.IN_LOAN.getId())) ? LoanTypeEnum.IN_LOAN
+						: LoanTypeEnum.OUT_LOAN;
+				try {
+					loadDebts(loaner.getId(), type);
+				} catch (EmptyResultSetException e1) {
+					// TODO Auto-generated catch block
+					log.info("no Debits found");
+				} catch (DataBaseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					loadPayees(loaner.getId(), type);
+				} catch (EmptyResultSetException e) {
+					// TODO Auto-generated catch block
+					log.info("no Payees found");
+
+				} catch (DataBaseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			
+			}
+
+			@Override
+			public void rowSelected() {
+				// TODO Auto-generated method stub
+
+			}
+		};
+
+		return d;
 
 	}
 

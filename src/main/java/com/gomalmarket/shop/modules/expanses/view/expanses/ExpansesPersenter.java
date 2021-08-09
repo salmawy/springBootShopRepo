@@ -115,10 +115,10 @@ public class ExpansesPersenter extends ExpansesAction implements Initializable, 
 	private CustomTable<OutcomeVB>outcomeCustomTable; 
 	
 	
-    private JFXComboBox<ComboBoxItem> incomeMonth_CB;
-    private JFXComboBox<ComboBoxItem> incomeDay_CB;
-    private JFXComboBox<ComboBoxItem> outcomeMonth_CB;
-    private JFXComboBox<ComboBoxItem> outcomeDay_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> incomeMonth_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> incomeDay_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> outcomeMonth_CB;
+    private JFXComboBox<ComboBoxItem<Integer>> outcomeDay_CB;
 
     private Label incomeTotalAmount_label;
     private Label incomeTotalAmountValue_label;
@@ -132,21 +132,21 @@ public class ExpansesPersenter extends ExpansesAction implements Initializable, 
 
 	 private JFXButton addIncome_btn;
 	    private JFXButton editIncome_btn;
-	    private List <ComboBoxItem>incomeDays;
+	    private List <ComboBoxItem<Integer>>incomeDays;
 		private Map <Integer,Double>incomeDayAmount;
 //----------------------------------------
 	    private JFXButton addOutcome_btn;
 	    private JFXButton editOutcome_btn;
-		private List <ComboBoxItem>outcomeDays;
+		private List <ComboBoxItem<Integer>>outcomeDays;
 		private Map <Integer,Double>outcomeDayAmount;
 		//----------------------------------------
 
 		
 	public ExpansesPersenter() {
-		incomeDays=new ArrayList<ComboBoxItem>();
+		incomeDays=new ArrayList<ComboBoxItem<Integer>>();
 		incomeDayAmount=new HashMap<Integer, Double>();
 		//----------------------------------------
-		outcomeDays=new ArrayList<ComboBoxItem>();
+		outcomeDays=new ArrayList<ComboBoxItem<Integer>>();
 		outcomeDayAmount=new HashMap<Integer, Double>();
 	
 	}
@@ -400,15 +400,15 @@ private List<Column> prepareIncomeTableColumns(){
   private void prepareIncomeHeaderNodes() {
 	 
 	  
-	  this.incomeDay_CB=new JFXComboBox<ComboBoxItem>();
-      this.incomeMonth_CB=new JFXComboBox<ComboBoxItem>();
+	  this.incomeDay_CB=new JFXComboBox<ComboBoxItem<Integer>>();
+      this.incomeMonth_CB=new JFXComboBox<ComboBoxItem<Integer>>();
       incomeDay_CB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>()
         {
             public void changed(ObservableValue<? extends Number> ov,
                     final Number oldvalue, final Number newvalue)
             {
             	
-            	ComboBoxItem day=incomeDay_CB.getSelectionModel().getSelectedItem();
+            	ComboBoxItem<Integer> day=incomeDay_CB.getSelectionModel().getSelectedItem();
              if(day!=null)
              {	
             	 loadIncomeData(day.getId());
@@ -543,7 +543,7 @@ private List<Column> prepareIncomeTableColumns(){
 		Map<String,Object> map=new HashMap<String, Object>();
 		map.put("seasonId", this.getAppContext().getSeason().getId());
 		String parentKey="";
-		 List<ComboBoxItem> outcomeMonthes=new ArrayList<ComboBoxItem>();
+		 List<ComboBoxItem<Integer>> outcomeMonthes=new ArrayList<ComboBoxItem<Integer>>();
 	  try {
 		  
 		  
@@ -560,7 +560,7 @@ private List<Column> prepareIncomeTableColumns(){
 			if(!parentKey.equals(month))
 			{
 			  int value=Integer.parseInt(month.split("-")[1]);
-			  ComboBoxItem item=new ComboBoxItem(value,month); 
+			  ComboBoxItem<Integer> item=new ComboBoxItem<Integer>(value,month); 
 			 
 			  outcomeMonthes.add(item);
 			}
@@ -600,7 +600,7 @@ private List<Column> prepareIncomeTableColumns(){
 	private void fillIncomeMonthes() {
 		
 		
-		List <ComboBoxItem>incomeMonthes=new ArrayList<ComboBoxItem>();
+		List <ComboBoxItem<Integer>>incomeMonthes=new ArrayList<ComboBoxItem<Integer>>();
 
 		
 		
@@ -616,7 +616,7 @@ private List<Column> prepareIncomeTableColumns(){
 				if(!parentKey.equals(month))
 				{
 				  int value=Integer.parseInt(month.split("-")[1]);
- 				  ComboBoxItem item=new ComboBoxItem(value,month); 
+ 				  ComboBoxItem<Integer> item=new ComboBoxItem<Integer>(value,month); 
 				  incomeMonthes.add(item);
 				}
 //-----------------amount --------------------------------------------------------------------------------------------------------
@@ -625,7 +625,7 @@ private List<Column> prepareIncomeTableColumns(){
 				
 //-----------------days --------------------------------------------------------------------------------------------------------
 				parentKey	=monthSDF.format(temp.getIncomeDate());
- 				ComboBoxItem boxItem=new  ComboBoxItem(temp.getId() , day, parentKey);
+ 				ComboBoxItem<Integer> boxItem=new  ComboBoxItem<Integer>(temp.getId() , day, parentKey);
  				incomeDays.add(boxItem);
 //-------------------------------------------------------------------------------------------------------------------------
 		
@@ -731,15 +731,15 @@ private List<Column> prepareIncomeTableColumns(){
   private void prepareOutcomeHeaderNodes() {
 	 
 	  
-	  this.outcomeDay_CB=new JFXComboBox<ComboBoxItem>();
-      this.outcomeMonth_CB=new JFXComboBox<ComboBoxItem>();
+	  this.outcomeDay_CB=new JFXComboBox<ComboBoxItem<Integer>>();
+      this.outcomeMonth_CB=new JFXComboBox<ComboBoxItem<Integer>>();
       outcomeDay_CB.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>()
         {
             public void changed(ObservableValue<? extends Number> ov,
                     final Number oldvalue, final Number newvalue)
             {
             	
-            	ComboBoxItem day=outcomeDay_CB.getSelectionModel().getSelectedItem();
+            	ComboBoxItem<Integer> day=outcomeDay_CB.getSelectionModel().getSelectedItem();
             	if(day!=null) {
             		double amount=outcomeDayAmount.get(day.getId());
             		outcomeTotalAmountValue_label.setText(String.valueOf(amount));
@@ -816,7 +816,7 @@ private List<Column> prepareIncomeTableColumns(){
     }
     private void setIncomDayseParentKey( String key ) {
     	 
- 		  List<ComboBoxItem> result = incomeDays.stream()  
+ 		  List<ComboBoxItem<Integer>> result = incomeDays.stream()  
 		  .filter(day -> day.getParentKey().equals(key)) .collect(Collectors.toList());
 		  
 		  incomeDay_CB.getItems().setAll(result);
@@ -832,7 +832,7 @@ private List<Column> prepareIncomeTableColumns(){
     //-----------------------------------------------------------------------
     private void setOutcomDayseParentKey( String key ) {
     	outcomeDay_CB.getItems().clear();
-		  List<ComboBoxItem> result = outcomeDays.stream()  
+		  List<ComboBoxItem<Integer>> result = outcomeDays.stream()  
 		  .filter(day -> day.getParentKey().equals(key)) .collect(Collectors.toList());
 		  
 		  outcomeDay_CB.getItems().setAll(result);
