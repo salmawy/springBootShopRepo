@@ -179,6 +179,10 @@ public class ApplicationPersenter extends BaseAction implements Initializable {
 	    @FXML
 	    private HBox buttom_box;
 
+	    @FXML
+	    private JFXButton shopArcivedDebts_btn;
+	    
+
    //========================================================================================================================================
    Map<String,String[]> panelPathes;
 
@@ -235,7 +239,9 @@ public class ApplicationPersenter extends BaseAction implements Initializable {
 	  
 	  Expanses_btn.setText(this.getMessage("label.expanses"));
 	  shopDebts_btn.setText(this.getMessage("label.shopDebts"));
-
+	  shopArcivedDebts_btn.setText(getMessage("label.shop.loan.archived"));
+	  
+	  
 	  labour_btn.setText(this.getMessage("button.labour"));
 	  suppliers_btn.setText(this.getMessage("button.suppliers"));
 	  varaities_btn.setText(this.getMessage("button.varaties"));
@@ -463,8 +469,11 @@ private void fitToAnchorePane(Node node) {
 	  panelPathes.put("transactionsBTN", new String [] {"com.gomalmarket.shop.modules.Customer.transactions.view.TransactionsView",getMessage("title.customer.purchases")});
 	  panelPathes.put("dailySelling_btn",new String [] { "com.gomalmarket.shop.modules.sales.view.DailySalesView",getMessage("title.seller.dailySales")});
 	  panelPathes.put("sellerDebts_btn", new String [] {"com.gomalmarket.shop.modules.sales.debt.view.DebtsView",getMessage("title.seller.debts")});
+	  
 	  panelPathes.put("Expanses_btn", new String [] {"com.gomalmarket.shop.modules.expanses.view.expanses.ExpansesView",getMessage("title.expanses.Safe")});
 	  panelPathes.put("shopDebts_btn",new String [] { "com.gomalmarket.shop.modules.expanses.view.loan.LoansView",getMessage("title.expanses.shopDebts")});
+	  panelPathes.put("shopArcivedDebts_btn",new String [] { "com.gomalmarket.shop.modules.expanses.view.archivedLoans.ArchivedLoansView",getMessage("title.expanses.shopDebts")});
+	  
 	  panelPathes.put("notes_btn", new String [] {"com.gomalmarket.shop.modules.contractor.view.notes.NotesView",getMessage("title.withdrawls.notes")});
 	  panelPathes.put("varaities_btn",new String [] { "com.gomalmarket.shop.modules.contractor.view.varaities.VaraityView",getMessage("title.withdrawls.varaities")});
 	  panelPathes.put("suppliers_btn",new String [] { "com.gomalmarket.shop.modules.contractor.view.suppliers.SupplierView",getMessage("title.withdrawls.suppliers")});

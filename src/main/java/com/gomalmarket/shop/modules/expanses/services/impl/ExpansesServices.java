@@ -17,14 +17,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.LoanTransactionTypeEnum;
+import com.gomalmarket.shop.core.Enum.LoanTypeEnum;
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.config.ShopAppContext;
 import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.entities.expanses.IncomeDetail;
 import com.gomalmarket.shop.core.entities.expanses.OutcomeDetail;
+import com.gomalmarket.shop.core.entities.repos.LoanAccountRepo;
+import com.gomalmarket.shop.core.entities.repos.PayCreditRepo;
+import com.gomalmarket.shop.core.entities.repos.PayDebitRepo;
 import com.gomalmarket.shop.core.entities.repos.RepoSupplier;
+import com.gomalmarket.shop.core.entities.safe.SafeTransaction;
 import com.gomalmarket.shop.core.entities.safe.SeasonSafe;
+import com.gomalmarket.shop.core.entities.shopLoan.LoanAccount;
 import com.gomalmarket.shop.core.entities.shopLoan.LoanCredit;
 import com.gomalmarket.shop.core.entities.shopLoan.LoanDebit;
 import com.gomalmarket.shop.core.entities.shopLoan.Loaner;
@@ -287,11 +293,14 @@ public class ExpansesServices implements IExpansesServices {
 		return getExpansesDao().getIncomeDetails(dateId);
 	}
 
-	public List<LoanTransaction> getPayCreditTransactions(int loanerId)
+	public List<LoanTransaction> getPayCreditTransactions(int loanerId, int groupId)
 			throws DataBaseException, EmptyResultSetException {
 		List<LoanTransaction> loanTransactions = null;
 		Map<String, Object> paramtersMap = new HashMap<String, Object>();
 		paramtersMap.put("loanerId", loanerId);
+
+		if (groupId != 0)
+			paramtersMap.put("groupId", groupId);
 
 		List<Object> result = this.getBaseService().findAllBeans(PayCredit.class, paramtersMap, null);
 		loanTransactions = new ArrayList<LoanTransaction>();
@@ -300,18 +309,22 @@ public class ExpansesServices implements IExpansesServices {
 
 			PayCredit t = (PayCredit) e;
 			return LoanTransaction.builder().amount(t.getAmount()).id(t.getId()).notes(t.getNotes())
-					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate())).description(LoanTransactionTypeEnum.PAY_CREDIT.getId())
-					.build();
+					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate()))
+					.description(LoanTransactionTypeEnum.PAY_CREDIT.getId()).loanerId(t.getLoaner().getId()).build();
 		}).collect(Collectors.toList());
 
 		return loanTransactions;
 	}
 
-	public List<LoanTransaction> getPayDebetTransactions(int loanerId)
+	public List<LoanTransaction> getPayDebetTransactions(int loanerId, int groupId)
 			throws DataBaseException, EmptyResultSetException {
 		List<LoanTransaction> loanTransactions = null;
 		Map<String, Object> paramtersMap = new HashMap<String, Object>();
+
 		paramtersMap.put("loanerId", loanerId);
+
+		if (groupId != 0)
+			paramtersMap.put("groupId", groupId);
 
 		List<Object> result = this.getBaseService().findAllBeans(PayDebit.class, paramtersMap, null);
 		loanTransactions = new ArrayList<LoanTransaction>();
@@ -320,19 +333,22 @@ public class ExpansesServices implements IExpansesServices {
 
 			PayDebit t = (PayDebit) e;
 			return LoanTransaction.builder().amount(t.getAmount()).id(t.getId()).notes(t.getNotes())
-					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate())).description(LoanTransactionTypeEnum.PAY_DEBIT.getId())
-					.build();
+					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate()))
+					.description(LoanTransactionTypeEnum.PAY_DEBIT.getId()).loanerId(t.getLoaner().getId()).build();
 		}).collect(Collectors.toList());
 
 		return loanTransactions;
 	}
 
-	public List<LoanTransaction> getLoanCreditTransactions(int loanerId)
+	public List<LoanTransaction> getLoanCreditTransactions(int loanerId, int groupId)
 			throws DataBaseException, EmptyResultSetException {
 
 		List<LoanTransaction> loanTransactions = null;
 		Map<String, Object> paramtersMap = new HashMap<String, Object>();
 		paramtersMap.put("loanerId", loanerId);
+
+		if (groupId != 0)
+			paramtersMap.put("groupId", groupId);
 
 		List<Object> result = this.getBaseService().findAllBeans(LoanCredit.class, paramtersMap, null);
 
@@ -340,50 +356,50 @@ public class ExpansesServices implements IExpansesServices {
 
 			LoanCredit t = (LoanCredit) e;
 			return LoanTransaction.builder().amount(t.getAmount()).id(t.getId()).notes(t.getNotes())
-					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate())).description(LoanTransactionTypeEnum.LOAN_CREDIT.getId())
-					.build();
+					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate()))
+					.description(LoanTransactionTypeEnum.LOAN_CREDIT.getId()).loanerId(t.getLoaner().getId()).build();
 		}).collect(Collectors.toList());
 
 		return loanTransactions;
 	}
 
-	public List<LoanTransaction> getLoanDebetTransactions(int loanerId)
+	public List<LoanTransaction> getLoanDebetTransactions(int loanerId, int groupId)
 			throws DataBaseException, EmptyResultSetException {
 		List<LoanTransaction> loanTransactions = null;
 		Map<String, Object> paramtersMap = new HashMap<String, Object>();
 		paramtersMap.put("loanerId", loanerId);
-
+		if (groupId != 0)
+			paramtersMap.put("groupId", groupId);
 		List<Object> result = this.getBaseService().findAllBeans(LoanDebit.class, paramtersMap, null);
 
 		loanTransactions = (List<LoanTransaction>) result.stream().map(e -> {
 
 			LoanDebit t = (LoanDebit) e;
 			return LoanTransaction.builder().amount(t.getAmount()).id(t.getId()).notes(t.getNotes())
-					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate())).description(LoanTransactionTypeEnum.LOAN_DEBET.getId())
-					.build();
+					.transactionDate(LoanTransaction.sdf.format(t.getTransactionDate()))
+					.description(LoanTransactionTypeEnum.LOAN_DEBET.getId()).loanerId(t.getLoaner().getId()).build();
 		}).collect(Collectors.toList());
 
 		return loanTransactions;
 	}
 
-	
 	@Override
-	public List<LoanTransaction> getLoanTransactions(int loanerId, LoanTransactionTypeEnum type)
+	public List<LoanTransaction> getLoanTransactions(int loanerId, int groupId, LoanTransactionTypeEnum type)
 			throws EmptyResultSetException, DataBaseException {
 
 		switch (type) {
 		case PAY_CREDIT:
-			return getPayCreditTransactions(loanerId);
+			return getPayCreditTransactions(loanerId, groupId);
 
 		case PAY_DEBIT:
 
-			return getPayDebetTransactions(loanerId);
+			return getPayDebetTransactions(loanerId, groupId);
 		case LOAN_CREDIT:
 
-			return getLoanCreditTransactions(loanerId);
+			return getLoanCreditTransactions(loanerId, groupId);
 		case LOAN_DEBET:
 
-			return getLoanDebetTransactions(loanerId);
+			return getLoanDebetTransactions(loanerId, groupId);
 
 		default:
 			return null;
@@ -391,4 +407,205 @@ public class ExpansesServices implements IExpansesServices {
 
 	}
 
+	@Override
+	public List getfindLoaners(String name) {
+		List loaners = new ArrayList<>();
+
+		try {
+			loaners = this.getExpansesDao().findLoaners(name);
+		} catch (EmptyResultSetException | DataBaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return loaners;
+
+	}
+
+	@Override
+	@Transactional
+	public void loanTansaction(int loanerId, String loanerName, double amount, String notes, Date trxDate,
+			LoanTypeEnum loanType, Fridage fridage, Season season) throws DataBaseException {
+
+		Loaner loaner = this.findLoaner(loanerName);
+
+		if (loaner == null) {
+			loaner = new Loaner();
+			loaner.setName(loanerName);
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getLoanerRepo(), loaner);
+
+		}
+		loanerId = loaner.getId();
+
+		switch (loanType) {
+		case OUT_LOAN:
+
+			LoanCredit loanCredit = new LoanCredit();
+			loanCredit.setAmount(amount);
+			loanCredit.setLoanerId(loanerId);
+			loanCredit.setNotes(notes);
+			loanCredit.setTransactionDate(trxDate);
+			loanCredit.setFinished(0);
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getLoanCreditRepo(),
+					loanCredit);
+
+			this.outcomeTransaction(trxDate, amount, notes, OutcomeTypeEnum.OUT_LOAN, loanerId, loanCredit.getId(),
+					fridage, season);
+
+			break;
+		case IN_LOAN:
+			LoanDebit loanDebit = new LoanDebit();
+			loanDebit.setAmount(amount);
+			loanDebit.setLoanerId(loanerId);
+			loanDebit.setNotes(notes);
+			loanDebit.setTransactionDate(trxDate);
+			loanDebit.setFinished(0);
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getLoanCreditRepo(), loanDebit);
+			this.incomeTransaction(trxDate, amount, notes, IncomeTypeEnum.IN_LOAN, loanerId, loanDebit.getId(), fridage,
+					season);
+
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	@Override
+	@Transactional
+	public void loanPayTansaction(int loanerId, String loanerName, double amount, String notes, Date trxDate,
+			LoanTypeEnum loanType, Fridage fridage, Season season) throws DataBaseException {
+
+		switch (loanType) {
+		case OUT_LOAN:
+
+			PayCredit payCredit = new PayCredit();
+			payCredit.setAmount(amount);
+			payCredit.setLoanerId(loanerId);
+			payCredit.setNotes(notes);
+			payCredit.setTransactionDate(trxDate);
+			payCredit.setFinished(0);
+
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getPayCreditRepo(), payCredit);
+			this.incomeTransaction(trxDate, amount, notes, IncomeTypeEnum.PAY_CREDIT, loanerId, payCredit.getId(),
+					fridage, season);
+
+			break;
+		case IN_LOAN:
+			PayDebit payDebit = new PayDebit();
+			payDebit.setAmount(amount);
+			payDebit.setLoanerId(loanerId);
+			payDebit.setNotes(notes);
+			payDebit.setTransactionDate(trxDate);
+			payDebit.setFinished(0);
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getPayDebitRepo(), payDebit);
+			this.outcomeTransaction(trxDate, amount, notes, OutcomeTypeEnum.PAY_DEBIT, loanerId, payDebit.getId(),
+					fridage, season);
+
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	@Override
+	public void editLoanTansaction(int LoanTransactionId, double amount, String notes, Date trxDate,
+			LoanTypeEnum loanType, Fridage fridage, Season season)
+			throws DataBaseException, InvalidReferenceException, EmptyResultSetException {
+
+		Map<String, Object> prams = new HashMap<String, Object>();
+		prams.put("orderId", LoanTransactionId);
+		SafeTransaction safeTransaction = (SafeTransaction) this.getBaseService().findBean(SafeTransaction.class,
+				prams);
+
+		switch (loanType) {
+		case OUT_LOAN:
+
+			LoanCredit loanCredit = this.getShopAppContext().getRepoSupplier().getLoanCreditRepo()
+					.findById(LoanTransactionId).get();
+			loanCredit.setAmount(amount);
+			loanCredit.setNotes(notes);
+			loanCredit.setTransactionDate(trxDate);
+			loanCredit.setFinished(0);
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getLoanCreditRepo(),
+					loanCredit);
+
+			this.editOutcomeTransaction(trxDate, amount, notes, OutcomeTypeEnum.OUT_LOAN, loanCredit.getLoanerId(),
+					loanCredit.getId(), fridage, season, safeTransaction.getId());
+
+			break;
+		case IN_LOAN:
+			LoanDebit loanDebit = this.getShopAppContext().getRepoSupplier().getLoanDeditRepo()
+					.findById(LoanTransactionId).get();
+			loanDebit.setAmount(amount);
+			loanDebit.setNotes(notes);
+			loanDebit.setTransactionDate(trxDate);
+			loanDebit.setFinished(0);
+			this.getBaseService().saveEntity(this.getShopAppContext().getRepoSupplier().getLoanCreditRepo(), loanDebit);
+			this.editIncomeTransaction(trxDate, amount, notes, IncomeTypeEnum.IN_LOAN, loanDebit.getLoanerId(),
+					loanDebit.getId(), fridage, season, safeTransaction.getId());
+
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	@Override
+	public void editLoanPayTansaction(int LoanTransactionId, double amount, String notes, Date trxDate,
+			LoanTypeEnum loanType, Fridage fridage, Season season)
+			throws DataBaseException, InvalidReferenceException, EmptyResultSetException {
+
+		Map<String, Object> prams = new HashMap<String, Object>();
+		prams.put("orderId", LoanTransactionId);
+		SafeTransaction safeTransaction = (SafeTransaction) this.getBaseService().findBean(SafeTransaction.class,
+				prams);
+		switch (loanType) {
+		case OUT_LOAN:
+			PayCreditRepo repo = this.getShopAppContext().getRepoSupplier().getPayCreditRepo();
+
+			PayCredit payCredit = repo.findById(LoanTransactionId).get();
+			payCredit.setAmount(amount);
+			payCredit.setNotes(notes);
+			payCredit.setTransactionDate(trxDate);
+			payCredit.setFinished(0);
+			this.getBaseService().saveEntity(repo, payCredit);
+			this.editIncomeTransaction(trxDate, amount, notes, IncomeTypeEnum.PAY_CREDIT, payCredit.getLoanerId(),
+					payCredit.getId(), fridage, season, safeTransaction.getId());
+
+			break;
+		case IN_LOAN:
+			PayDebitRepo payDebitRepo = this.getShopAppContext().getRepoSupplier().getPayDebitRepo();
+
+			PayDebit payDebit = payDebitRepo.findById(LoanTransactionId).get();
+			payDebit.setAmount(amount);
+			payDebit.setNotes(notes);
+			payDebit.setTransactionDate(trxDate);
+			payDebit.setFinished(0);
+			this.getBaseService().saveEntity(payDebitRepo, payDebit);
+			editOutcomeTransaction(trxDate, amount, notes, OutcomeTypeEnum.PAY_DEBIT, payDebit.getLoanerId(),
+					payDebit.getId(), fridage, season, safeTransaction.getId());
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	@Override
+	public LoanAccount getLoanerAccount(int id) {
+		LoanAccountRepo loanAccountRepo = repoSupplier.getLoanAccountRepo();
+		Optional<LoanAccount> account = loanAccountRepo.findById(id);
+
+		return (account.isPresent()) ? account.get() : null;
+
+	}
+
+@Override
+public List loadGroupsLoanerNames(LoanTypeEnum loanType) throws EmptyResultSetException, DataBaseException {
+	 return getExpansesDao().loadGroupsLoanerNames(loanType);
+ 
+ }
 }

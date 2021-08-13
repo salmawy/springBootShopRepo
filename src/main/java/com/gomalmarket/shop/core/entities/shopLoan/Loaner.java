@@ -31,8 +31,7 @@ public class Loaner extends BaseEntity  {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "LOAN_ACCOUNT_ID")
-    private int loanAccountId;
+    
 
 	 
 

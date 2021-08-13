@@ -4,7 +4,7 @@ public enum IncomeTypeEnum implements EnumClass<Integer> {
 	
 	
   CASH(1),
-  IN_PAY_LOAN(4),
+  PAY_CREDIT(4),
   INTST_PAY(2),
   IN_LOAN(3);
 	IncomeTypeEnum(Integer value) {

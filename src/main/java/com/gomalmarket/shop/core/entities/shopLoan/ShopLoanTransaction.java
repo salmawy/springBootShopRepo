@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 @Table(name = "SHOP_LOANS_TRANSACTIONS")
@@ -23,6 +24,7 @@ import lombok.Setter;
 @Getter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "TRANSACTION_TYPE")
+ 
 public class ShopLoanTransaction {
 
 	@TableGenerator(name = "TABLE_GENERATOR", table = "ID_TABLE", pkColumnName = "ID_TABLE_NAME",
@@ -46,8 +48,13 @@ public class ShopLoanTransaction {
 	@Column(name = "FINISHED")
 	private  int finished ;
 	
+	@Column(name = "GROUP_ID")
+	private  int groupId ;
+	
 	@Column(name = "NOTES")
 	private String notes;
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "LOANER_ID",insertable = false,updatable = false)
 	private Loaner loaner;

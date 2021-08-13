@@ -10,7 +10,7 @@ public enum OutcomeTypeEnum implements EnumClass<Integer> {
 	allah(6),
 	PURCHASES_WITHDRAWALS(7),
 	maintaince(8),
-	OUT_PAY_LOAN(9),
+	PAY_DEBIT(9),
 	K_V(10),
 	INVOICE_TIPS(11),
 	TIPS(12),

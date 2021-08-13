@@ -24,9 +24,17 @@ public class RepoSupplier {
 	@Autowired
 	 FridageRepo fridageRepo;
 	
-	//@Autowired
-	//IncLoanRepo incLoanRepo;
+	@Autowired
+	LoanDeditRepo loanDeditRepo;
 	
+	@Autowired
+	LoanCreditRepo loanCreditRepo;
+	
+	@Autowired
+	PayDebitRepo payDebitRepo;
+	
+	@Autowired
+	PayCreditRepo payCreditRepo ;
 	@Autowired
 	IncomeDetailRepo incomeDetailRepo;
 	@Autowired
@@ -35,8 +43,8 @@ public class RepoSupplier {
 	IncomeTypeRepo incomeTypeRepo;
 	@Autowired
 	InstallmentRepo installmentRepo;
-	//@Autowired
-	//LoanAccountRepo loanAccountRepo;
+	@Autowired
+	LoanAccountRepo loanAccountRepo;
 	@Autowired
 	LoanerRepo loanerRepo;
 	//@Autowired
@@ -44,13 +52,7 @@ public class RepoSupplier {
 	
 	@Autowired
 	OutcomeDetailRepo outcomeDetailRepo;
-	
-	//@Autowired
-	//OutcomeRepo outcomeRepo;
-	
-	
-	//@Autowired 
-	//OutcomeTypeRepo outcomeTypeRepo;
+ ;
 	@Autowired
 	ProductRepo productRepo;
 	@Autowired

@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import com.gomalmarket.shop.core.Enum.LoanTypeEnum;
 import com.gomalmarket.shop.core.entities.safe.SafeOfDay;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
@@ -604,6 +605,71 @@ public List inExactMatchSearchloanerName(String loanerName, String loanerType) t
 }
 
 
-	
-	
+@Override	
+ public List findLoaners(String name) throws EmptyResultSetException, DataBaseException {
+
+
+	   
+	  try { 
+		
+    
+       String  query =  " select distinct loaner.name from Loaner  "
+       		+ " where 1=1"
+       		+ "	and name like '%"+name+" %' ";
+       		
+       		
+ 	  Query queryList = entityManger.createQuery(query);
+ 
+ 	  List<Object> result =	 queryList.getResultList();
+ 	  
+ 	  if(result.size() == 0) {
+ 		  throw new  EmptyResultSetException("error.emptyRS,query,Loaners"); }
+ 	  
+ 	  if(result.size() > 0) 
+ 	  {return result;}
+ 	 } 
+ 	  catch(DataAccessException e) { throw new
+ 	  DataBaseException("error.dataBase.query,Loaners,"+e.getMessage()  );
+ 	  }
+ 	  finally { }
+ 	  
+ 	 
+ 	return new ArrayList();
+ }
+
+
+
+@Override	
+ public List loadGroupsLoanerNames(LoanTypeEnum loanType) throws EmptyResultSetException, DataBaseException {
+
+
+	   
+	  try { 
+		
+    
+       String  query =  " select distinct l from LoanGroup g,Loaner l  "
+       		+ " where l.id=g.loanerId"
+       		+ "	and g.loanType = :loanType";      		
+       		
+ 	  Query queryList = entityManger.createQuery(query);
+ 	 queryList.setParameter("loanType", loanType.getId());
+ 	  List<Object> result =	 queryList.getResultList();
+ 	  
+ 	  if(result.size() == 0) {
+ 		  throw new  EmptyResultSetException("error.emptyRS,query,Loaners"); }
+ 	  
+ 	  if(result.size() > 0) 
+ 	  {return result;}
+ 	 } 
+ 	  catch(DataAccessException e) { throw new
+ 	  DataBaseException("error.dataBase.query,Loaners,"+e.getMessage()  );
+ 	  }
+ 	  finally { }
+ 	  
+ 	 
+ 	return new ArrayList();
+ }
+
+
+
 }

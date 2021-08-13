@@ -5,11 +5,13 @@ import java.util.List;
 
 import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.LoanTransactionTypeEnum;
+import com.gomalmarket.shop.core.Enum.LoanTypeEnum;
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.entities.expanses.IncomeDetail;
 import com.gomalmarket.shop.core.entities.expanses.OutcomeDetail;
+import com.gomalmarket.shop.core.entities.shopLoan.LoanAccount;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
@@ -52,6 +54,20 @@ public interface IExpansesServices {
 	void deleteIncomeDetailTransaction(IncomeDetail incomeDetail) throws DataBaseException;
 	
 	public double getSafeBalanceOfday(int seasonId,Date date,SafeTypeEnum type);
-	List<LoanTransaction> getLoanTransactions(int loanerId, LoanTransactionTypeEnum type)
+	List<LoanTransaction> getLoanTransactions(int loanerId,int groupId, LoanTransactionTypeEnum type)
 			throws EmptyResultSetException, DataBaseException;
+	List getfindLoaners(String name);
+	void editLoanPayTansaction(int LoanTransactionId, double amount, String notes, Date trxDate, LoanTypeEnum loanType,
+			Fridage fridage, Season season)
+			throws DataBaseException, InvalidReferenceException, EmptyResultSetException;
+	void loanTansaction(int loanerId, String loanerName, double amount, String notes, Date trxDate,
+			LoanTypeEnum loanType, Fridage fridage, Season season) throws DataBaseException;
+	void loanPayTansaction(int loanerId, String loanerName, double amount, String notes, Date trxDate,
+			LoanTypeEnum loanType, Fridage fridage, Season season) throws DataBaseException;
+	void editLoanTansaction(int LoanTransactionId, double amount, String notes, Date trxDate, LoanTypeEnum loanType,
+			Fridage fridage, Season season)
+			throws DataBaseException, InvalidReferenceException, EmptyResultSetException;
+	LoanAccount getLoanerAccount(int id);
+	
+	 public List loadGroupsLoanerNames(LoanTypeEnum loanType) throws EmptyResultSetException, DataBaseException ;
 }

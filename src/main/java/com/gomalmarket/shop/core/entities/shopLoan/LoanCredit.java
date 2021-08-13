@@ -7,6 +7,7 @@ import javax.persistence.OneToOne;
 
 import com.gomalmarket.shop.core.entities.expanses.OutcomeDetail;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ import lombok.Setter;
  @Setter
 @Getter
 @DiscriminatorValue("LOAN_CREDIT")
+ 
 public class LoanCredit extends ShopLoanTransaction {
 	
 	@OneToOne

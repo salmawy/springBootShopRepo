@@ -17,6 +17,7 @@ import lombok.Setter;
 public class LoanTransaction {
 	
 	private int id;
+	private int loanerId;
 	private String transactionDate;
 	private String notes;
 	private String description;

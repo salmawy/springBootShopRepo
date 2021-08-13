@@ -94,7 +94,7 @@ public class AddOutcomePersenter extends ExpansesAction implements Initializable
 		public AddOutcomePersenter() {
 	    	
 	    	
-	    	id=(int) request.get("outcomeDetailId");
+	    	id=(int) requestMap.get("outcomeDetailId");
 	    	
 
 			 requirerdTypes=new ArrayList(Arrays.asList(OutcomeTypeEnum.labours

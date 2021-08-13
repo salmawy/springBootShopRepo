@@ -5,26 +5,35 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
 
-import com.gomalmarket.shop.core.Enum.IncomeTypeEnum;
 import com.gomalmarket.shop.core.Enum.LoanTypeEnum;
+import com.gomalmarket.shop.core.Enum.NavigationResponseCodeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
-import com.gomalmarket.shop.core.entities.contractor.Contractor;
-import com.gomalmarket.shop.core.entities.expanses.Income;
-import com.gomalmarket.shop.core.entities.expanses.IncomeDetail;
+import com.gomalmarket.shop.core.action.navigation.Request;
+import com.gomalmarket.shop.core.action.navigation.Response;
+import com.gomalmarket.shop.core.entities.shopLoan.LoanAccount;
+import com.gomalmarket.shop.core.entities.shopLoan.Loaner;
 import com.gomalmarket.shop.core.entities.shopLoan.ShopLoanTransaction;
+import com.gomalmarket.shop.core.exception.DataBaseException;
+import com.gomalmarket.shop.core.exception.EmptyResultSetException;
+import com.gomalmarket.shop.core.exception.InvalidReferenceException;
+import com.gomalmarket.shop.core.validator.Validator;
 import com.gomalmarket.shop.modules.expanses.action.ExpansesAction;
 import com.gomalmarket.shop.modules.expanses.view.beans.LoanTransaction;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXSnackbar;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
@@ -41,335 +50,402 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-public class AddEditLoanPersenter extends ExpansesAction implements Initializable { 
- 
-	Logger logger = Logger.getLogger(this.getClass().getName());	
+public class AddEditLoanPersenter extends ExpansesAction implements Initializable {
 
-	    @FXML
-	    private JFXComboBox<ComboBoxItem> loanType_combo;
+	Logger logger = Logger.getLogger(this.getClass().getName());
 
-	    @FXML
-	    private JFXButton cancel_btn;
+	@FXML
+	private JFXComboBox<ComboBoxItem<String>> loanType_combo;
 
-	    @FXML
-	    private JFXTextField amount_TF;
+	@FXML
+	private JFXButton cancel_btn;
 
-	    @FXML
-	    private Label loanerName_label;
+	@FXML
+	private JFXTextField amount_TF;
 
-	    @FXML
-	    private Label type_label;
+	@FXML
+	private Label loanerName_label;
 
-	    @FXML
-	    private JFXTextField loanerName_TF;
+	@FXML
+	private Label type_label;
 
-  
-	    @FXML
-	    private HBox date_loc;
+	@FXML
+	private JFXTextField loanerName_TF;
 
-	    @FXML
-	    private JFXTextArea note_TA;
+	@FXML
+	private HBox date_loc;
 
-	    @FXML
-	    private Label date_label;
+	@FXML
+	private JFXTextArea note_TA;
 
-	    @FXML
-	    private AnchorPane root_pane;
+	@FXML
+	private Label date_label;
 
-	    @FXML
-	    private Pane coloredPane;
+	@FXML
+	private AnchorPane root_pane;
 
-	    @FXML
-	    private Label title_label;
+	@FXML
+	private Pane coloredPane;
 
-	    @FXML
-	    private HBox datePicker_loc1;
+	@FXML
+	private Label title_label;
 
-	    @FXML
-	    private Label amount_label;
+	@FXML
+	private HBox datePicker_loc1;
 
-	    @FXML
-	    private HBox datePicker_loc;
+	@FXML
+	private Label amount_label;
 
-	    @FXML
-	    private JFXButton saveBtn;
-	    
-	    
+	@FXML
+	private HBox datePicker_loc;
+
+	@FXML
+	private JFXButton saveBtn;
+
 //---------------------------------------------------------------------------------------------
-    
-	List<ComboBoxItem<String>> loanTypes;
- 
-	LoanTypeEnum loanType;
-	public static final int Mode_Add=0;
-	public static final int Mode_Edit=1;
-	int mode;
-    private JFXDatePicker datePicker;
-    public AddEditLoanPersenter() {
+	private JFXSnackbar snackBar;
+	Validator myvaValidator;
 
-     	mode=(int) this.request.get("mode");
-    	LoanTypeEnum loanType=(LoanTypeEnum) this.request.get("loanType");
-     	ComboBoxItem<String> selectedLoanType=(loanType.equals(LoanTypeEnum.IN_LOAN))?new ComboBoxItem<String>(LoanTypeEnum.IN_LOAN.getId(),this.getMessage(" label.pay.inloan") )
-     			:new ComboBoxItem<String>(LoanTypeEnum.OUT_LOAN.getId(),this.getMessage(" label.pay.outloan") );
-    	loanTypes=new ArrayList<ComboBoxItem<String>>(Arrays.asList(selectedLoanType));
-    
-    
-    }
-    
-    
+	List<ComboBoxItem<String>> loanTypes;
+
+	LoanTypeEnum loanType;
+ 
+	int mode;
+	LoanTransaction editedTrx;
+	private JFXDatePicker datePicker;
+
+	public AddEditLoanPersenter() {
+
+		mode = this.requestObj.getMode();
+		loanType = (LoanTypeEnum) this.requestObj.getMap().get("loanType");
+		ComboBoxItem<String> selectedLoanType = (loanType.equals(LoanTypeEnum.IN_LOAN))
+				? new ComboBoxItem<String>(LoanTypeEnum.IN_LOAN.getId(), this.getMessage("label.inLoan"))
+				: new ComboBoxItem<String>(LoanTypeEnum.OUT_LOAN.getId(), this.getMessage("label.inLoan"));
+		loanTypes = new ArrayList<ComboBoxItem<String>>(Arrays.asList(selectedLoanType));
+		editedTrx = (LoanTransaction) this.requestObj.getEditedObject();
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-	  	  logger.log(Level.INFO,"============================================================================================================");
+		logger.log(Level.INFO,
+				"============================================================================================================");
 
+		datePicker = new JFXDatePicker();
+		datePicker.getEditor().setAlignment(Pos.CENTER_LEFT);
+		datePicker.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+		datePicker.setPrefWidth(317);
+
+		datePicker.setConverter(new StringConverter<LocalDate>() {
+			private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+			@Override
+			public String toString(LocalDate localDate) {
+				if (localDate == null)
+					return "";
+				return dateTimeFormatter.format(localDate);
+			}
+
+			@Override
+			public LocalDate fromString(String dateString) {
+				if (dateString == null || dateString.trim().isEmpty()) {
+					return null;
+				}
+				return LocalDate.parse(dateString, dateTimeFormatter);
+			}
+		});
+		date_loc.getChildren().add(datePicker);
+		date_loc.setPrefWidth(317);
+		date_label.setText(getMessage("label.date"));
+		// ==============================================================================================================
+
+		loanType_combo.getItems().addAll(loanTypes);
+		loanType_combo.setEditable(false);
+		loanType_combo.getSelectionModel().selectFirst();
+		String styleColoredPane = (loanType.equals(LoanTypeEnum.IN_LOAN)) ? "-fx-background-color: #00A65A"
+				: "-fx-background-color: #DD4B39";
+		coloredPane.setStyle(styleColoredPane);
 		
-		datePicker=new JFXDatePicker();
-	   	datePicker.getEditor().setAlignment(Pos.CENTER_LEFT);
-	   	datePicker.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-	   	datePicker.setPrefWidth(317);
-	   	 
-	   	datePicker.setConverter(new StringConverter<LocalDate>()
-	   	{
-	   	    private DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		
+		
+//==============================================================================================================
+		
+		amount_TF.textProperty().addListener((observable, oldValue, newValue) -> {
+ 			    myvaValidator=new Validator();
+			    if(newValue.length()>0) {
+				    myvaValidator.getValidDouble(newValue, 0, Double.MAX_VALUE, "amountValue", true);
+				    if(!myvaValidator.noException()) {
+				     
+				    	newValue=oldValue;
+				    amount_TF.setText(newValue);
+				    	}	    	
+				     
+			    	
+			    }
+		 });
 
-	   	    @Override
-	   	    public String toString(LocalDate localDate)
-	   	    {
-	   	        if(localDate==null)
-	   	            return "";
-	   	        return dateTimeFormatter.format(localDate);
-	   	    }
-
-	   	    @Override
-	   	    public LocalDate fromString(String dateString)
-	   	    {
-	   	        if(dateString==null || dateString.trim().isEmpty())
-	   	        {
-	   	            return null;
-	   	        }
-	   	        return LocalDate.parse(dateString,dateTimeFormatter);
-	   	    }
-	   	});    
-	   	date_loc.getChildren().add(datePicker);
-	   	date_loc.setPrefWidth(317);
-	   	date_label.setText(getMessage("label.date"));
- //==============================================================================================================
- 
-			loanType_combo.getItems().addAll(loanTypes);
-			loanType_combo.setDisable(true);
-			loanType_combo.getSelectionModel().selectFirst();
-			 
 //==============================================================================================================
 
-		
 		amount_label.setText(this.getMessage("label.money.amount"));
-		type_label.setText(this.getMessage("label.safe.income.kind"));
- 		loanerName_label.setText(this.getMessage("label.name"));
+		type_label.setText(this.getMessage("label.type"));
+		loanerName_label.setText(this.getMessage("label.name"));
 
-		 //==============================================================================================================
+		// ==============================================================================================================
 		saveBtn.setText(this.getMessage("button.save"));
 		saveBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.SAVE));
-		saveBtn.getStyleClass().setAll("btn","btn-primary");  
-		
-		//-----------------------------
+		saveBtn.getStyleClass().setAll("btn", "btn-primary");
+
+		// -----------------------------
 		cancel_btn.setText(this.getMessage("button.cancel"));
 		cancel_btn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.REMOVE));
-	    cancel_btn.getStyleClass().setAll("btn","btn-danger");
-	    cancel_btn.setOnAction(e -> {
-	    	cancel();
-	    	
-	    });	
-	    
-		//==============================================================================================================
-		note_TA.setPromptText(getMessage("label.notes"));
-	     title_label.setText(getMessage("label.safe.income.data"));
-	    //==============================================================================================================
+		cancel_btn.getStyleClass().setAll("btn", "btn-danger");
+		cancel_btn.setOnAction(e -> {
+			cancel();
 
-		/*
-		 * TextFields.bindAutoCompletion(incomeName_TF, t-> {
-		 * 
-		 * 
-		 * return "";// getLoanerNames(t.getUserText(), LoanTypeEnum.IN_LOAN);
-		 * 
-		 * });
-		 */
-	     
-	     intiateScreen();
+		});
+
+		// ==============================================================================================================
+		note_TA.setPromptText(getMessage("label.notes"));// label.loan
+		String title = (this.mode ==Request.MODE_EDIT) ? this.getMessage("label.edit") + " " + this.getMessage("label.loan")
+		:this.getMessage("label.add") + " " + this.getMessage("label.loan");
+		title_label.setText(title);
+		// ==============================================================================================================
+
+		TextFields.bindAutoCompletion(loanerName_TF, t -> {
+
+			return getExpansesServices().getfindLoaners(t.getUserText());
+
+		});
+
+		intiateScreen();
 	}
-    
-
-
-
-
-
-
-
 
 //---------------------------------------------------------------------------------------------------------------
 
+	void intiateScreen() {
 
-	 
-		boolean validateInForm() {
-			
-			   String name = loanerName_TF.getText(); 
-			   String inAmount = amount_TF.getText();
-			 
-			  if (name.isEmpty()) {
-				  
-				  
-			  alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
-			  this.getMessage("msg.err.required.name"));
-			  
-			  return false; } 
-			  else if (inAmount.isEmpty()) 
-			  {
-				  
-			  alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
-			  this.getMessage("msg.err.required.amount"));
-			  
-			  return false; }
-			  
-			  /*  if (account == null) {
-			  
-			  alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
-			  this.getMessage("msg.err.notfound.name")); return false;//err.notfound.name
-			  
-			  }
-			  
+		switch (mode) {
+		case Request.MODE_EDIT:
+
+			try {
+
+				ShopLoanTransaction trx = (ShopLoanTransaction) this.getBaseService()
+						.findBean(ShopLoanTransaction.class, editedTrx.getId());
+				this.note_TA.setText(trx.getNotes());
+				this.loanerName_TF.setText(trx.getLoaner().getName());
+				loanerName_TF.setEditable(false);
+				this.amount_TF.setText(String.valueOf(trx.getAmount()));
+				datePicker.setValue(this.getBaseService().convertToLocalDateViaMilisecond(trx.getTransactionDate()));
+
+			} catch (Exception e) {
+				alert(AlertType.ERROR, "", "", this.getMessage("msg.err.cannot.load.data"));
+				this.responseMap = new HashMap<String, Object>();
+				responseMap.put("code", "500");
+
+				cancel();
+			}
+
+			break;
+		case Request.MODE_ADD:
+
+			try {
+				int loanerId=(int) this.getRequest().get("loanerId");
+				Loaner loaner = (Loaner) this.getBaseService()
+						.findBean(Loaner.class,loanerId);
+				this.loanerName_TF.setText(loaner.getName());
+				loanerName_TF.setEditable(false);
+
+			} catch (Exception e) {
+				alert(AlertType.ERROR, "", "", this.getMessage("msg.err.cannot.load.data"));
+				this.responseMap = new HashMap<String, Object>();
+				responseMap.put("code", "500");
+
+				cancel();
+			}
+
+			break;
+		default:
+			break;
+		}
+
+	}
+
+//---------------------------------------------------------------------------------------------------------------
+
+	@FXML
+	private void save() {
+
+		if(!validateForm())
+			return;
 		
-		 * if (Double.parseDouble(inAmount) > 0 && account.getType().equals("IN_LOAN"))
-		 * {
-		 * 
-		 * 
-		 * alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
-		 * this.getMessage("err.amountShouldBePayedFromLoaner"));
-		 * 
-		 * return false;
-		 * 
-		 * } if (Double.parseDouble(inAmount) > account.getDueAmount()) {
-		 * 
-		 * alert(AlertType.ERROR,this.getMessage("msg.err"),this.getMessage("msg.err"),
-		 * this.getMessage(" msg.err.input.amount.greather"));
-		 * 
-		 * return false; }
-		 */
-			  
-			   
-			  return true;
+		double amount = Double.parseDouble(this.amount_TF.getText());
+		String notes = note_TA.getText();
+		String loanerName = (this.loanerName_TF.getText());
+		Date trxDate = getBaseService().convertToDateViaInstant(this.datePicker.getValue());
+
+		switch (mode) {
+		case Request.MODE_CREATE_NEW:
+			try {
+				
+				
+				this.getExpansesServices().loanTansaction(0, loanerName, amount, notes, trxDate, loanType,
+						getAppContext().getFridage(), getAppContext().getSeason());
+				responseMap=new HashMap<String, Object>();
+				responseMap.put("code", 100);
+				responseMap.put("msg", getMessage("msg.done.save"));
+				Stage stage = (Stage) cancel_btn.getScene().getWindow();
+ 				stage.close();
+				
+				
+				
+			} catch (DataBaseException e) {
+				alert(AlertType.ERROR, this.getMessage("msg.err"), this.getMessage("msg.err"),
+						this.getMessage("msg.err.general"));
+				e.printStackTrace();
 			}
+			alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
 
-	   
-//---------------------------------------------------------------------------------------------------------------
+			break;
+		case Request.MODE_ADD:
+			try {
+				this.getExpansesServices().loanTansaction(0, loanerName, amount, notes, trxDate, loanType,
+						getAppContext().getFridage(), getAppContext().getSeason());
+			 
+				this.responseObj=prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+				
+				Stage stage = (Stage) cancel_btn.getScene().getWindow();
+ 				stage.close();
+ 				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
 
-		  void intiateScreen() {
-		     switch (mode) {
-			case Mode_Edit:
-				
-				
-				try {
-					LoanTransaction editedTrx=(LoanTransaction) request.get("editedTrx");
-					
-					
-					ShopLoanTransaction trx= (ShopLoanTransaction) this.getBaseService().findBean(ShopLoanTransaction.class, editedTrx.getId());
- 					this.note_TA.setText(trx.getNotes());
-					this.loanerName_TF.setText(trx.getLoaner().getName());
-					loanerName_TF.setDisable(true);
-					this.amount_TF.setText(String.valueOf(trx.getAmount()));
-					datePicker.setValue(this.getBaseService().convertToLocalDateViaMilisecond(trx.getTransactionDate()));
-					
-					
-				}catch (Exception e) {
-					alert(AlertType.ERROR, "", "", this.getMessage("msg.err.cannot.load.data"));
-					this.response=new HashMap<String, Object>();
-					response.put("code", "500");
-					
-					
-					cancel();
-				}
-				
-				
-				
-				
-				
-				
-				break;
-
-			default:
-				break;
+			 
+			} catch (DataBaseException e) {
+				snackBar.show(this.getMessage("msg.err.general"), 1000);
+				logger.log(Level.WARNING, e.getMessage());
 			}
-		        
-		        
-		        
-		        
-		        
-		        
  
-		    }
+			break;
+		case Request.MODE_EDIT:
+			try {
+				this.getExpansesServices().editLoanTansaction(editedTrx.getId(), amount, notes, trxDate, loanType,
+						getAppContext().getFridage(), getAppContext().getSeason());
+			this.responseObj=prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+  				Stage stage = (Stage) cancel_btn.getScene().getWindow();
+ 				stage.close();
+ 				
+ 				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.edit"));
 
-//---------------------------------------------------------------------------------------------------------------
-	  
-			@FXML
-			private void save() {
-				
-				  
-				  
-				  String typeId = (String) loanType_combo.getSelectionModel().getSelectedItem().getId();
-				  double  amount = Double.parseDouble(this.amount_TF.getText());
-				  String notes =  note_TA.getText();
-				  
-			/*	  try {
-				  
-				  
-				  this.getExpansesServices().loanPayTansaction(incomeName_TF.getText(), new
-				  Date(), amount, typeId, notes, getAppContext().getFridage() );
-				  alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
-				  
-				  }catch (Exception ex) { 
-					  alert(AlertType.ERROR, this.getMessage("msg.err"),this.getMessage("msg.err"),
-				       this.getMessage("msg.err.general"));
-				   }
-			   */
-				 }
-			
-//---------------------------------------------------------------------------------------------------------------
-
-			  private void alert(AlertType alertType,String title,String headerText,String message) {
-					 Alert a = new Alert(alertType);
-					 a.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-					 a.setTitle(title );
-					 a.setHeaderText(headerText);
-					 a.setContentText(message); 
-			      a.show(); 
-				  
+			} catch (DataBaseException | InvalidReferenceException | EmptyResultSetException e) {
+ 						snackBar.show(this.getMessage("msg.err.general"), 1000);
+ 
 			}
+			
+			alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.edit"));
+
+			break;
+
+		default:
+			break;
+		}
+	}
+
 //---------------------------------------------------------------------------------------------------------------
 
-				private void cancel() {
-					
-					   
+	private void alert(AlertType alertType, String title, String headerText, String message) {
+		Alert a = new Alert(alertType);
+		a.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+		a.setTitle(title);
+		a.setHeaderText(headerText);
+		a.setContentText(message);
+		a.show();
 
-				      Stage stage = (Stage) cancel_btn.getScene().getWindow();
-				      // do what you have to do
-				      stage.close();
-				   
-				   
-				}
-				
-				
-				
-				
-	private List<String> getLoanerNames(String loanerName, String loanerType) {
-		/*
-		 * 
-		 * List <String >names=new ArrayList<String>(); try { names=
-		 * getExpansesServices().inExactMatchSearchloanerName(loanerName, loanerType); }
-		 * catch (EmptyResultSetException e) { // TODO Auto-generated catch block //
-		 * e.printStackTrace(); } catch (DataBaseException e) { // TODO Auto-generated
-		 * catch block // e.printStackTrace(); } catch (Exception e) {
-		 * e.printStackTrace();
-		 * 
-		 * 
-		 * } return names;
-		 * 
-		 */return null;}
+	}
+//---------------------------------------------------------------------------------------------------------------
+
+	private void cancel() {
+
+		
+		this.responseObj = prepareResponse(NavigationResponseCodeEnum.EXIT);
+		Stage stage = (Stage) cancel_btn.getScene().getWindow();
+		// do what you have to do
+		stage.close();
+
+	}
+
+	private boolean validateForm() {
+		String name = loanerName_TF.getText();
+		String amount = amount_TF.getText();
+		double safaBalance = this.getExpansesServices().getSafeBalance(getAppContext().getSeason());
+
+		if (amount.isEmpty()) {
+
+			snackBar.show(this.getMessage("msg.err.required.amount"), 1000);
+
+			return false;
+
+		} else if (name.isEmpty()) {
+			snackBar.show(this.getMessage("msg.err.required.name"), 1000);
+
+			return false;
+
+		}
+
+		if (datePicker.getValue() == null) {
+			snackBar.show(this.getMessage("msg.err.required.date"), 1000);
+
+			return false;
+
+		}
+		LoanAccount account = null;
+		try {
+			account = this.getExpansesServices().getLoanerAccount(editedTrx.getLoanerId());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (loanType.equals(LoanTypeEnum.IN_LOAN) && account.getType().equals(LoanTypeEnum.OUT_LOAN.getId())) {
+			snackBar.show(this.getMessage("msg.warnning.loaner.exist.outloan") ,1000);
+
+			return false;
+
+		}
+
+		if (loanType.equals(LoanTypeEnum.OUT_LOAN) && account.getType().equals(LoanTypeEnum.IN_LOAN.getId())) {
+			snackBar.show(this.getMessage("msg.warnning.loaner.exist.inloan") ,1000);
+
+			return false;
+		}
+
+		if (loanType.equals(LoanTypeEnum.OUT_LOAN) && safaBalance < Double.parseDouble(amount)) {
+
+			snackBar.show(this.getMessage("msg.err.notEnough.safeBalance"), 1000);
+			return false;
+		}
+		return true;
+
+	}
+
+ public Response prepareResponse(NavigationResponseCodeEnum reponseStatusCode) {
+	 return new Response() {
+		
+		@Override
+		public Map getResults() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public NavigationResponseCodeEnum getResponseCode() {
+			// TODO Auto-generated method stub
+			return reponseStatusCode;
+		}
+		
+		 
+	};
+	 
+	 
+	 
+	 
+ }
 
 }

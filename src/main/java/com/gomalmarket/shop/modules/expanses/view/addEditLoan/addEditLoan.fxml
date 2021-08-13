@@ -7,20 +7,20 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="420.0" prefWidth="400.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.expanses.view.addIncome.AddIncomePersenter">
+<AnchorPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="420.0" prefWidth="400.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.expanses.view.addEditLoan.AddEditLoanPersenter">
    <children>
       <Pane layoutX="10.0" layoutY="10.0" prefHeight="350.0" prefWidth="300.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Pane fx:id="coloredPane" prefHeight="46.0" prefWidth="390.0" style="-fx-background-color: #00A65A;">
                <children>
-                  <Label fx:id="title_label" alignment="CENTER" contentDisplay="CENTER" layoutX="-12.0" layoutY="13.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="20.0" prefWidth="400.0" text="Titleafsfsdfsdfasfasdfasdasdas" textFill="WHITE">
+                  <Label fx:id="title_label" alignment="CENTER" contentDisplay="CENTER" layoutX="-12.0" layoutY="13.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="20.0" prefWidth="400.0" text="Titleafsfsdfsdfasfasdfasdasdas" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
-            <VBox layoutX="4.0" layoutY="51.0" prefHeight="355.0" prefWidth="390.0">
+            <VBox layoutX="4.0" layoutY="51.0" prefHeight="355.0" prefWidth="390.0" spacing="3.0">
                <children>
                   <HBox fx:id="datePicker_loc1" prefHeight="30.0" prefWidth="300.0">
                      <children>
@@ -30,32 +30,32 @@
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
-                        <Label fx:id="incomeType_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
-                        <JFXComboBox fx:id="incomeType_combo" prefHeight="25.0" prefWidth="250.0" />
+                        <Label fx:id="type_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
+                        <JFXComboBox fx:id="loanType_combo" prefHeight="25.0" prefWidth="250.0" />
                      </children>
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
-                        <Label fx:id="incomeAmount_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
-                        <JFXTextField fx:id="incomeAmount_TF" prefHeight="26.0" prefWidth="250.0" />
+                        <Label fx:id="amount_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
+                        <JFXTextField fx:id="amount_TF" prefHeight="26.0" prefWidth="250.0" />
                      </children>
                   </HBox>
                   <HBox fx:id="datePicker_loc" prefHeight="30.0" prefWidth="300.0">
                      <children>
-                        <Label fx:id="incomeName_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
-                        <JFXTextField fx:id="incomeName_TF" prefHeight="25.0" prefWidth="250.0" />
+                        <Label fx:id="loanerName_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
+                        <JFXTextField fx:id="loanerName_TF" prefHeight="25.0" prefWidth="250.0" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="60.0" prefWidth="300.0">
+                  <HBox maxWidth="1.7976931348623157E308" prefHeight="60.0" prefWidth="300.0">
                      <children>
-                        <JFXTextArea fx:id="note_TA" prefHeight="60.0" prefWidth="385.0" promptText="notes" />
+                        <JFXTextArea fx:id="note_TA" maxWidth="1.7976931348623157E308" prefHeight="60.0" prefWidth="385.0" promptText="notes" />
                      </children>
                   </HBox>
                   <HBox prefHeight="28.0" prefWidth="340.0" />
                   <HBox alignment="CENTER" prefHeight="49.0" prefWidth="340.0" spacing="30.0">
                      <children>
                         <JFXButton fx:id="cancel_btn" text="cancel" />
-                        <JFXButton fx:id="saveBtn" alignment="CENTER" onAction="#saveIncome" text="Save" />
+                        <JFXButton fx:id="saveBtn" alignment="CENTER" onAction="#save" text="Save" />
                      </children>
                   </HBox>
                </children>

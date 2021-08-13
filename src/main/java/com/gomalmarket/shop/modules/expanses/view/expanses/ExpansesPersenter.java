@@ -290,9 +290,9 @@ public class ExpansesPersenter extends ExpansesAction implements Initializable, 
  	private void addEditOutcome(int id ) {
       	
  
-		this.request=new HashMap<String,Object>();
+		this.requestMap=new HashMap<String,Object>();
 		
-		request.put("outcomeDetailId", id);
+		requestMap.put("outcomeDetailId", id);
 		
  		AddOutcomeView form=new AddOutcomeView();
 		URL u=	 getClass().getClassLoader().getResource("appResources/custom.css");
@@ -479,7 +479,7 @@ private List<Column> prepareIncomeTableColumns(){
 				Seller seller=(Seller) this.getBaseService().findBean(Seller.class, detail.getSellerId());
 				name=seller.getName();
 			}
-			else if (detail.getTypeId()==IncomeTypeEnum.IN_LOAN.getId()||detail.getTypeId()==IncomeTypeEnum.IN_PAY_LOAN.getId())
+			else if (detail.getTypeId()==IncomeTypeEnum.IN_LOAN.getId()||detail.getTypeId()==IncomeTypeEnum.PAY_CREDIT.getId())
 			{
 				Loaner loaner=(Loaner) this.getBaseService().findBean(Loaner.class, detail.getSellerId());
 				name=loaner.getName();
@@ -688,7 +688,7 @@ private List<Column> prepareIncomeTableColumns(){
 			name=contractor.getName();
 		 
 		 
-     } else if (detail.getTypeId()==OutcomeTypeEnum.OUT_LOAN.getId()||detail.getTypeId()==OutcomeTypeEnum.OUT_PAY_LOAN.getId()) {
+     } else if (detail.getTypeId()==OutcomeTypeEnum.OUT_LOAN.getId()||detail.getTypeId()==OutcomeTypeEnum.PAY_DEBIT.getId()) {
 				
     	     Loaner loaner=(Loaner) this.getBaseService().getBean(Loaner.class, detail.getCustomerId());
 			name=loaner.getName();
