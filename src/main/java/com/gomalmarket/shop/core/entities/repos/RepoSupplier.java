@@ -25,7 +25,7 @@ public class RepoSupplier {
 	 FridageRepo fridageRepo;
 	
 	@Autowired
-	LoanDeditRepo loanDeditRepo;
+	LoanDebitRepo loanDebitRepo;
 	
 	@Autowired
 	LoanCreditRepo loanCreditRepo;

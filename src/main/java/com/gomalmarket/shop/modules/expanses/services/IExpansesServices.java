@@ -73,4 +73,5 @@ public interface IExpansesServices {
 	Date GetLoanStartDate(int loanerId, LoanTypeEnum loanType);
 	void groupLoan(int loanerId, LoanTypeEnum loanType) throws DataBaseException;
 	LoanAccount getLoanAccount(int loanerId, String name);
+	void deleteLoanTransaction(int trxId, LoanTransactionTypeEnum trxType) throws DataBaseException;
 }

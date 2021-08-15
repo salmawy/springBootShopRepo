@@ -349,10 +349,9 @@ public class LoansPersenter extends ExpansesAction implements Initializable {
 		deletePayeeBtn.setDisable(true);
 		deletePayeeBtn.getStyleClass().setAll("btn", "btn-danger", "btn-xs");
 		deletePayeeBtn.setOnAction(e -> {
-			LoanTransaction loanTransaction = (LoanTransaction) this.PayeesCustomTable.getTable().getSelectionModel()
-					.getSelectedItem();
+			LoanTransaction loanTransaction = (LoanTransaction) this.PayeesCustomTable.getTable().getSelectionModel().getSelectedItem();
 
-			// payLoan(loanTransaction);
+			deletePayeeTransaction(loanTransaction);
 
 		});
 
@@ -402,7 +401,7 @@ public class LoansPersenter extends ExpansesAction implements Initializable {
 			LoanTransaction loanTransaction = (LoanTransaction) this.debitsCustomtable.getTable().getSelectionModel()
 					.getSelectedItem();
 
-			deleteLoanTransaction(loanTransaction);
+			deleteDebitTransaction(loanTransaction);
 
 		});
 
@@ -412,11 +411,7 @@ public class LoansPersenter extends ExpansesAction implements Initializable {
 		return buttons;
 	}
 
-	private void deleteLoanTransaction(LoanTransaction loanTransaction) {
-		// TODO Auto-generated method stub
-
-	}
-
+	 
 	private void addEditLoan(LoanTransaction loanTransaction, int loanerId, int mode) {
 
 		this.requestObj = prepareAddEditLoanRequest(loanerId, mode, loanTransaction);
@@ -551,6 +546,12 @@ public class LoansPersenter extends ExpansesAction implements Initializable {
 
 			break;
 		case Request.MODE_EDIT:
+			loadDebts(loanerId, loanType);
+			if (loaner != null)
+				mytable.getSelectionModel().getSelectedItem().setValue(loaner);
+			break;
+			
+		case Request.MODE_DELETE:
 			loadDebts(loanerId, loanType);
 			if (loaner != null)
 				mytable.getSelectionModel().getSelectedItem().setValue(loaner);
@@ -891,4 +892,120 @@ public class LoansPersenter extends ExpansesAction implements Initializable {
 	
 		
 	}
+	
+	
+	private void deleteDebitTransaction(LoanTransaction trx) {
+		LoanTypeEnum loanType = LoanTypeEnum.fromId(this.loanType_combo.getSelectionModel().getSelectedItem().getId());
+		if(!validateDebiteDelet(trx)) return;
+		try {
+			
+		
+		switch (loanType) {
+		case OUT_LOAN:
+		
+				getExpansesServices().deleteLoanTransaction(trx.getId(), LoanTransactionTypeEnum.LOAN_CREDIT);			
+
+			break;
+		case IN_LOAN:
+			
+			getExpansesServices().deleteLoanTransaction(trx.getId(), LoanTransactionTypeEnum.LOAN_DEBET);			
+
+		break;
+		default:
+			break;
+		}
+		
+		
+		alert(AlertType.INFORMATION, "", "", getMessage("msg.done.delete"));
+		refreshDebits(Request.MODE_DELETE, trx.getLoanerId());
+		} catch (DataBaseException | EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			alert(AlertType.ERROR, "", "", getMessage("msg.err.general"));
+
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	private void deletePayeeTransaction(LoanTransaction trx) {
+		
+		LoanTypeEnum loanType = LoanTypeEnum.fromId(this.loanType_combo.getSelectionModel().getSelectedItem().getId());
+
+		try {
+		
+		switch (loanType) {
+		case OUT_LOAN:
+		
+				getExpansesServices().deleteLoanTransaction(trx.getId(), LoanTransactionTypeEnum.PAY_CREDIT);			
+
+			break;
+		case IN_LOAN:
+			
+			getExpansesServices().deleteLoanTransaction(trx.getId(), LoanTransactionTypeEnum.PAY_DEBIT);
+			break;
+			
+			
+		default:
+			break;
+		}
+		
+		
+		alert(AlertType.INFORMATION, "", "", getMessage("msg.done.delete"));
+		refreshPayees(Request.MODE_DELETE, trx.getLoanerId());
+		} catch (DataBaseException | EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			alert(AlertType.ERROR, "", "", getMessage("msg.err.general"));
+
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	private boolean validateDebiteDelet(LoanTransaction trx) {
+		
+		LoanTypeEnum loanType = LoanTypeEnum.fromId(this.loanType_combo.getSelectionModel().getSelectedItem().getId());
+		LoanersNameVB loaner= getLoaner(trx.getLoanerId(), loanType);
+		
+		if(loaner==null) {
+			alert(AlertType.ERROR, "", "", getMessage("msg.err.notfound.name"));
+			return false;
+		}
+	
+		
+		double temp=loaner.getAmount().get()-trx.getAmount();
+		
+		
+		if(temp<0) {			
+			alert(AlertType.ERROR, "", "", getMessage("msg.err.loan.canot.delete"));			
+			return false;
+		}
+		
+		
+		
+		return true;
+	}
+
+	
+	
+	
+	
+	
 }

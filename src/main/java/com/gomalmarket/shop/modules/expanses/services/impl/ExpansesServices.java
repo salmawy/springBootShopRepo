@@ -543,7 +543,7 @@ public class ExpansesServices implements IExpansesServices {
 
 			break;
 		case IN_LOAN:
-			LoanDebit loanDebit = this.getShopAppContext().getRepoSupplier().getLoanDeditRepo()
+			LoanDebit loanDebit = this.getShopAppContext().getRepoSupplier().getLoanDebitRepo()
 					.findById(LoanTransactionId).get();
 			loanDebit.setAmount(amount);
 			loanDebit.setNotes(notes);
@@ -727,7 +727,7 @@ public class ExpansesServices implements IExpansesServices {
 			
 			Iterable<LoanDebit> loansIterable = loans;
 			
-			getRepoSupplier().getLoanDeditRepo().saveAll(loansIterable);
+			getRepoSupplier().getLoanDebitRepo().saveAll(loansIterable);
 
 		} catch (EmptyResultSetException e) {
 			// TODO Auto-generated catch block
@@ -812,6 +812,120 @@ public class ExpansesServices implements IExpansesServices {
 		
 	}
 		
+	@Override
+public void deleteLoanTransaction(int trxId,LoanTransactionTypeEnum trxType) throws DataBaseException {
+
+	switch (trxType) {
+	case PAY_CREDIT:
+		 deletePayCreditTransactions(trxId);
+break;
+	case PAY_DEBIT:
+
+		 deletePayDebitTransactions(trxId);
+		 break;
+	case LOAN_CREDIT:
+
+		 deleteLoanCreditTransactions(trxId);
+		 break;
+	case LOAN_DEBET:
+
+		 deleteLoanDebitTransactions(trxId);
+		 break;
+
+	default:
+		 break;
+	}
+
+}
+
+@Transactional
+private void deletePayCreditTransactions(int trxId) throws DataBaseException {
+	
+	getRepoSupplier().getPayCreditRepo().deleteById(trxId);
+	
+	
+ 	
+	Map<String, Object> prams = new HashMap<String, Object>();
+	prams.put("orderId", trxId);
+	IncomeDetail incomeDetail;
+	try {
+		incomeDetail = (IncomeDetail) this.getBaseService().findBean(IncomeDetail.class,prams);
+		deleteIncomeDetailTransaction(incomeDetail);
+
+	} catch (EmptyResultSetException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	// TODO Auto-generated method stub
+ }
+
+
+@Transactional
+private void deletePayDebitTransactions(int trxId) throws DataBaseException {
+	
+	getRepoSupplier().getPayDebitRepo().deleteById(trxId);
+	
+	
+ 	
+	Map<String, Object> prams = new HashMap<String, Object>();
+	prams.put("orderId", trxId);
+	OutcomeDetail outcomeDetail;
+	try {
+		outcomeDetail = (OutcomeDetail) this.getBaseService().findBean(OutcomeDetail.class,prams);
+		deleteOutcomeDetailTransaction(outcomeDetail);
+
+	} catch (EmptyResultSetException e) {
+		// TODO Auto-generated catch block
+		log.info("deletePayDebitTransactions not  found trx ");
+	}
+	// TODO Auto-generated method stub
+ }
+
+
+
+@Transactional
+private void deleteLoanDebitTransactions(int trxId) throws DataBaseException {
+	
+	getRepoSupplier().getLoanDebitRepo().deleteById(trxId);
+	
+	
+ 	
+ 
+	Map<String, Object> prams = new HashMap<String, Object>();
+	prams.put("orderId", trxId);
+	IncomeDetail incomeDetail;
+	try {
+		incomeDetail = (IncomeDetail) this.getBaseService().findBean(IncomeDetail.class,prams);
+		deleteIncomeDetailTransaction(incomeDetail);
+
+	} catch (EmptyResultSetException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	// TODO Auto-generated method stub
+ }
+
+
+@Transactional
+private void deleteLoanCreditTransactions(int trxId) throws DataBaseException {
+	
+	getRepoSupplier().getLoanCreditRepo().deleteById(trxId);
+	
+	
+ 	
+	Map<String, Object> prams = new HashMap<String, Object>();
+	prams.put("orderId", trxId);
+	OutcomeDetail outcomeDetail;
+	try {
+		outcomeDetail = (OutcomeDetail) this.getBaseService().findBean(OutcomeDetail.class,prams);
+		deleteOutcomeDetailTransaction(outcomeDetail);
+
+	} catch (EmptyResultSetException e) {
+		// TODO Auto-generated catch block
+		log.info("deletePayDebitTransactions not  found trx ");
+	}
+	// TODO Auto-generated method stub
+ }
 
 
 }

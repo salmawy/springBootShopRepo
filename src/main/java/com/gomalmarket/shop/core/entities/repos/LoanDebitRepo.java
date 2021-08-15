@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.gomalmarket.shop.core.entities.shopLoan.LoanDebit;
 
 @Repository
-public interface LoanDeditRepo extends CrudRepository<LoanDebit,Integer> {
+public interface LoanDebitRepo extends CrudRepository<LoanDebit,Integer> {
 
 	
 	

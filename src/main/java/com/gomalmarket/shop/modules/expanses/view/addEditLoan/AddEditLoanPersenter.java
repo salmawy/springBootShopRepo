@@ -445,7 +445,7 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 			@Override
 			public Map getResults() {
 				// TODO Auto-generated method stub
-				return null;
+				return new HashMap<String,Object>();
 			}
 
 			@Override
