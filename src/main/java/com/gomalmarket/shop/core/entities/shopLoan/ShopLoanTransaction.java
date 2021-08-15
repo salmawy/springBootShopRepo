@@ -15,11 +15,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 @Table(name = "SHOP_LOANS_TRANSACTIONS")
-@Entity(name = "ShopLoan")
+@Entity(name = "ShopLoanTransaction")
 @Setter
 @Getter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -49,7 +48,7 @@ public class ShopLoanTransaction {
 	private  int finished ;
 	
 	@Column(name = "GROUP_ID")
-	private  int groupId ;
+	private  Integer groupId ;
 	
 	@Column(name = "NOTES")
 	private String notes;

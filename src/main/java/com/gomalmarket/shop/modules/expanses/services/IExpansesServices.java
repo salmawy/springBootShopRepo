@@ -54,9 +54,9 @@ public interface IExpansesServices {
 	void deleteIncomeDetailTransaction(IncomeDetail incomeDetail) throws DataBaseException;
 	
 	public double getSafeBalanceOfday(int seasonId,Date date,SafeTypeEnum type);
-	List<LoanTransaction> getLoanTransactions(int loanerId,int groupId, LoanTransactionTypeEnum type)
+	List<LoanTransaction> getLoanTransactions(int loanerId, int groupId, LoanTransactionTypeEnum type,int finished)
 			throws EmptyResultSetException, DataBaseException;
-	List getfindLoaners(String name);
+	List<String> getfindLoaners(String name);
 	void editLoanPayTansaction(int LoanTransactionId, double amount, String notes, Date trxDate, LoanTypeEnum loanType,
 			Fridage fridage, Season season)
 			throws DataBaseException, InvalidReferenceException, EmptyResultSetException;
@@ -70,4 +70,7 @@ public interface IExpansesServices {
 	LoanAccount getLoanerAccount(int id);
 	
 	 public List loadGroupsLoanerNames(LoanTypeEnum loanType) throws EmptyResultSetException, DataBaseException ;
+	Date GetLoanStartDate(int loanerId, LoanTypeEnum loanType);
+	void groupLoan(int loanerId, LoanTypeEnum loanType) throws DataBaseException;
+	LoanAccount getLoanAccount(int loanerId, String name);
 }

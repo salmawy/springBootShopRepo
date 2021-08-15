@@ -16,6 +16,20 @@ public interface IBaseDao {
     List<Object> findAllBeansWithDepthMapping(Class<?> beanClass, Map<Object, Object> propertyMap)
                 throws DataBaseException, EmptyResultSetException;
 
+    
+    
+    
+    public <T> List<T> gFindAllBeansWithDepthMapping(Class<T> beanClass, Map  propertyMap)
+            throws DataBaseException, EmptyResultSetException;
+
+
+    
+    
+    
+    
+    
+    
+   
     public List<Object> findAllBeans(Class<?> beanClass, Map<String, Object> params , List<JPAOrderBy> nOrder, int fromRecord, int maxResult) throws DataBaseException, EmptyResultSetException ;
 
 	void insertBean(Object newBean) throws DataBaseException;
@@ -36,12 +50,15 @@ public interface IBaseDao {
 	void PrintReport(Map param, InputStream report);
 	
 	public Season getCurrentSeason() throws DataBaseException, EmptyResultSetException ;
-
+	 <T> T gFindBean(Class<T> beanClass, Map propertyMap)throws DataBaseException, EmptyResultSetException;
 	Object findBean(Class<?> beanClass, Map propertyMap) throws DataBaseException, EmptyResultSetException;
 
 	void mergeEntity(Object entity);
 
 	List<Object> findAllBeansWithDepthMapping(Class beanClass, Map propertyMap, List<String> nOrder)
 			throws DataBaseException, EmptyResultSetException;
+
+	<T>List<T> gFindAllBeans(Class<?> beanClass, Map<String, Object> params, List<JPAOrderBy> nOrder, int fromRecord,
+			int maxResult) throws EmptyResultSetException, DataBaseException;
  
     }

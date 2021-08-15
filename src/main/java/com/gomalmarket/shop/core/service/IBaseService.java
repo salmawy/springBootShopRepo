@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.data.repository.CrudRepository;
 
 import com.gomalmarket.shop.core.JPAOrderBy;
+import com.gomalmarket.shop.core.entities.basic.BaseEntity;
 import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.entities.sellers.SellerOrderWeight;
 import com.gomalmarket.shop.core.exception.DataBaseException;
@@ -27,6 +28,7 @@ public interface IBaseService
 			EmptyResultSetException;
 
 	public List<Object> findAllBeansWithDepthMapping(Class<?> beanClass, Map  propertyMap) throws DataBaseException, EmptyResultSetException;
+	public <T> List<T> gFindAllBeansWithDepthMapping(Class<T> beanClass, Map  propertyMap) throws DataBaseException, EmptyResultSetException;
 
 	List findAllBeans(Class<?> beanClass) throws DataBaseException, EmptyResultSetException;
 
@@ -35,6 +37,7 @@ public interface IBaseService
 	void addEditBean(Object newBean) throws DataBaseException;
 
 	void addBean(Object newBean) throws DataBaseException;
+	<T> T gFindBean(Class<T> beanClass, Map propertyMap) throws DataBaseException,EmptyResultSetException;
 
 	Object findBean(Class<?> beanClass, Map propertyMap) throws DataBaseException,EmptyResultSetException;
 
@@ -64,6 +67,8 @@ public interface IBaseService
 
 	List<Object> findAllBeansWithDepthMapping(Class beanClass, Map propertyMap, List<String> nOrder)
 			throws DataBaseException, EmptyResultSetException;
+
+	<T>List<T> gFindAllBeans(Class<?> beanClass, Map params, List <JPAOrderBy> order) throws EmptyResultSetException, DataBaseException;
 
 
 }

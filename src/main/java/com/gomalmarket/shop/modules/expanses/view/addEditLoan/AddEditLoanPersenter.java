@@ -109,7 +109,7 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 	List<ComboBoxItem<String>> loanTypes;
 
 	LoanTypeEnum loanType;
- 
+	int loanerId = 0;;
 	int mode;
 	LoanTransaction editedTrx;
 	private JFXDatePicker datePicker;
@@ -120,9 +120,11 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 		loanType = (LoanTypeEnum) this.requestObj.getMap().get("loanType");
 		ComboBoxItem<String> selectedLoanType = (loanType.equals(LoanTypeEnum.IN_LOAN))
 				? new ComboBoxItem<String>(LoanTypeEnum.IN_LOAN.getId(), this.getMessage("label.inLoan"))
-				: new ComboBoxItem<String>(LoanTypeEnum.OUT_LOAN.getId(), this.getMessage("label.inLoan"));
+				: new ComboBoxItem<String>(LoanTypeEnum.OUT_LOAN.getId(), this.getMessage("label.outLoan"));
 		loanTypes = new ArrayList<ComboBoxItem<String>>(Arrays.asList(selectedLoanType));
 		editedTrx = (LoanTransaction) this.requestObj.getEditedObject();
+		loanerId = this.requestObj.getEditedObjectId();
+
 	}
 
 	@Override
@@ -165,25 +167,23 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 		String styleColoredPane = (loanType.equals(LoanTypeEnum.IN_LOAN)) ? "-fx-background-color: #00A65A"
 				: "-fx-background-color: #DD4B39";
 		coloredPane.setStyle(styleColoredPane);
-		
-		
-		
-//==============================================================================================================
-		
-		amount_TF.textProperty().addListener((observable, oldValue, newValue) -> {
- 			    myvaValidator=new Validator();
-			    if(newValue.length()>0) {
-				    myvaValidator.getValidDouble(newValue, 0, Double.MAX_VALUE, "amountValue", true);
-				    if(!myvaValidator.noException()) {
-				     
-				    	newValue=oldValue;
-				    amount_TF.setText(newValue);
-				    	}	    	
-				     
-			    	
-			    }
-		 });
 
+//==============================================================================================================
+
+		amount_TF.textProperty().addListener((observable, oldValue, newValue) -> {
+			myvaValidator = new Validator();
+			if (newValue.length() > 0) {
+				myvaValidator.getValidDouble(newValue, 0, Double.MAX_VALUE, "amountValue", true);
+				if (!myvaValidator.noException()) {
+
+					newValue = oldValue;
+					amount_TF.setText(newValue);
+				}
+
+			}
+		});
+		// ============================================================================================================
+				snackBar = new JFXSnackbar(root_pane);
 //==============================================================================================================
 
 		amount_label.setText(this.getMessage("label.money.amount"));
@@ -206,8 +206,9 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 
 		// ==============================================================================================================
 		note_TA.setPromptText(getMessage("label.notes"));// label.loan
-		String title = (this.mode ==Request.MODE_EDIT) ? this.getMessage("label.edit") + " " + this.getMessage("label.loan")
-		:this.getMessage("label.add") + " " + this.getMessage("label.loan");
+		String title = (this.mode == Request.MODE_EDIT)
+				? this.getMessage("label.edit") + " " + this.getMessage("label.loan")
+				: this.getMessage("label.add") + " " + this.getMessage("label.loan");
 		title_label.setText(title);
 		// ==============================================================================================================
 
@@ -249,9 +250,8 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 		case Request.MODE_ADD:
 
 			try {
-				int loanerId=(int) this.getRequest().get("loanerId");
-				Loaner loaner = (Loaner) this.getBaseService()
-						.findBean(Loaner.class,loanerId);
+				int loanerId = this.requestObj.getEditedObjectId();
+				Loaner loaner = (Loaner) this.getBaseService().findBean(Loaner.class, loanerId);
 				this.loanerName_TF.setText(loaner.getName());
 				loanerName_TF.setEditable(false);
 
@@ -271,13 +271,32 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 	}
 
 //---------------------------------------------------------------------------------------------------------------
+	private LoanAccount getLoanAccount(int loanerId, String name) {
+		LoanAccount account = null;
+
+		switch (mode) {
+		case Request.MODE_CREATE_NEW:
+			
+			account=getExpansesServices().getLoanAccount(0, name);
+			break;
+		case Request.MODE_ADD:
+			account=getExpansesServices().getLoanAccount(loanerId, null);
+			break;
+
+		case Request.MODE_EDIT:
+			account=getExpansesServices().getLoanAccount(loanerId, null);
+			break;
+		}
+		return account;
+
+	}
 
 	@FXML
 	private void save() {
 
-		if(!validateForm())
+		if (!validateForm())
 			return;
-		
+
 		double amount = Double.parseDouble(this.amount_TF.getText());
 		String notes = note_TA.getText();
 		String loanerName = (this.loanerName_TF.getText());
@@ -286,18 +305,16 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 		switch (mode) {
 		case Request.MODE_CREATE_NEW:
 			try {
-				
-				
+
 				this.getExpansesServices().loanTansaction(0, loanerName, amount, notes, trxDate, loanType,
 						getAppContext().getFridage(), getAppContext().getSeason());
-				responseMap=new HashMap<String, Object>();
-				responseMap.put("code", 100);
-				responseMap.put("msg", getMessage("msg.done.save"));
+				this.responseObj = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+				
+				LoanAccount acc= getLoanAccount(0, loanerName);
+				responseObj.getResults().put("loanerId",acc.getLoaner().getId());
 				Stage stage = (Stage) cancel_btn.getScene().getWindow();
- 				stage.close();
-				
-				
-				
+				stage.close();
+
 			} catch (DataBaseException e) {
 				alert(AlertType.ERROR, this.getMessage("msg.err"), this.getMessage("msg.err"),
 						this.getMessage("msg.err.general"));
@@ -310,35 +327,35 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 			try {
 				this.getExpansesServices().loanTansaction(0, loanerName, amount, notes, trxDate, loanType,
 						getAppContext().getFridage(), getAppContext().getSeason());
-			 
-				this.responseObj=prepareResponse(NavigationResponseCodeEnum.SUCCESS);
-				
-				Stage stage = (Stage) cancel_btn.getScene().getWindow();
- 				stage.close();
- 				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
 
-			 
+				this.responseObj = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+				responseObj.getResults().put("loanerId",loanerId);
+				Stage stage = (Stage) cancel_btn.getScene().getWindow();
+				stage.close();
+				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
+
 			} catch (DataBaseException e) {
-				snackBar.show(this.getMessage("msg.err.general"), 1000);
+				snackBar.show(this.getMessage("msg.err.general"), 2000);
 				logger.log(Level.WARNING, e.getMessage());
 			}
- 
+
 			break;
 		case Request.MODE_EDIT:
 			try {
 				this.getExpansesServices().editLoanTansaction(editedTrx.getId(), amount, notes, trxDate, loanType,
 						getAppContext().getFridage(), getAppContext().getSeason());
-			this.responseObj=prepareResponse(NavigationResponseCodeEnum.SUCCESS);
-  				Stage stage = (Stage) cancel_btn.getScene().getWindow();
- 				stage.close();
- 				
- 				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.edit"));
+				this.responseObj = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+				responseObj.getResults().put("loanerId",loanerId);
+				Stage stage = (Stage) cancel_btn.getScene().getWindow();
+				stage.close();
+
+				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.edit"));
 
 			} catch (DataBaseException | InvalidReferenceException | EmptyResultSetException e) {
- 						snackBar.show(this.getMessage("msg.err.general"), 1000);
- 
+				snackBar.show(this.getMessage("msg.err.general"), 2000);
+
 			}
-			
+
 			alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.edit"));
 
 			break;
@@ -363,7 +380,6 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 
 	private void cancel() {
 
-		
 		this.responseObj = prepareResponse(NavigationResponseCodeEnum.EXIT);
 		Stage stage = (Stage) cancel_btn.getScene().getWindow();
 		// do what you have to do
@@ -375,77 +391,84 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 		String name = loanerName_TF.getText();
 		String amount = amount_TF.getText();
 		double safaBalance = this.getExpansesServices().getSafeBalance(getAppContext().getSeason());
-
+		LoanAccount account = getLoanAccount(loanerId, name);
+			
 		if (amount.isEmpty()) {
 
-			snackBar.show(this.getMessage("msg.err.required.amount"), 1000);
+			snackBar.show(this.getMessage("msg.err.required.amount"), 2000);
 
 			return false;
 
 		} else if (name.isEmpty()) {
-			snackBar.show(this.getMessage("msg.err.required.name"), 1000);
+			snackBar.show(this.getMessage("msg.err.required.name"), 2000);
 
 			return false;
 
 		}
 
 		if (datePicker.getValue() == null) {
-			snackBar.show(this.getMessage("msg.err.required.date"), 1000);
+			snackBar.show(this.getMessage("msg.err.required.date"), 2000);
 
 			return false;
 
 		}
-		LoanAccount account = null;
-		try {
-			account = this.getExpansesServices().getLoanerAccount(editedTrx.getLoanerId());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		 
 
-		if (loanType.equals(LoanTypeEnum.IN_LOAN) && account.getType().equals(LoanTypeEnum.OUT_LOAN.getId())) {
-			snackBar.show(this.getMessage("msg.warnning.loaner.exist.outloan") ,1000);
+		if (account != null && loanType.equals(LoanTypeEnum.IN_LOAN)
+				&& account.getType().equals(LoanTypeEnum.OUT_LOAN.getId())) {
+			snackBar.show(this.getMessage("msg.warnning.loaner.exist.outloan"), 2000);
 
 			return false;
 
 		}
 
-		if (loanType.equals(LoanTypeEnum.OUT_LOAN) && account.getType().equals(LoanTypeEnum.IN_LOAN.getId())) {
-			snackBar.show(this.getMessage("msg.warnning.loaner.exist.inloan") ,1000);
+		if (account != null && loanType.equals(LoanTypeEnum.OUT_LOAN)
+				&& account.getType().equals(LoanTypeEnum.IN_LOAN.getId())) {
+			snackBar.show(this.getMessage("msg.warnning.loaner.exist.inloan"), 2000);
 
 			return false;
 		}
 
 		if (loanType.equals(LoanTypeEnum.OUT_LOAN) && safaBalance < Double.parseDouble(amount)) {
 
-			snackBar.show(this.getMessage("msg.err.notEnough.safeBalance"), 1000);
+			snackBar.show(this.getMessage("msg.err.notEnough.safeBalance"), 2000);
 			return false;
 		}
 		return true;
 
 	}
 
- public Response prepareResponse(NavigationResponseCodeEnum reponseStatusCode) {
-	 return new Response() {
-		
-		@Override
-		public Map getResults() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-		@Override
-		public NavigationResponseCodeEnum getResponseCode() {
-			// TODO Auto-generated method stub
-			return reponseStatusCode;
-		}
-		
-		 
-	};
-	 
-	 
-	 
-	 
- }
+	public Response prepareResponse(NavigationResponseCodeEnum reponseStatusCode) {
+		return new Response() {
+
+			@Override
+			public Map getResults() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public NavigationResponseCodeEnum getResponseCode() {
+				// TODO Auto-generated method stub
+				return reponseStatusCode;
+			}
+
+		};
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

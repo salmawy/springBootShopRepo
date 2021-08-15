@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gomalmarket.shop.core.JPAOrderBy;
 import com.gomalmarket.shop.core.Enum.JPAOrderByEnum;
+import com.gomalmarket.shop.core.entities.basic.BaseEntity;
 import com.gomalmarket.shop.core.entities.basic.Season;
 
 /**
@@ -100,7 +101,46 @@ public class BaseDaoImpl implements IBaseDao {
 
     }
 
+    public <T> List<T> gFindAllBeansWithDepthMapping(Class<T> beanClass, Map  propertyMap) throws EmptyResultSetException, DataBaseException{
+        try {
+           String key, value;
+           StringBuffer sb = new StringBuffer("");
 
+           sb.append("from " + beanClass.getSimpleName() + " as bean");
+
+           String andConditions = " where ";
+
+           for (Iterator<Object> itr = propertyMap.keySet().iterator(); itr.hasNext(); ) {
+               sb.append(andConditions);
+               key = (String) itr.next();
+               value = String.valueOf(propertyMap.get(key));
+               sb.append(" bean." + key);
+               if (!value.contains("is null") && !value.contains("is not null") && !value.contains(">") && !value.contains("<") && !value.contains("IN("))
+                   sb.append("=");
+               sb.append(" " + value + " ");
+               if (!value.contains(" or"))
+                   andConditions = " and ";
+               else
+                   andConditions = "  ";
+
+           }
+
+           //System.out.println(sb.toString());
+           //	session= this.getSessionFactory().openSession();
+           List<T> result = entityManger.createQuery(sb.toString()).getResultList();
+
+           if (result.size() == 0)
+               throw new EmptyResultSetException("error.emptyRS," + beanClass.getSimpleName());
+
+           return result;
+       } catch (DataAccessException e) {
+           throw new DataBaseException("error.dataBase.query," + beanClass.getSimpleName() + "," + e.getMessage());
+       } finally {
+          
+       }
+
+   
+    }
     @Override
     @Transactional
     public List<Object> findAllBeans(Class<?> beanClass, Map<String, Object> params, List<JPAOrderBy> nOrder, int fromRecord, int maxResult) throws DataBaseException, EmptyResultSetException {
@@ -176,8 +216,81 @@ public class BaseDaoImpl implements IBaseDao {
         }
     }
 
+@Override
+    public   <T> List<T> gFindAllBeans(Class<?> beanClass,Map<String, Object> params,List<JPAOrderBy> nOrder, int fromRecord, int maxResult) throws EmptyResultSetException, DataBaseException {
 
-   
+        List<T> result = new ArrayList<T>();
+
+        try {
+
+            CriteriaBuilder cb = entityManger.getCriteriaBuilder();
+            CriteriaQuery cq = cb.createQuery(beanClass);
+            List<Predicate> predicates = new ArrayList<>();
+            log.info(beanClass.getName());
+            Root root = cq.from(beanClass);
+            if (params != null) {
+
+                for (Iterator<String> itr = params.keySet().iterator(); itr.hasNext(); ) {
+                    String key = itr.next();
+
+                    if (params.get(key) == null)
+                        predicates.add(cb.isNull(root.get(key)));
+                    else if (params.get(key) instanceof String && ((String) params.get(key)).equals("NOT_NULL") == true)
+                        predicates.add(cb.isNotNull(root.get(key)));
+                    else
+                        predicates.add(cb.equal(root.get(key), params.get(key)));
+                }
+
+                cq.where(predicates.toArray(predicates.toArray(new Predicate[0])));
+            //    log.info(predicates.toArray(predicates.toArray(new Predicate[0])).toString());
+            }
+
+            if (nOrder != null) {
+            	nOrder.stream().forEach(e ->{
+            		if(e.getType()==JPAOrderByEnum.ASC)
+            			cq.orderBy(cb.asc(root.get(e.getColumnName())));
+            		if(e.getType()==JPAOrderByEnum.DESC)
+            			cq.orderBy(cb.desc(root.get(e.getColumnName())));     		
+                
+
+            		
+            	});
+             }
+
+
+            TypedQuery query = entityManger.createQuery(cq);
+
+            if (fromRecord != 0) {
+                query.setFirstResult(fromRecord);
+            }
+
+            if (maxResult != 0) {
+                query.setMaxResults(maxResult);
+            }
+
+
+            result = query.getResultList();
+
+            if (result.size() == 0) {
+                String temp = beanClass.toString();
+                int x = temp.lastIndexOf(".");
+
+                String errorClass = temp.substring(x + 1, temp.length());
+                throw new EmptyResultSetException("error.emptyRS," + errorClass);
+            }
+
+            return result;
+
+        } catch (DataAccessException e) {
+            String temp = beanClass.toString();
+            int x = temp.lastIndexOf(".");
+            String errorClass = temp.substring(x + 1, temp.length());
+            throw new DataBaseException("error.dataBase.query," + errorClass + "," + e.getMessage());
+        } finally {
+      //     log.info("finally clause ");
+        }
+    
+    }
     
 	@Override 
 	public void insertBean(Object newBean)throws DataBaseException
@@ -347,6 +460,60 @@ public class BaseDaoImpl implements IBaseDao {
 	}
 	
 	
+	
+	@Override
+	public  <T> T gFindBean(Class<T> beanClass, Map propertyMap)throws DataBaseException, EmptyResultSetException{
+
+			List<T> result=null;
+		 
+			try 
+			{
+				
+				CriteriaBuilder cb = entityManger.getCriteriaBuilder();
+	            CriteriaQuery cq = cb.createQuery(beanClass);
+	            List<Predicate> predicates = new ArrayList<>();
+
+	            Root root = cq.from(beanClass);
+				String key;
+				
+				for(Iterator itr = propertyMap.keySet().iterator() ; itr.hasNext() ;)
+				{
+					key = (String)itr.next();
+	                predicates.add(cb.equal(root.get(key), propertyMap.get(key)));
+
+
+	 			}
+				
+				if(predicates.size()>0) {
+	 				cq.where( predicates.toArray(predicates.toArray(new Predicate[0])));
+
+				}
+				Query query=entityManger.createQuery(cq);	
+				result = query.getResultList();
+				
+				if(result.size()==0)
+				{
+					String temp=beanClass.toString();
+					int x=temp.lastIndexOf(".");
+					
+					String errorClass =temp.substring(x+1,temp.length());
+					
+					throw new EmptyResultSetException("error.emptyRef,"+errorClass);
+				}
+				
+				return result.iterator().next();
+			}
+			catch (DataAccessException e) 
+			{
+				String temp=beanClass.toString();
+				int x = temp.lastIndexOf(".");
+				String errorClass =temp.substring(x+1,temp.length()); 
+				throw new DataBaseException("error.dataBase.query,"+errorClass+","+e.getMessage());
+			}		
+			finally
+			{ }
+		
+	 }
 	@Override
 	public Object  aggregate(String tablename,String operation,String columnName,Map <String,Object>parameters) throws DataBaseException, EmptyResultSetException {
 		

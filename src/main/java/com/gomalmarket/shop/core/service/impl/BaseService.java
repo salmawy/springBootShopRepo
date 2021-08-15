@@ -64,6 +64,28 @@ public class BaseService implements IBaseService {
 
 		return this.getBaseDao().findAllBeans(beanClass, params, order, 0, 0);
 	}
+	
+	
+	
+	@Override
+    public   <T> List<T> gFindAllBeans(Class<?> beanClass, Map params, List <JPAOrderBy> order) throws EmptyResultSetException, DataBaseException {
+ 
+		/*
+		 * if (order != null) nOrder.add((JPAOrderBy) order);
+		 */
+
+		List<Object> nExpression = new ArrayList<Object>();
+		String key;
+
+		return this.getBaseDao().gFindAllBeans(beanClass, params, order, 0, 0);	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public List findAllBeans(Class<?> beanClass) throws DataBaseException, EmptyResultSetException {
@@ -128,7 +150,9 @@ public class BaseService implements IBaseService {
 	public Object findBean(Class<?> beanClass, Map propertyMap) throws DataBaseException, EmptyResultSetException {
 		return this.getBaseDao().findBean(beanClass, propertyMap);
 	}
-
+	public <T> T gFindBean(Class<T> beanClass, Map propertyMap) throws DataBaseException, EmptyResultSetException {
+		return this.getBaseDao().gFindBean(beanClass, propertyMap);
+	}
 	@Override
 	public Object findBean(Class<?> beanClass, int id) throws DataBaseException, InvalidReferenceException {
 		return this.getBaseDao().findBean(beanClass, id);
@@ -148,6 +172,20 @@ public class BaseService implements IBaseService {
 		return getBaseDao().findAllBeansWithDepthMapping(beanClass, propertyMap);
 	}
 
+	
+	public <T> List<T> gFindAllBeansWithDepthMapping(Class<T> beanClass, Map  propertyMap) throws DataBaseException, EmptyResultSetException{
+
+		// TODO Auto-generated method stub
+		return getBaseDao().gFindAllBeansWithDepthMapping(beanClass, propertyMap);
+	
+	}
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public LocalDate convertToLocalDateViaMilisecond(Date dateToConvert) {
 		return Instant.ofEpochMilli(dateToConvert.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();

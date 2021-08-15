@@ -613,9 +613,9 @@ public List inExactMatchSearchloanerName(String loanerName, String loanerType) t
 	  try { 
 		
     
-       String  query =  " select distinct loaner.name from Loaner  "
+       String  query =  " select distinct name from Loaner  "
        		+ " where 1=1"
-       		+ "	and name like '%"+name+" %' ";
+       		+ "	and name like '%"+name+"%' ";
        		
        		
  	  Query queryList = entityManger.createQuery(query);

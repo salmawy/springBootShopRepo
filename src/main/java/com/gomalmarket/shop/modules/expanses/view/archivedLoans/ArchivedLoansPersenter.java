@@ -18,6 +18,8 @@ import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTableActions;
 import com.gomalmarket.shop.core.UIComponents.customTable.PredicatableTable;
+import com.gomalmarket.shop.core.UIComponents.titledPanel.TitledPanel;
+import com.gomalmarket.shop.core.UIComponents.titledPanel.TitledPanelView;
 import com.gomalmarket.shop.core.entities.shopLoan.LoanAccount;
 import com.gomalmarket.shop.core.entities.shopLoan.LoanGroup;
 import com.gomalmarket.shop.core.entities.shopLoan.Loaner;
@@ -89,6 +91,8 @@ public class ArchivedLoansPersenter extends ExpansesAction implements Initializa
 	private JFXButton detail_btn;
 	private JFXButton prif_btn;
 	private VBox groupDetailsPane;
+	private TitledPanel debitsTiltledPane;
+	private TitledPanel payeesTiltledPane;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -133,16 +137,19 @@ public class ArchivedLoansPersenter extends ExpansesAction implements Initializa
 		groupsPane.getChildren().addAll(groupsCustomtable.getCutomTableComponent());
 
 //==========================debitsCustomtable========================================================================================	
-
+		
 		debitsCustomtable = new CustomTable<LoanTransaction>(payeesColumns, prepareGroupDetailHeaderNodes(), null, null,
 				null, CustomTable.headTableCard, LoanTransaction.class);
 		fitToAnchorePane(debitsCustomtable.getCutomTableComponent());
 		debitsCustomtable.getCutomTableComponent().setPrefHeight(200);
 
 		debtTable_loc.getChildren().addAll(debitsCustomtable.getCutomTableComponent());
-
-		groupDetailsPane.getChildren().add(debtTable_loc);
-		groupDetailsPane.setVgrow(debtTable_loc, Priority.ALWAYS);
+		fitToAnchorePane(debtTable_loc);
+		
+		debitsTiltledPane=new TitledPanel(getMessage("label.loaned.amounts"), debtTable_loc);
+		
+		groupDetailsPane.getChildren().add(debitsTiltledPane.getRootStackPane());
+		groupDetailsPane.setVgrow(debitsTiltledPane.getRootStackPane(), Priority.ALWAYS);
 		// ========================PayeesCustomTable==========================================================================================
 
 		PayeesCustomTable = new CustomTable<LoanTransaction>(payeesColumns, null, null, null, null,
@@ -150,9 +157,11 @@ public class ArchivedLoansPersenter extends ExpansesAction implements Initializa
 		PayeesCustomTable.getCutomTableComponent().setPrefHeight(200);
 		fitToAnchorePane(PayeesCustomTable.getCutomTableComponent());
 		installmentsTable_loc.getChildren().addAll(PayeesCustomTable.getCutomTableComponent());
-
-		groupDetailsPane.getChildren().add(installmentsTable_loc);
-		groupDetailsPane.setVgrow(installmentsTable_loc, Priority.ALWAYS);
+		fitToAnchorePane(installmentsTable_loc);
+		
+		payeesTiltledPane =new TitledPanel(getMessage("label.payeed.amounts"), installmentsTable_loc);  
+		groupDetailsPane.getChildren().add(payeesTiltledPane.getRootStackPane());
+		groupDetailsPane.setVgrow(payeesTiltledPane.getRootStackPane(), Priority.ALWAYS);
 //==================================================================================================================
 
 		stackPane.getChildren().addAll(groupsPane);
@@ -173,12 +182,12 @@ public class ArchivedLoansPersenter extends ExpansesAction implements Initializa
 				if (item.getId().equals(LoanTypeEnum.IN_LOAN.getId())) {
 
 					initiateInLoanPage();
-					coloredPane.setStyle("-fx-background-color: #00A65A");
+					//coloredPane.setStyle("-fx-background-color: #00A65A");
 
 				} else if (item.getId().equals(LoanTypeEnum.OUT_LOAN.getId())) {
 
 					initiateOutLoanPage();
-					coloredPane.setStyle("-fx-background-color: #DD4B39");
+				//	coloredPane.setStyle("-fx-background-color: #DD4B39");
 
 				}
 
@@ -204,7 +213,7 @@ public class ArchivedLoansPersenter extends ExpansesAction implements Initializa
 	}
 
 	private List prepareGroupHeaderNodes() {
-		detail_btn = new JFXButton(this.getMessage("button.back"));
+		detail_btn = new JFXButton(this.getMessage("button.detail"));
 		detail_btn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.TABLE));
 		detail_btn.getStyleClass().setAll("btn", "btn-info", "btn-sm");
 		detail_btn.setDisable(true);
@@ -222,7 +231,7 @@ public class ArchivedLoansPersenter extends ExpansesAction implements Initializa
 	}
 
 	private List prepareGroupDetailHeaderNodes() {
-		prif_btn = new JFXButton(this.getMessage("button.prif"));
+		prif_btn = new JFXButton(this.getMessage("button.back"));
 		prif_btn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.ARROW_RIGHT));
 		prif_btn.getStyleClass().setAll("btn", "btn-sm", "btn-info");
 		prif_btn.setOnAction(e -> {
@@ -256,12 +265,12 @@ public class ArchivedLoansPersenter extends ExpansesAction implements Initializa
 		// detect type of loan
 		if (type.equals(LoanTypeEnum.IN_LOAN)) {
 			transactions = getExpansesServices().getLoanTransactions(loanerId, groupId,
-					LoanTransactionTypeEnum.PAY_DEBIT);
+					LoanTransactionTypeEnum.PAY_DEBIT,1);
 
 		} else if (type.equals(LoanTypeEnum.OUT_LOAN)) {
 
 			transactions = getExpansesServices().getLoanTransactions(loanerId, groupId,
-					LoanTransactionTypeEnum.PAY_CREDIT);
+					LoanTransactionTypeEnum.PAY_CREDIT,1);
 
 		}
 
@@ -278,12 +287,12 @@ public class ArchivedLoansPersenter extends ExpansesAction implements Initializa
 		// detect type of loan
 		if (type.equals(LoanTypeEnum.IN_LOAN)) {
 			transactions = getExpansesServices().getLoanTransactions(loanerId, groupId,
-					LoanTransactionTypeEnum.LOAN_DEBET);
+					LoanTransactionTypeEnum.LOAN_DEBET,1);
 
 		} else if (type.equals(LoanTypeEnum.OUT_LOAN)) {
 
 			transactions = getExpansesServices().getLoanTransactions(loanerId, groupId,
-					LoanTransactionTypeEnum.LOAN_CREDIT);
+					LoanTransactionTypeEnum.LOAN_CREDIT,1);
 
 		}
 

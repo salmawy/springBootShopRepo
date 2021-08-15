@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -293,12 +294,12 @@ public class ExpansesServices implements IExpansesServices {
 		return getExpansesDao().getIncomeDetails(dateId);
 	}
 
-	public List<LoanTransaction> getPayCreditTransactions(int loanerId, int groupId)
+	public List<LoanTransaction> getPayCreditTransactions(int loanerId, int groupId,int finished)
 			throws DataBaseException, EmptyResultSetException {
 		List<LoanTransaction> loanTransactions = null;
 		Map<String, Object> paramtersMap = new HashMap<String, Object>();
 		paramtersMap.put("loanerId", loanerId);
-
+		paramtersMap.put("finished", finished);
 		if (groupId != 0)
 			paramtersMap.put("groupId", groupId);
 
@@ -316,13 +317,13 @@ public class ExpansesServices implements IExpansesServices {
 		return loanTransactions;
 	}
 
-	public List<LoanTransaction> getPayDebetTransactions(int loanerId, int groupId)
+	public List<LoanTransaction> getPayDebetTransactions(int loanerId, int groupId,int finished)
 			throws DataBaseException, EmptyResultSetException {
 		List<LoanTransaction> loanTransactions = null;
 		Map<String, Object> paramtersMap = new HashMap<String, Object>();
 
 		paramtersMap.put("loanerId", loanerId);
-
+		paramtersMap.put("finished", finished);
 		if (groupId != 0)
 			paramtersMap.put("groupId", groupId);
 
@@ -340,13 +341,13 @@ public class ExpansesServices implements IExpansesServices {
 		return loanTransactions;
 	}
 
-	public List<LoanTransaction> getLoanCreditTransactions(int loanerId, int groupId)
+	public List<LoanTransaction> getLoanCreditTransactions(int loanerId, int groupId,int finished)
 			throws DataBaseException, EmptyResultSetException {
 
 		List<LoanTransaction> loanTransactions = null;
 		Map<String, Object> paramtersMap = new HashMap<String, Object>();
 		paramtersMap.put("loanerId", loanerId);
-
+		paramtersMap.put("finished", finished);
 		if (groupId != 0)
 			paramtersMap.put("groupId", groupId);
 
@@ -363,11 +364,12 @@ public class ExpansesServices implements IExpansesServices {
 		return loanTransactions;
 	}
 
-	public List<LoanTransaction> getLoanDebetTransactions(int loanerId, int groupId)
+	public List<LoanTransaction> getLoanDebetTransactions(int loanerId, int groupId,int finished)
 			throws DataBaseException, EmptyResultSetException {
 		List<LoanTransaction> loanTransactions = null;
 		Map<String, Object> paramtersMap = new HashMap<String, Object>();
 		paramtersMap.put("loanerId", loanerId);
+		paramtersMap.put("finished", finished);
 		if (groupId != 0)
 			paramtersMap.put("groupId", groupId);
 		List<Object> result = this.getBaseService().findAllBeans(LoanDebit.class, paramtersMap, null);
@@ -384,22 +386,22 @@ public class ExpansesServices implements IExpansesServices {
 	}
 
 	@Override
-	public List<LoanTransaction> getLoanTransactions(int loanerId, int groupId, LoanTransactionTypeEnum type)
+	public List<LoanTransaction> getLoanTransactions(int loanerId, int groupId, LoanTransactionTypeEnum type,int finished)
 			throws EmptyResultSetException, DataBaseException {
 
 		switch (type) {
 		case PAY_CREDIT:
-			return getPayCreditTransactions(loanerId, groupId);
+			return getPayCreditTransactions(loanerId, groupId,finished);
 
 		case PAY_DEBIT:
 
-			return getPayDebetTransactions(loanerId, groupId);
+			return getPayDebetTransactions(loanerId, groupId,finished);
 		case LOAN_CREDIT:
 
-			return getLoanCreditTransactions(loanerId, groupId);
+			return getLoanCreditTransactions(loanerId, groupId,finished);
 		case LOAN_DEBET:
 
-			return getLoanDebetTransactions(loanerId, groupId);
+			return getLoanDebetTransactions(loanerId, groupId,finished);
 
 		default:
 			return null;
@@ -408,15 +410,20 @@ public class ExpansesServices implements IExpansesServices {
 	}
 
 	@Override
-	public List getfindLoaners(String name) {
-		List loaners = new ArrayList<>();
+	public List<String> getfindLoaners(String name) {
+		List<String>  loaners = new ArrayList<>();
 
 		try {
 			loaners = this.getExpansesDao().findLoaners(name);
-		} catch (EmptyResultSetException | DataBaseException e) {
+		} catch (EmptyResultSetException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info("name not found ");
 		}
+		
+		 catch ( DataBaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		return loaners;
 
@@ -603,9 +610,208 @@ public class ExpansesServices implements IExpansesServices {
 
 	}
 
-@Override
-public List loadGroupsLoanerNames(LoanTypeEnum loanType) throws EmptyResultSetException, DataBaseException {
-	 return getExpansesDao().loadGroupsLoanerNames(loanType);
- 
- }
+	@Override
+	public List loadGroupsLoanerNames(LoanTypeEnum loanType) throws EmptyResultSetException, DataBaseException {
+		return getExpansesDao().loadGroupsLoanerNames(loanType);
+
+	}
+
+	@Override
+	public Date GetLoanStartDate(int loanerId, LoanTypeEnum loanType) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("loanerId=", loanerId);
+		// map.put("season.id=", getAppContext().getSeason().getId());
+		map.put("groupId is", " null");
+
+		Date date = null;
+
+		String tableName = (loanType.equals(LoanTypeEnum.IN_LOAN)) ? "LoanDebit" : "LoanCredit";
+
+		try {
+			date = (Date) this.getBaseService().aggregate(tableName, "min", "transactionDate", map);
+		} catch (DataBaseException | EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return date;
+
+	}
+
+	
+	private int getMaxGroupId() {
+		
+		int maxId = 0;
+
+		String tableName ="ShopLoanTransaction";
+
+		try {
+			maxId = (int) this.getBaseService().aggregate(tableName, "max", "groupId", null);
+		} catch (DataBaseException | EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return maxId;
+
+	
+		
+		
+	}
+	
+	@Transactional
+	private void groupOutLoan(int loanerId) throws DataBaseException {
+
+		Map<String, Object> paramtersMap = new HashMap<String, Object>();
+		paramtersMap.put("loanerId", loanerId);
+		paramtersMap.put("groupId", "is null");
+		paramtersMap.put("finished", 0);
+		int maxGroupId=getMaxGroupId();
+		List<LoanCredit> loans=null;
+		try {
+			loans = this.getBaseService().gFindAllBeansWithDepthMapping(LoanCredit.class, paramtersMap);//(LoanCredit.class, paramtersMap, null);
+			loans.stream().forEach(e-> {
+				e.setFinished(1);
+				e.setGroupId(maxGroupId);
+			});
+			
+			Iterable<LoanCredit> loansIterable = loans;
+			
+			getRepoSupplier().getLoanCreditRepo().saveAll(loansIterable);
+
+		} catch (EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//-------------------------------------------------------------------------------------------------------------------
+		List<PayCredit> payees=null;
+		try {
+			payees = this.getBaseService().gFindAllBeansWithDepthMapping(PayCredit.class, paramtersMap);
+			payees.stream().forEach(e-> {
+				e.setFinished(1);
+				e.setGroupId(maxGroupId);
+			});
+			
+			Iterable<PayCredit> payeesIterable = payees;
+			
+			getRepoSupplier().getPayCreditRepo().saveAll(payeesIterable);
+
+		} catch (EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+
+
+	}
+
+	@Transactional
+	private void groupInLoan(int loanerId) throws DataBaseException {
+
+		Map<String, Object> paramtersMap = new HashMap<String, Object>();
+		paramtersMap.put("loanerId", loanerId);
+		paramtersMap.put("groupId", "is null");
+		paramtersMap.put("finished", 0);
+		int groupId=getMaxGroupId()+1;
+		
+//-------------------------------------------------------------------------------------------
+		List<LoanDebit> loans=null;
+		try {
+			loans = this.getBaseService().gFindAllBeansWithDepthMapping(LoanDebit.class, paramtersMap);
+			loans.stream().forEach(e-> {
+				e.setFinished(1);
+				e.setGroupId(groupId);
+			});
+			
+			Iterable<LoanDebit> loansIterable = loans;
+			
+			getRepoSupplier().getLoanDeditRepo().saveAll(loansIterable);
+
+		} catch (EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//-------------------------------------------------------------------------------------------------------------------
+		List<PayDebit> payees=null;
+		try {
+			payees = this.getBaseService().gFindAllBeansWithDepthMapping(PayDebit.class, paramtersMap);
+			payees.stream().forEach(e-> {
+				e.setFinished(1);
+				e.setGroupId(groupId);
+			});
+			
+			Iterable<PayDebit> payeesIterable = payees;
+			
+			getRepoSupplier().getPayDebitRepo().saveAll(payeesIterable);
+
+		} catch (EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+
+
+	}
+
+	
+	
+	
+	@Override
+	public void groupLoan(int loanerId, LoanTypeEnum loanType) throws DataBaseException {
+		
+		
+		switch (loanType) {
+		case IN_LOAN:
+			groupInLoan(loanerId);
+			break;
+		case OUT_LOAN:
+			groupOutLoan(loanerId);
+			break;
+		default:
+			break;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	//---------------------------------------------------------------------------------------------------------------
+	@Override
+	public  LoanAccount getLoanAccount(int loanerId,String name) {
+		LoanAccount account=null;
+		Map<String,Object> params=new HashMap<String, Object>();
+		
+		if(name!=null&&!name.isEmpty())
+		params.put("name", name);
+		
+		if(loanerId!=0)
+			params.put("id", loanerId);
+		
+		try {
+			account= this.getBaseService().gFindBean(LoanAccount.class, params);
+		} catch (DataBaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			log.info("loan account not found");
+		}
+		
+		return account;
+		
+	}
+		
+
+
 }

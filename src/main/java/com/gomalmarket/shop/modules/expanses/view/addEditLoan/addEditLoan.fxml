@@ -22,16 +22,16 @@
             </Pane>
             <VBox layoutX="4.0" layoutY="51.0" prefHeight="355.0" prefWidth="390.0" spacing="3.0">
                <children>
-                  <HBox fx:id="datePicker_loc1" prefHeight="30.0" prefWidth="300.0">
-                     <children>
-                        <Label fx:id="date_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
-                        <HBox fx:id="date_loc" minWidth="317.0" prefHeight="30.0" prefWidth="317.0" />
-                     </children>
-                  </HBox>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
                         <Label fx:id="type_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
                         <JFXComboBox fx:id="loanType_combo" prefHeight="25.0" prefWidth="250.0" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="datePicker_loc" prefHeight="30.0" prefWidth="300.0">
+                     <children>
+                        <Label fx:id="loanerName_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
+                        <JFXTextField fx:id="loanerName_TF" prefHeight="25.0" prefWidth="250.0" />
                      </children>
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="300.0">
@@ -40,10 +40,10 @@
                         <JFXTextField fx:id="amount_TF" prefHeight="26.0" prefWidth="250.0" />
                      </children>
                   </HBox>
-                  <HBox fx:id="datePicker_loc" prefHeight="30.0" prefWidth="300.0">
+                  <HBox fx:id="datePicker_loc1" prefHeight="30.0" prefWidth="300.0">
                      <children>
-                        <Label fx:id="loanerName_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
-                        <JFXTextField fx:id="loanerName_TF" prefHeight="25.0" prefWidth="250.0" />
+                        <Label fx:id="date_label" prefHeight="30.0" prefWidth="70.0" text="Label" />
+                        <HBox fx:id="date_loc" minWidth="317.0" prefHeight="30.0" prefWidth="317.0" />
                      </children>
                   </HBox>
                   <HBox maxWidth="1.7976931348623157E308" prefHeight="60.0" prefWidth="300.0">

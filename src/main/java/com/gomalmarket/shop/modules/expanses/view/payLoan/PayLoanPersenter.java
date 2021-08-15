@@ -230,6 +230,9 @@ public class PayLoanPersenter extends ExpansesAction implements Initializable {
 		String name = name_TF.getText();
 		String amount = amount_TF.getText();
 		double safaBalance = this.getExpansesServices().getSafeBalance(getAppContext().getSeason());
+		LoanAccount account = getLoanAccount(loanerId, name);
+		double accountAmount=(mode==Request.MODE_EDIT)?account.getAmount()+editedTrx.getAmount():account.getAmount();
+		Date loanStartDate=getExpansesServices().GetLoanStartDate(loanerId, loanType);
 
 		if (amount.isEmpty()) {
 
@@ -251,13 +254,7 @@ public class PayLoanPersenter extends ExpansesAction implements Initializable {
 
 		}
 
-		LoanAccount account = null;
-		try {
-			account = this.getExpansesServices().getLoanerAccount(editedTrx.getLoanerId());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		 
 
 		if (account == null) {
 
@@ -267,20 +264,45 @@ public class PayLoanPersenter extends ExpansesAction implements Initializable {
 
 		}
 
-		if (account.getAmount() > 0 && account.getType().equals("OUT_LOAN")) {
-			snackBar.show(this.getMessage("msg.err.amountShouldBecollestedFromLoaner") + " : " + account.getAmount(),
-					1000);
+		
+		if(loanStartDate!=null&&datePicker.getValue().isBefore(getBaseService().convertToLocalDateViaMilisecond(loanStartDate))) {
+			//
+			snackBar.show(this.getMessage("msg.err.paybeforestartDate") + " : " ,
+					1500);
+			return false;
+		}
+		
+		if (account != null && loanType.equals(LoanTypeEnum.IN_LOAN)
+				&& account.getType().equals(LoanTypeEnum.OUT_LOAN.getId())) {
+			snackBar.show(this.getMessage("msg.warnning.loaner.exist.outloan"), 1000);
 
 			return false;
 
 		}
-		if (Double.parseDouble(amount) > account.getAmount()) {
+
+		if (account != null && loanType.equals(LoanTypeEnum.OUT_LOAN)
+				&& account.getType().equals(LoanTypeEnum.IN_LOAN.getId())) {
+			snackBar.show(this.getMessage("msg.warnning.loaner.exist.inloan"), 1000);
+
+			return false;
+		}
+		
+	 
+		if (Double.parseDouble(amount) > accountAmount) {
 			snackBar.show(this.getMessage("msg.err.input.amount.greather") + " : " + account.getAmount(), 1000);
 
 			return false;
 		}
+	 
+		
+		if (mode==Request.MODE_EDIT&& loanType.equals(LoanTypeEnum.IN_LOAN)
+				&& safaBalance < Double.parseDouble(amount)-editedTrx.getAmount()) {
 
-		if (loanType.equals(LoanTypeEnum.IN_LOAN) && safaBalance < Double.parseDouble(amount)) {
+			snackBar.show(this.getMessage("msg.err.notEnough.safeBalance"), 1000);
+			return false;
+		}
+		else if(loanType.equals(LoanTypeEnum.IN_LOAN)
+				&& safaBalance < Double.parseDouble(amount)) {
 
 			snackBar.show(this.getMessage("msg.err.notEnough.safeBalance"), 1000);
 			return false;
@@ -337,19 +359,22 @@ public class PayLoanPersenter extends ExpansesAction implements Initializable {
 	 */
 	// ---------------------------------------------------------------------------------------------------------------
 
-	private void alert(AlertType alertType, String title, String headerText, String message) {
+	private Alert alert(AlertType alertType, String title, String headerText, String message) {
 		Alert a = new Alert(alertType);
 		a.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 		a.setTitle(title);
 		a.setHeaderText(headerText);
 		a.setContentText(message);
 		a.show();
+		return a;
 
 	}
 	// ---------------------------------------------------------------------------------------------------------------
 
 	@FXML
 	private void save() {
+if(!validateForm()) return;
+
 
 		double amount = Double.parseDouble(this.amount_TF.getText());
 		String notes = note_TA.getText();
@@ -414,5 +439,23 @@ public class PayLoanPersenter extends ExpansesAction implements Initializable {
 		};
 
 	}
+	private LoanAccount getLoanAccount(int loanerId, String name) {
+		LoanAccount account = null;
 
+		switch (mode) {
+		case Request.MODE_CREATE_NEW:
+			
+			account=getExpansesServices().getLoanAccount(0, name);
+			break;
+		case Request.MODE_ADD:
+			account=getExpansesServices().getLoanAccount(loanerId, null);
+			break;
+
+		case Request.MODE_EDIT:
+			account=getExpansesServices().getLoanAccount(loanerId, null);
+			break;
+		}
+		return account;
+
+	}
 }

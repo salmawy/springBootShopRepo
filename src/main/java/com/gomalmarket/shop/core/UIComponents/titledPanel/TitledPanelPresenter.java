@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import lombok.Getter;
 
@@ -23,6 +24,13 @@ public class TitledPanelPresenter implements Initializable {
     @FXML
     private Label title_label;
 
+    
+    
+    @FXML
+    private HBox titlebox_panel;
+
+    
+    
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
