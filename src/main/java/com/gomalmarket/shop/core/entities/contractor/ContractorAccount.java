@@ -10,26 +10,30 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table(name ="CONTRACTOR_ACCOUNTS")
-@Entity(name ="ContractorAccount")
+@Table(name = "CONTRACTOR_ACCOUNTS")
+@Entity(name = "ContractorAccount")
 @Setter
 @Getter
 public class ContractorAccount {
 
 	@Id
-	@Column(name ="ID" )
-	private int id ;
+	@Column(name = "ID")
+	private String id;
 
-	@Column(name ="TYPE_ID" )
-	private int typeId ;
-	
-	
+	@Column(name = "CONTRACTOR_NAME")
+	private String contractorName;
+
 	@Column(name = "AMOUNT")
 	private Double amount;
 
-	 @ManyToOne
-	@JoinColumn(name = "CONTRACTOR_ID",updatable = false,insertable = false)
-	private  Contractor contractor; 
+	@ManyToOne
+	@JoinColumn(name = "CONTRACTOR_ID", updatable = false, insertable = false)
+	private Contractor contractor;
 
+	@Column(name = "OWNER_ID")
+	private int ownerId;
+	
+	@Column(name = "SEASON_ID")
+	private String seasonId;
 
 }

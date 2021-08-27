@@ -25,13 +25,14 @@ import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTableActions;
 import com.gomalmarket.shop.core.UIComponents.customTable.PredicatableTable;
 import com.gomalmarket.shop.core.entities.contractor.Contractor;
+import com.gomalmarket.shop.core.entities.contractor.ContractorAccount;
 import com.gomalmarket.shop.core.entities.contractor.ContractorTransaction;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.modules.contractor.action.ContractorAction;
 import com.gomalmarket.shop.modules.contractor.view.addSupplier.AddSupplierView;
-import com.gomalmarket.shop.modules.contractor.view.beans.ContractorDataVB;
+import com.gomalmarket.shop.modules.contractor.view.beans.ContractorTransactionVB;
 import com.gomalmarket.shop.modules.contractor.view.beans.ContractorVB;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -121,7 +122,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 	    private JFXComboBox<ComboBoxItem<Integer>> owner_combo;
 	private PredicatableTable<ContractorVB> contractorPredicatableTable;
 
-	private CustomTable<ContractorDataVB> transactionsCustomeTable;
+	private CustomTable<ContractorTransactionVB> transactionsCustomeTable;
 	private final int contractorTypeId=ContractorTypeEnum.SUPPLIER_;
 
 	@Override
@@ -139,7 +140,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 		List transactionsColumns=prepareTransactionsColumns();
 		List contratorHeadNodes=prepareContractorHeaderNodes();
 		contractorPredicatableTable=new PredicatableTable<ContractorVB>(contractorColumns, contratorHeadNodes, null, new ContractorableActionListner(), PredicatableTable.headTableCard, ContractorVB.class);
-		transactionsCustomeTable=new CustomTable<ContractorDataVB>(transactionsColumns, null, null, null, null, CustomTable.tableCard, ContractorDataVB.class);
+		transactionsCustomeTable=new CustomTable<ContractorTransactionVB>(transactionsColumns, null, null, null, null, CustomTable.tableCard, ContractorTransactionVB.class);
 
 		//=========================================================================================================================================
 		fitToAnchorePane(contractorPredicatableTable.getCutomTableComponent());
@@ -204,7 +205,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 	        	try {
 	        		ContractorVB contractor= (ContractorVB) table.getSelectionModel().getSelectedItem().getValue();
 					  int ownerId=owner_combo.getSelectionModel().getSelectedItem().getId();
-		        	  loadContractorTransactions(contractor.getId(), paid,ownerId);
+		        	  loadContractorTransactions(contractor.getContractorId(), paid,ownerId);
 	        	}catch (NullPointerException e) {}
 	        	
 	        }
@@ -219,22 +220,19 @@ public class SupplierPersenter extends ContractorAction implements Initializable
   	//contractorPredicatableTable.getTable().getRoot().getChildren().clear();
 
   	try {
-			List contractors=this.getContractorService().getNotSettledContractors(0, contractorTypeId);
+		List contractors=this.getContractorService().getAllContractorsAccounts(this.contractorTypeId, ownerId, this.getAppContext().getSeason().getId());
 		    List tableData=new ArrayList();
 			
 		    
 		    for (Iterator iterator = contractors.iterator(); iterator.hasNext();) {
 			
-		    	Object[] contractor = (Object[]) iterator.next();
+		    	ContractorAccount acc = (ContractorAccount) iterator.next();
 			
 		    	ContractorVB  viewBean=new ContractorVB();
-		    	int id =(Integer) contractor[0];
-			    String name =(String) contractor[1];
-		     	double amount =(Double) contractor[2];
-		     	
-		     	viewBean.setId(id);
-		    	viewBean.setName((name) );
-		    	viewBean.setAmount(amount);
+		     	viewBean.setAccountId(acc.getId());
+		     	viewBean.setContractorId(acc.getContractor().getId());
+		    	viewBean.setName((acc.getContractorName()) );
+		    	viewBean.setAmount(acc.getAmount());
 		    	tableData.add(viewBean);
 		    	
 		}
@@ -333,8 +331,8 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 			int ownerId=owner_combo.getSelectionModel().getSelectedItem().getId();
 			AddSupplierView form=new AddSupplierView();
 			URL u=getClass().getClassLoader().getResource("appResources/custom.css");
-			this.request=new HashMap<String, Object>();
-			request.put("ownerId", ownerId);
+			this.request_map=new HashMap<String, Object>();
+			request_map.put("ownerId", ownerId);
 			Scene scene1= new Scene(form.getView(), 350, 420);
 			Stage popupwindow=new Stage();
 			popupwindow.setResizable(false);
@@ -348,15 +346,15 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 		popupwindow.setOnHiding( ev -> {
 				
 
-			if(response!=null&&response.get("valid")!=null) {
-				boolean valid=(boolean) response.get("valid");
+			if(response_map!=null&&response_map.get("valid")!=null) {
+				boolean valid=(boolean) response_map.get("valid");
 				
 				  int paid=-1;
 				  if(shop_radioBtn.isSelected())
 					  paid=1;
 				  else  if(owner_radioBtn.isSelected())
 					  paid=0;
-				String contractorName=(String) response.get("name");
+				String contractorName=(String) response_map.get("name");
 				Map<String,Object> map=new HashMap<String, Object>();
 				
 				map.put("name", contractorName);
@@ -442,8 +440,8 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 		for (Iterator iterator = transactions.iterator(); iterator.hasNext();) {
 			
 			ContractorTransaction transaction = (ContractorTransaction) iterator.next();
-			ContractorDataVB viewBean=new ContractorDataVB();
-			viewBean.setDate(ContractorDataVB.sdf.format(transaction.getTransactionDate()));
+			ContractorTransactionVB viewBean=new ContractorTransactionVB();
+			viewBean.setDate(ContractorTransactionVB.sdf.format(transaction.getTransactionDate()));
 			viewBean.setId(transaction.getId());
 			viewBean.setAmount(transaction.getAmount());
 			viewBean.setNotes(transaction.getReport());
@@ -545,7 +543,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
   	int index=0;
   	for (Iterator iterator = data.iterator(); iterator.hasNext();) {
 			TreeItem<ContractorVB> treeItem = (TreeItem<ContractorVB>) iterator.next();
-			if(treeItem.getValue().getId()==id)
+			if(treeItem.getValue().getContractorId()==id)
 				{
 				//table.getSelectionModel().select(index);
 				  table.requestFocus();
@@ -597,7 +595,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 			  else  if(owner_radioBtn.isSelected())
 				  paid=0;
 			  int ownerId=owner_combo.getSelectionModel().getSelectedItem().getId();
-			  loadContractorTransactions(contractor.getId(),paid,ownerId);
+			  loadContractorTransactions(contractor.getContractorId(),paid,ownerId);
 			  
 			  
 			  

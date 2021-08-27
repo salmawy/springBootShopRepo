@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ContractorDataVB {
+public class ContractorTransactionVB {
 
 	private int id;
 	

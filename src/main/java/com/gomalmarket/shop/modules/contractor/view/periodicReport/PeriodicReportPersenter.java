@@ -33,7 +33,7 @@ import com.gomalmarket.shop.core.entities.contractor.ContractorTransaction;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.contractor.action.ContractorAction;
-import com.gomalmarket.shop.modules.contractor.view.beans.ContractorDataVB;
+import com.gomalmarket.shop.modules.contractor.view.beans.ContractorTransactionVB;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
@@ -105,7 +105,7 @@ public class PeriodicReportPersenter extends ContractorAction implements Initial
     private JFXDatePicker fromDate;
     private JFXDatePicker toDate;
 
-	private CustomTable<ContractorDataVB> transactions;
+	private CustomTable<ContractorTransactionVB> transactions;
 	
 	 
 
@@ -226,7 +226,7 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 			List columns=prepareGridColumns();
 
 		   	
-			transactions=new CustomTable<ContractorDataVB>(columns, null, null, null, null, CustomTable.tableCard, ContractorDataVB.class);
+			transactions=new CustomTable<ContractorTransactionVB>(columns, null, null, null, null, CustomTable.tableCard, ContractorTransactionVB.class);
 			transactions.getTable().setEditable(false);
 		   	fitToAnchorePane(transactions.getCutomTableComponent());
 			gridLocation_Panel.getChildren().addAll(transactions.getCutomTableComponent());
@@ -329,7 +329,7 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 		  
 		  }
 		  
-		  List<ContractorDataVB> data=new LinkedList<ContractorDataVB>();
+		  List<ContractorTransactionVB> data=new LinkedList<ContractorTransactionVB>();
 		  
 		  int seasonId=getAppContext().getSeason().getId(); 
 		  try {  
@@ -341,8 +341,8 @@ Logger logger = Logger.getLogger(this.getClass().getName());
 
 					
 					ContractorTransaction transaction = (ContractorTransaction) iterator.next();
-					ContractorDataVB viewBean=new ContractorDataVB();
-					viewBean.setDate(ContractorDataVB.sdf.format(transaction.getTransactionDate()));
+					ContractorTransactionVB viewBean=new ContractorTransactionVB();
+					viewBean.setDate(ContractorTransactionVB.sdf.format(transaction.getTransactionDate()));
 					viewBean.setName(transaction.getContractor().getName());
 
 					viewBean.setId(transaction.getId());

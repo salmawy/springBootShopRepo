@@ -14,10 +14,12 @@ import org.springframework.stereotype.Service;
 
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.config.ShopAppContext;
+import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.entities.contractor.Contractor;
 import com.gomalmarket.shop.core.entities.contractor.ContractorTransaction;
 import com.gomalmarket.shop.core.entities.repos.RepoSupplier;
+import com.gomalmarket.shop.core.entities.safe.SafeTransaction;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
@@ -52,14 +54,12 @@ public class ContractorService implements IContractorService {
 	ShopAppContext appContext;
 
 	@Override
-	public List getNotSettledContractors(int contractorId, int typeId)
-			throws DataBaseException, EmptyResultSetException {
-		return this.getContractorDao().getNotSettledContractors(contractorId, typeId);
+	public List getAllContractorsAccounts(int typeId,int ownerId,int seasonId) throws DataBaseException, EmptyResultSetException {
+		return this.getContractorDao().getAllContractorsAccounts(typeId, ownerId, seasonId);
 	}
 
 	@Override
-
-	public void contractorTransaction(String name, int typeId, double amount, int fridageId, String notes, int paid,
+	public ContractorTransaction AddContractorTransaction(String name, int typeId, double amount, Fridage fridage, String notes, int paid,
 			int ownerId, Date date, Season season) throws DataBaseException, InvalidReferenceException {
 
 		// ===================save contractor into Database
@@ -68,27 +68,62 @@ public class ContractorService implements IContractorService {
 
 		// ========================save contractor detail into Database
 		// ========================================================
-		ContractorTransaction accountDetail = new ContractorTransaction();
-		accountDetail.setAmount(amount);
-		accountDetail.setContractor(contractor);
-		accountDetail.setTransactionDate(date);
-		accountDetail.setPaid(paid);
-		accountDetail.setReport(notes);
-		accountDetail.setSpenderName(appContext.getCurrentUser().getUsername());
-		accountDetail.setSeason(season);
-		this.getBaseService().addBean(accountDetail);
-		// this.getBaseService().addEditBean(contractorAccount);
-		// =============================== insert outcomeTransaction total
-		// value=====================================
-
-		if (accountDetail.getPaid() == 1) {
+		ContractorTransaction trx = new ContractorTransaction();
+		trx.setAmount(amount);
+		trx.setContractor(contractor);
+		trx.setTransactionDate(date);
+		trx.setPaid(paid);
+		trx.setReport(notes);
+		trx.setSpenderName(appContext.getCurrentUser().getUsername());
+		trx.setSeason(season);
+		
+		this.baseService.saveEntity(repoSupplier.getContractorTransactionRepo(), trx);
+	 
+		if (trx.getPaid() == 1) {
 
 			this.getExpansesService().outcomeTransaction(date, amount, notes, OutcomeTypeEnum.K_L, contractor.getId(),
-					-1, getAppContext().getFridage(), season);
+					trx.getId(), fridage, season);
 		}
-
+return trx;
 	}
 
+	@Override
+	public ContractorTransaction editContractorTransaction(String name, int typeId, double amount, Fridage fridage, String notes, int paid,
+			int ownerId, Date date, Season season,int trxId) throws DataBaseException, InvalidReferenceException {
+
+		 
+		// ========================save contractor detail into Database
+		// ========================================================
+		ContractorTransaction trx = repoSupplier.getContractorTransactionRepo().findById(trxId).get();
+		trx.setAmount(amount);
+ 		trx.setTransactionDate(date);
+		trx.setPaid(paid);
+		trx.setReport(notes);
+		trx.setSpenderName(appContext.getCurrentUser().getUsername());
+		trx.setSeason(season);
+		
+		this.baseService.saveEntity(repoSupplier.getContractorTransactionRepo(), trx);
+	 
+		if (trx.getPaid() == 1) {
+			
+			Map<String, Object> prams = new HashMap<String, Object>();
+			prams.put("orderId", trxId);
+			SafeTransaction safeTransaction;
+			try {
+				safeTransaction = (SafeTransaction) this.getBaseService().findBean(SafeTransaction.class,
+						prams);
+				this.getExpansesService().editOutcomeTransaction(date, amount, notes, OutcomeTypeEnum.K_L, trx.getContractor().getId(), trx.getId(),  fridage, season, safeTransaction.getId());
+
+			} catch (EmptyResultSetException e) {
+				 log.info("safe transaction not found of contracor transaction id : "+trxId);
+			}
+			
+			
+  		}
+return trx;
+	}
+
+	
 	public Contractor saveContractor(String name, int typeId, int ownerId) throws DataBaseException {
 
 		Contractor contractor = new Contractor();

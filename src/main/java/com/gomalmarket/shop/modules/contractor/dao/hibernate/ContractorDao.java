@@ -25,27 +25,18 @@ public class ContractorDao   implements IContractorDao{
 EntityManager entityManager;
 	
 	@Override
-	public List getNotSettledContractors(int contractorId,int typeId) throws DataBaseException, EmptyResultSetException {
+	public List getAllContractorsAccounts(int typeId,int ownerId,int seasonId) throws DataBaseException, EmptyResultSetException {
 		
 		 
  		  try { 	
  
-		  String q ="select "
-		  		+ " ca.contractor.id, "
-		  		+ "ca.contractor.name ,"
-		  		+ "ca.amount "
-		  		
-		  		+ " from "
-		  		+ " ContractorAccount ca ,Contractor c "
-		  		+ " where   ca.id=c.id ";
-		
-		  if(contractorId!=0)
-			  q +="	and ca.contractor.id ="+contractorId;
-		  
-		  if(typeId!=0)
-			  q +="	and ca.typeId ="+typeId;
-		
-		  
+		  String q =
+		  		 " select ca from "
+		  		+ " ContractorAccount ca  "
+		  		+ " where   ca.contractor.typeId="+typeId
+		  		 + " and    ca.contractor.ownerId="+ownerId
+		  + " and    ca.seasonId="+seasonId;
+		 
  
 		  Query query= this.entityManager.createQuery(q);
 

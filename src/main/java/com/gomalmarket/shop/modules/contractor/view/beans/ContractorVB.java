@@ -6,20 +6,19 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import lombok.Builder;
 
  
  
 public class ContractorVB  extends RecursiveTreeObject<ContractorVB>  {
 	
-	private int id ;
+	private int contractorId ;
 	private StringProperty name;
 	private DoubleProperty amount;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+	private String accountId;
+	
+	
+ 
 	public StringProperty getName() {
 		return name;
 	}
@@ -39,6 +38,21 @@ public class ContractorVB  extends RecursiveTreeObject<ContractorVB>  {
 	
 	public void setName(String name) {
 		this.name = new SimpleStringProperty(name);
+	}
+	public int getContractorId() {
+		return contractorId;
+	}
+	public void setContractorId(int contractorId) {
+		this.contractorId = contractorId;
+	}
+	public String getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+	public ContractorVB() {
+		// TODO Auto-generated constructor stub
 	}
 	
 	

@@ -314,13 +314,14 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 				responseObj.getResults().put("loanerId",acc.getLoaner().getId());
 				Stage stage = (Stage) cancel_btn.getScene().getWindow();
 				stage.close();
+				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
 
 			} catch (DataBaseException e) {
 				alert(AlertType.ERROR, this.getMessage("msg.err"), this.getMessage("msg.err"),
 						this.getMessage("msg.err.general"));
 				e.printStackTrace();
+				 
 			}
-			alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
 
 			break;
 		case Request.MODE_ADD:

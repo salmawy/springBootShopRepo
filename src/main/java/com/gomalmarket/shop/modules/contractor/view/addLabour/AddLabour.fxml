@@ -22,21 +22,27 @@
             </Pane>
             <VBox layoutX="4.0" layoutY="51.0" prefHeight="355.0" prefWidth="340.0" spacing="10.0">
                <children>
-                  <HBox fx:id="paid_toogleBtn" alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="300.0">
+                  <HBox fx:id="paid_toogleBtn" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" prefWidth="300.0">
                      <children>
                         <JFXToggleButton fx:id="paid_TBtn" contentDisplay="RIGHT" prefHeight="38.0" prefWidth="143.0" />
                      </children>
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
-                        <Label fx:id="amount_label" prefHeight="30.0" prefWidth="60.0" text="Label" />
-                        <JFXTextField fx:id="amount_TF" prefHeight="25.0" prefWidth="186.0" />
+                        <Label fx:id="owner_label" prefHeight="30.0" prefWidth="60.0" text="Label" />
+                        <JFXTextField fx:id="owner_TF" editable="false" prefWidth="186.0" />
                      </children>
                   </HBox>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
                         <Label fx:id="name_label" prefHeight="30.0" prefWidth="60.0" text="Label" />
                         <JFXTextField fx:id="name_TF" prefWidth="186.0" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="30.0" prefWidth="300.0">
+                     <children>
+                        <Label fx:id="amount_label" prefHeight="30.0" prefWidth="60.0" text="Label" />
+                        <JFXTextField fx:id="amount_TF" prefHeight="25.0" prefWidth="186.0" />
                      </children>
                   </HBox>
                   <HBox fx:id="datePicker_loc" prefHeight="30.0" prefWidth="300.0">

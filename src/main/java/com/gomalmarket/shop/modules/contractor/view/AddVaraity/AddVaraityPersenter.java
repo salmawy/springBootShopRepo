@@ -192,26 +192,26 @@ public class AddVaraityPersenter extends ContractorAction implements Initializab
 		String name=name_TF.getText();
 		double amount=Double.parseDouble(amount_TF.getText());
 		String notes=note_TA.getText();
-		int ownerId=(Integer)this.request.get("ownerId"); 
+		int ownerId=(Integer)this.request_map.get("ownerId"); 
 		Date date=getValueOfDatePicker();
-		try {
-			this.getContractorService().contractorTransaction(name, ContractorTypeEnum.LABOUR, amount, getAppContext().getFridage().getId(), notes, paid, ownerId, date, getAppContext().getSeason());
-				this.response=new HashMap<String, Object>();
-				response.put("valid", true);
-				response.put("name", name);
-
-		      Stage stage = (Stage) saveBtn.getScene().getWindow();
-		      stage.close();		
-		      
-		} catch (DataBaseException e) {
-
-			
-			
-			e.printStackTrace();
-		} catch (InvalidReferenceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			this.getContractorService().AddContractorTransaction(name, ContractorTypeEnum.LABOUR, amount, getAppContext().getFridage().getId(), notes, paid, ownerId, date, getAppContext().getSeason());
+//				this.response_map=new HashMap<String, Object>();
+//				response_map.put("valid", true);
+//				response_map.put("name", name);
+//
+//		      Stage stage = (Stage) saveBtn.getScene().getWindow();
+//		      stage.close();		
+//		      
+//		} catch (DataBaseException e) {
+//
+//			
+//			
+//			e.printStackTrace();
+//		} catch (InvalidReferenceException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 	 }		
 }
@@ -282,7 +282,7 @@ public class AddVaraityPersenter extends ContractorAction implements Initializab
     
   private  List autoComplete(String name) {
 	  
-	  int ownerid=(int) request.get("ownerId");
+	  int ownerid=(int) request_map.get("ownerId");
 	  
 	 return this.getContractorService().getSuggestedContractorName(name, ownerid, ContractorTypeEnum.LABOUR);
   }  
