@@ -71,16 +71,16 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 	    private Label ownerAmount_label;
 
 	    @FXML
-	    private TextField ownerAmountValue_label;
+	    private TextField ownerAmount_TF;
 
 	    @FXML
 	    private JFXTextField name_TF;
 
 	    @FXML
-	    private Label owner1_label;
+	    private Label owner_title;
 
 	    @FXML
-	    private Label shopValue_label;
+	    private Label shopAmount_title;
 
 	    @FXML
 	    private Pane shop_coloredPane;
@@ -89,7 +89,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 	    private AnchorPane contractorTable_loc;
 
 	    @FXML
-	    private Label shop_label;
+	    private Label shop_title;
 
 	    @FXML
 	    private AnchorPane transactions_table;
@@ -98,13 +98,13 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 	    private Pane owner_coloredPane;
 
 	    @FXML
-	    private TextField shopAmountValue_label;
+	    private TextField shopAmount_TF;
 
 	    @FXML
 	    private ToggleGroup g1;
 
 	    @FXML
-	    private Label owner1Value_label;
+	    private Label ownerAmount_title;
 
 	    @FXML
 	    private JFXRadioButton owner_radioBtn;
@@ -161,9 +161,9 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 	});
 		
 //=========================================================================================================================================
-	owner1_label.setText(this.getMessage("label.owner.name.kareem"));
+	owner_title.setText(this.getMessage("label.owner.name.kareem"));
 	ownerAmount_label.setText(this.getMessage("label.owner.name.kareem"));
-	shop_label.setText(this.getMessage("label.shop"));
+	shop_title.setText(this.getMessage("label.shop"));
 	shopAmount_label.setText(this.getMessage("label.shop"));
 	
 	owner_radioBtn.setText(this.getMessage("label.owner.name.kareem"));
@@ -461,8 +461,8 @@ public class SupplierPersenter extends ContractorAction implements Initializable
             } catch (EmptyResultSetException e) {
 					alert(AlertType.WARNING, "", "", this.getMessage("msg.warning.noData"));}
 			
-			this.shopAmountValue_label.setText(String.valueOf(shopTotalPaidAmount));
-			this.ownerAmountValue_label.setText(String.valueOf(ownerTotalAmount));
+			this.shopAmount_TF.setText(String.valueOf(shopTotalPaidAmount));
+			this.ownerAmount_TF.setText(String.valueOf(ownerTotalAmount));
 
 
 	} 
@@ -501,7 +501,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 		}
 		
 		
-		this.shopValue_label.setText(String.valueOf(amount));
+		this.shopAmount_title.setText(String.valueOf(amount));
 		
 		
 	}
@@ -525,7 +525,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 		}
 		
 		
-		this.owner1Value_label.setText(String.valueOf(amount));
+		this.ownerAmount_title.setText(String.valueOf(amount));
 		
 		
 	}

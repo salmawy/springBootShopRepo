@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,7 +18,9 @@ import com.gomalmarket.shop.core.config.ShopAppContext;
 import com.gomalmarket.shop.core.entities.basic.Fridage;
 import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.entities.contractor.Contractor;
+import com.gomalmarket.shop.core.entities.contractor.ContractorAccount;
 import com.gomalmarket.shop.core.entities.contractor.ContractorTransaction;
+import com.gomalmarket.shop.core.entities.expanses.OutcomeDetail;
 import com.gomalmarket.shop.core.entities.repos.RepoSupplier;
 import com.gomalmarket.shop.core.entities.safe.SafeTransaction;
 import com.gomalmarket.shop.core.exception.DataBaseException;
@@ -26,6 +29,7 @@ import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.core.service.IBaseService;
 import com.gomalmarket.shop.modules.contractor.dao.IContractorDao;
 import com.gomalmarket.shop.modules.contractor.services.IContractorService;
+import com.gomalmarket.shop.modules.contractor.view.beans.ContractorVB;
 import com.gomalmarket.shop.modules.expanses.services.IExpansesServices;
 
 import lombok.Getter;
@@ -54,13 +58,15 @@ public class ContractorService implements IContractorService {
 	ShopAppContext appContext;
 
 	@Override
-	public List getAllContractorsAccounts(int typeId,int ownerId,int seasonId) throws DataBaseException, EmptyResultSetException {
+	public List getAllContractorsAccounts(int typeId, int ownerId, int seasonId)
+			throws DataBaseException, EmptyResultSetException {
 		return this.getContractorDao().getAllContractorsAccounts(typeId, ownerId, seasonId);
 	}
 
 	@Override
-	public ContractorTransaction AddContractorTransaction(String name, int typeId, double amount, Fridage fridage, String notes, int paid,
-			int ownerId, Date date, Season season) throws DataBaseException, InvalidReferenceException {
+	public ContractorTransaction AddContractorTransaction(String name, int typeId, double amount, Fridage fridage,
+			String notes, int paid, int ownerId, Date date, Season season)
+			throws DataBaseException, InvalidReferenceException {
 
 		// ===================save contractor into Database
 		// ========================================================
@@ -76,60 +82,89 @@ public class ContractorService implements IContractorService {
 		trx.setReport(notes);
 		trx.setSpenderName(appContext.getCurrentUser().getUsername());
 		trx.setSeason(season);
-		
+
 		this.baseService.saveEntity(repoSupplier.getContractorTransactionRepo(), trx);
-	 
+
 		if (trx.getPaid() == 1) {
 
 			this.getExpansesService().outcomeTransaction(date, amount, notes, OutcomeTypeEnum.K_L, contractor.getId(),
 					trx.getId(), fridage, season);
 		}
-return trx;
+		return trx;
 	}
 
+	
 	@Override
-	public ContractorTransaction editContractorTransaction(String name, int typeId, double amount, Fridage fridage, String notes, int paid,
-			int ownerId, Date date, Season season,int trxId) throws DataBaseException, InvalidReferenceException {
+	public ContractorVB getcontractorAccount(int contractorId,int seasonId) {
+		
+		Map params=new HashMap();
+		params.put("seasonId", seasonId);
+		params.put("contracor.id", contractorId);
+		ContractorVB contractorVB=null;
+		try {
+			List<ContractorAccount> accounts=	this.getBaseService().gFindAllBeansWithDepthMapping(ContractorAccount.class, params);
+			ContractorAccount account=accounts.get(0);
+			
+			contractorVB =new ContractorVB();
+			contractorVB.setAccountId(account.getId());
+			contractorVB.setAmount(account.getAmount());
+			contractorVB.setContractorId(account.getContractor().getId());
+			contractorVB.setName(account.getContractorName());
+			
+			return contractorVB;
+			
+		} catch (DataBaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EmptyResultSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	@Override
+	public ContractorTransaction editContractorTransaction(String name, int typeId, double amount, Fridage fridage,
+			String notes, int paid, int ownerId, Date date, Season season, int trxId)
+			throws DataBaseException, InvalidReferenceException {
 
-		 
 		// ========================save contractor detail into Database
 		// ========================================================
 		ContractorTransaction trx = repoSupplier.getContractorTransactionRepo().findById(trxId).get();
 		trx.setAmount(amount);
- 		trx.setTransactionDate(date);
+		trx.setTransactionDate(date);
 		trx.setPaid(paid);
 		trx.setReport(notes);
 		trx.setSpenderName(appContext.getCurrentUser().getUsername());
 		trx.setSeason(season);
-		
+
 		this.baseService.saveEntity(repoSupplier.getContractorTransactionRepo(), trx);
-	 
+
 		if (trx.getPaid() == 1) {
-			
+
 			Map<String, Object> prams = new HashMap<String, Object>();
 			prams.put("orderId", trxId);
 			SafeTransaction safeTransaction;
 			try {
-				safeTransaction = (SafeTransaction) this.getBaseService().findBean(SafeTransaction.class,
-						prams);
-				this.getExpansesService().editOutcomeTransaction(date, amount, notes, OutcomeTypeEnum.K_L, trx.getContractor().getId(), trx.getId(),  fridage, season, safeTransaction.getId());
+				safeTransaction = (SafeTransaction) this.getBaseService().findBean(SafeTransaction.class, prams);
+				this.getExpansesService().editOutcomeTransaction(date, amount, notes, OutcomeTypeEnum.K_L,
+						trx.getContractor().getId(), trx.getId(), fridage, season, safeTransaction.getId());
 
 			} catch (EmptyResultSetException e) {
-				 log.info("safe transaction not found of contracor transaction id : "+trxId);
+				log.info("safe transaction not found of contracor transaction id : " + trxId);
 			}
-			
-			
-  		}
-return trx;
+
+		}
+		return trx;
 	}
 
-	
 	public Contractor saveContractor(String name, int typeId, int ownerId) throws DataBaseException {
 
 		Contractor contractor = new Contractor();
 		contractor.setName(name);
 		contractor.setTypeId(typeId);
- 		contractor.setOwnerId(ownerId);
+		contractor.setOwnerId(ownerId);
 
 		try {
 			Map<String, Object> m = new HashMap<String, Object>();
@@ -153,10 +188,37 @@ return trx;
 	}
 
 	@Override
-	public List getContractorTransactions(String name, int typeId, Date fromDate, Date toDate, int paid,
-			int ownerId) throws DataBaseException, EmptyResultSetException {
+	public List getContractorTransactions(String name, int typeId, Date fromDate, Date toDate, int paid, int ownerId)
+			throws DataBaseException, EmptyResultSetException {
 		// TODO Auto-generated method stub
 		return this.getContractorDao().getContractorTransactions(name, typeId, fromDate, toDate, paid, ownerId);
 	}
 
+	
+	@Override
+	public void deleteContractorTransaction(int trxId) {
+
+		ContractorTransaction trx = repoSupplier.getContractorTransactionRepo().findById(trxId).get();
+		repoSupplier.getContractorTransactionRepo().findById(trxId).get();
+
+		//-------------------------------------------------------------------------------------------------------------------------------------
+		if (trx.getPaid() == 1) {
+
+			Map<String, Object> prams = new HashMap<String, Object>();
+			prams.put("orderId", trxId);
+			try {
+				OutcomeDetail outcomeDetail = this.getBaseService().gFindBean(OutcomeDetail.class, prams);
+
+				getExpansesService().deleteOutcomeDetailTransaction(outcomeDetail);
+
+			} catch (EmptyResultSetException | DataBaseException e) {
+				log.info("safe transaction not found of contracor transaction id : " + trxId);
+			}
+
+		}
+		//-------------------------------------------------------------------------------------------------------------------------------------
+	
+		repoSupplier.getContractorTransactionRepo().delete(trx);
+	
+	}
 }

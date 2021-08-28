@@ -21,8 +21,6 @@ import com.gomalmarket.shop.core.Enum.ContractorTypeEnum;
 import com.gomalmarket.shop.core.Enum.NavigationResponseCodeEnum;
 import com.gomalmarket.shop.core.action.navigation.Request;
 import com.gomalmarket.shop.core.action.navigation.Response;
-import com.gomalmarket.shop.core.entities.basic.Fridage;
-import com.gomalmarket.shop.core.entities.basic.Season;
 import com.gomalmarket.shop.core.entities.contractor.Contractor;
 import com.gomalmarket.shop.core.entities.contractor.ContractorTransaction;
 import com.gomalmarket.shop.core.exception.DataBaseException;
@@ -42,8 +40,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -110,12 +108,14 @@ public class AddLabourPersenter extends ContractorAction implements Initializabl
 	private int trxId;
 	private int typeId;
 
+	
+
 	public AddLabourPersenter() {
 
 		mode = request.getMode();
 		int tempid = (int) request.getMap().get("ownerId");
-		int typeId = (int) request.getMap().get("typeId");
-		owner.fromId(tempid);
+		 typeId = (int) request.getMap().get("typeId");
+		owner=ContractorOwnerEnum.fromId(tempid);
 		trxId = request.getEditedObjectId();
 
 	}
@@ -212,7 +212,7 @@ public class AddLabourPersenter extends ContractorAction implements Initializabl
 			String name = name_TF.getText();
 			double amount = Double.parseDouble(amount_TF.getText());
 			String notes = note_TA.getText();
-			int ownerId = (Integer) this.request_map.get("ownerId");
+			 
 			Date date = getValueOfDatePicker();
 			int paid = (paid_TBtn.isSelected()) ? 1 : 0;
 
@@ -221,28 +221,38 @@ public class AddLabourPersenter extends ContractorAction implements Initializabl
 				ContractorTransaction trx=null;;
 				try {
 					trx = this.getContractorService().AddContractorTransaction
-						(name, typeId, amount, getAppContext().getFridage(), notes, paid, ownerId, date, getAppContext().getSeason());
+						(name, typeId, amount, getAppContext().getFridage(), notes, paid, owner.getId(), date, getAppContext().getSeason());
+					this.response = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+					response.getResults().put("contractorId",trx.getContractor().getId());
+					Stage stage = (Stage) cancel_btn.getScene().getWindow();
+					stage.close();
+					alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
 				} catch (DataBaseException e) {
 					alert(AlertType.ERROR, this.getMessage("msg.err"), this.getMessage("msg.err"),
 							this.getMessage("msg.err.general"));
 					e.printStackTrace();
 					 
 				} catch (InvalidReferenceException e) {
-				 
+					
 				}				
 				
-				this.response = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
-				response.getResults().put("contractorId",trx.getContractor().getId());
-				Stage stage = (Stage) cancel_btn.getScene().getWindow();
-				stage.close();
-				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
+			
 				break;
 			case Request.MODE_ADD:
 
 				 trx=null;
 				try {
 					trx = this.getContractorService().AddContractorTransaction
-						(name, typeId, amount, getAppContext().getFridage(), notes, paid, ownerId, date, getAppContext().getSeason());
+						(name, typeId, amount, getAppContext().getFridage(), notes, paid,  owner.getId(), date, getAppContext().getSeason());
+								
+				
+				this.response = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+				Map results=response.getResults();
+				results.put("contractorId",trx.getContractor().getId());
+				
+				Stage	 stage = (Stage) cancel_btn.getScene().getWindow();
+				stage.close();
+				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
 				} catch (DataBaseException e) {
 					alert(AlertType.ERROR, this.getMessage("msg.err"), this.getMessage("msg.err"),
 							this.getMessage("msg.err.general"));
@@ -250,20 +260,14 @@ public class AddLabourPersenter extends ContractorAction implements Initializabl
 					 
 				} catch (InvalidReferenceException e) {
 				 
-				}				
-				
-				this.response = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
-				response.getResults().put("contractorId",trx.getContractor().getId());
-				 stage = (Stage) cancel_btn.getScene().getWindow();
-				stage.close();
-				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
+				}
 				break;
 			case Request.MODE_EDIT:
 
 				 trx=null;
 					try {
 						trx = this.getContractorService().editContractorTransaction
-								(name, typeId, amount, getAppContext().getFridage(), notes, paid, ownerId, date, getAppContext().getSeason(), trxId);
+								(name, typeId, amount, getAppContext().getFridage(), notes, paid,  owner.getId(), date, getAppContext().getSeason(), trxId);
 								} catch (DataBaseException e) {
 						alert(AlertType.ERROR, this.getMessage("msg.err"), this.getMessage("msg.err"),
 								this.getMessage("msg.err.general"));
@@ -275,7 +279,7 @@ public class AddLabourPersenter extends ContractorAction implements Initializabl
 					
 					this.response = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
 					response.getResults().put("contractorId",trx.getContractor().getId());
-					 stage = (Stage) cancel_btn.getScene().getWindow();
+					Stage stage = (Stage) cancel_btn.getScene().getWindow();
 					stage.close();
 					alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.edit"));
 					break;
@@ -352,6 +356,7 @@ public class AddLabourPersenter extends ContractorAction implements Initializabl
 			break;
 
 		case Request.MODE_ADD:
+			this.name_TF.setEditable(false);
 			Map<String, Object> map = new HashMap<String, Object>();
 			int contractorId = (int) request.getMap().get("contractorId");
 			map.put("id", contractorId);
@@ -368,6 +373,7 @@ public class AddLabourPersenter extends ContractorAction implements Initializabl
 			break;
 
 		case Request.MODE_EDIT:
+			this.name_TF.setEditable(false);
 			map = new HashMap<String, Object>();
 			map.put("id", this.trxId);
 			try {
@@ -394,10 +400,13 @@ public class AddLabourPersenter extends ContractorAction implements Initializabl
 	public Response prepareResponse(NavigationResponseCodeEnum reponseStatusCode) {
 		return new Response() {
 
+	Map <String,Object> map=new HashMap<String,Object>();
+			
+			
 			@Override
 			public Map getResults() {
 				// TODO Auto-generated method stub
-				return new HashMap<String, Object>();
+				return map;
 			}
 
 			@Override
@@ -422,4 +431,5 @@ public class AddLabourPersenter extends ContractorAction implements Initializabl
 		}
 	//---------------------------------------------------------------------------------------------------------------
 
+	
 }

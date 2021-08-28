@@ -9,7 +9,7 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="598.0" prefWidth="1298.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.contractor.view.labours.LabourPersenter">
    <children>
-      <SplitPane dividerPositions="0.1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
@@ -33,14 +33,14 @@
                                  <children>
                                     <Pane fx:id="owner_coloredPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="50.0" style="-fx-background-color: #00C0EF;" />
                                     <VBox layoutX="67.0" layoutY="29.0" />
-                                    <Label id="totalAmount_label" fx:id="owner_title" layoutX="51.0" layoutY="-2.0" prefHeight="39.0" prefWidth="136.0" style="-fx-font-size: 12;" text="Bookmarks">
+                                    <Label id="totalAmount_label" fx:id="owner_title" layoutX="51.0" layoutY="-2.0" prefHeight="40.0" prefWidth="136.0" text="Bookmarks">
                                        <font>
-                                          <Font size="9.0" />
+                                          <Font name="Arial Bold" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label id="totalAmount_value" fx:id="ownerAmount_title" layoutX="187.0" layoutY="3.0" prefHeight="30.0" prefWidth="109.0" style="-fx-font-size: 12;" text="410">
+                                    <Label id="totalAmount_value" fx:id="ownerAmount_title" layoutX="187.0" prefHeight="40.0" prefWidth="109.0" text="410">
                                        <font>
-                                          <Font size="9.0" />
+                                          <Font name="Arial Bold" size="14.0" />
                                        </font>
                                     </Label>
                                  </children>
@@ -49,14 +49,14 @@
                                  <children>
                                     <Pane fx:id="shop_coloredPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="50.0" style="-fx-background-color: #F39C12;" />
                                     <VBox layoutX="67.0" layoutY="29.0" />
-                                    <Label id="totalAmount_label" fx:id="shop_title" layoutX="50.0" layoutY="1.0" prefHeight="39.0" prefWidth="136.0" style="-fx-font-size: 12;" text="Bookmarks">
+                                    <Label id="totalAmount_label" fx:id="shop_title" layoutX="50.0" layoutY="1.0" prefHeight="40.0" prefWidth="136.0" text="Bookmarks">
                                        <font>
-                                          <Font size="9.0" />
+                                          <Font name="Arial Bold" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label id="totalAmount_value" fx:id="shopAmount_title" layoutX="186.0" layoutY="6.0" prefHeight="30.0" prefWidth="109.0" style="-fx-font-size: 12;" text="410">
+                                    <Label id="totalAmount_value" fx:id="shopAmount_title" layoutX="186.0" prefHeight="40.0" prefWidth="109.0" text="410">
                                        <font>
-                                          <Font size="9.0" />
+                                          <Font name="Arial Bold" size="14.0" />
                                        </font>
                                     </Label>
                                  </children>
@@ -97,7 +97,7 @@
                                  </children>
                               </AnchorPane>
                               <Separator prefWidth="200.0" />
-                              <AnchorPane fx:id="transactions_table" maxHeight="1.7976931348623157E308" prefHeight="370.0" prefWidth="658.0" style="-fx-background-color: #000000;" VBox.vgrow="ALWAYS" />
+                              <AnchorPane fx:id="transactions_table" maxHeight="1.7976931348623157E308" prefHeight="370.0" prefWidth="658.0" VBox.vgrow="ALWAYS" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

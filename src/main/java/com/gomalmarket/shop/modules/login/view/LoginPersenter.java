@@ -179,4 +179,10 @@ App.loginStage.hide();
 		close_btn.getStyleClass().setAll("btn", "btn-info", "btn-xs");
 
 	}
+	
+	
+	@FXML
+	public void onEnter(ActionEvent ae){
+	  makeLogin(ae);
+	}
 }

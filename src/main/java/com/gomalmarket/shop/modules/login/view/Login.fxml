@@ -11,7 +11,7 @@
       <Pane layoutX="19.0" layoutY="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="366.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
          <children>
             <JFXTextField fx:id="usernameTF" focusColor="#12bfdd" layoutX="79.0" layoutY="98.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="25.0" prefWidth="250.0" promptText="UserName" />
-            <JFXPasswordField fx:id="passwordPass" focusColor="#12bfdd" layoutX="79.0" layoutY="153.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="25.0" prefWidth="250.0" promptText="Password" />
+            <JFXPasswordField fx:id="passwordPass" focusColor="#12bfdd" layoutX="79.0" layoutY="153.0" nodeOrientation="RIGHT_TO_LEFT" onAction="#onEnter" prefHeight="25.0" prefWidth="250.0" promptText="Password" />
             <JFXComboBox fx:id="fridage_CB" layoutX="73.0" layoutY="44.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="25.0" prefWidth="250.0" />
             <JFXButton fx:id="close_btn" layoutX="116.0" layoutY="209.0" onAction="#close" prefHeight="25.0" prefWidth="60.0" ripplerFill="WHITE" text="close" textFill="WHITE" />
            

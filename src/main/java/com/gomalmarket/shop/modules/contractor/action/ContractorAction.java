@@ -18,8 +18,8 @@ public class ContractorAction extends BaseAction {
 	private IExpansesServices expansesServices;
 	
     
-	protected Request request;
-	protected Response response;
+	public static Request request;
+	public static Response response;
 	
 	public  static  Map<String, Object> request_map;
     public  static  Map<String, Object> response_map;

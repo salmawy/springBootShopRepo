@@ -443,10 +443,13 @@ public class AddEditLoanPersenter extends ExpansesAction implements Initializabl
 	public Response prepareResponse(NavigationResponseCodeEnum reponseStatusCode) {
 		return new Response() {
 
+			Map <String,Object> map=new HashMap<String,Object>();
+			
+			
 			@Override
 			public Map getResults() {
 				// TODO Auto-generated method stub
-				return new HashMap<String,Object>();
+				return map;
 			}
 
 			@Override
