@@ -24,6 +24,12 @@
                <children>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
+                        <Label fx:id="owner_label" prefHeight="30.0" prefWidth="60.0" text="Label" />
+                        <JFXTextField fx:id="owner_TF" editable="false" prefWidth="186.0" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="30.0" prefWidth="300.0">
+                     <children>
                         <Label fx:id="amount_label" prefHeight="30.0" prefWidth="60.0" text="Label" />
                         <JFXTextField fx:id="amount_TF" prefHeight="25.0" prefWidth="186.0" />
                      </children>

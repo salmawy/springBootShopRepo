@@ -29,7 +29,7 @@ import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.Customer.transactions.view.beans.InvoiceViewbean;
 import com.gomalmarket.shop.modules.billing.action.BillingAction;
 import com.gomalmarket.shop.modules.billing.view.invoice.archived.InvoiceArchiveView;
-import com.gomalmarket.shop.modules.billing.view.invoice.generate.InvoiceView;
+import com.gomalmarket.shop.modules.billing.view.invoice.generate.InvoiceGenerateView;
 import com.gomalmarket.shop.modules.billing.view.invoicePayment.InvoicePaymentView;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -446,8 +446,8 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
     	Scene scene1=null;
      	if(invoiceStatus==InvoiceStatusEnum.UNDER_EDIT) {
     		
-    	InvoiceView  form=new InvoiceView();
-        	 scene1= new Scene(form.getView(), 850, 600);
+    	InvoiceGenerateView  form=new InvoiceGenerateView();
+        	 scene1= new Scene(form.getView(), 918, 780);
          title=getMessage("button.invoice.generate")  ;
 
     	}
@@ -455,7 +455,7 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
 
     		
     		InvoicePaymentView form=new InvoicePaymentView();
-        	 scene1= new Scene(form.getView(), 850, 600);
+        	 scene1= new Scene(form.getView(), 918, 780);
         	 title=getMessage("button.invoice.give");
     	
      	}
@@ -463,7 +463,7 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
 
     		   //
     		InvoiceArchiveView form=new InvoiceArchiveView ();
-        	 scene1= new Scene(form.getView(), 850, 600);
+        	 scene1= new Scene(form.getView(), 918, 780);
         	 title=getMessage("button.invoice.archive");
     	
      	}
@@ -483,7 +483,7 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
     	scene1.getStylesheets().addAll(css); 
     	popupwindow.initModality(Modality.APPLICATION_MODAL);
     	popupwindow.setTitle(title);
-    	      
+    	popupwindow.setResizable(false);  
     	popupwindow.setScene(scene1);
     	popupwindow.setOnHiding( ev -> {
     		

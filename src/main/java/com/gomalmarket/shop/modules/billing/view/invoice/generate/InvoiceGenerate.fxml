@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="RIGHT_TO_LEFT" prefHeight="780.0" prefWidth="918.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gomalmarket.shop.modules.billing.view.invoice.generate.InvoiceGeneratePersenter">
+   <children>
+      <HBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox fx:id="invoiceFields_vbox" minWidth="-Infinity" prefHeight="720.0" prefWidth="347.0">
+               <children>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="invoiceId_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="invoiceId_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Label fx:id="invoiceDate_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="invoiceDate_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="productName_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="productName_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="nolun_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="nolun_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="grossWeight_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="grossWeight_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="netWeight_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="netWeight_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="lost_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="lost_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="count_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="count_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="totalAmount_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="totalAmount_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="gift_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="gift_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="commision_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="commision_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="netAmount_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="netAmount_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="vehicleType_label" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="120.0" text="Label" />
+                        <JFXTextField fx:id="vehicleType_TF" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="170.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="78.0" prefWidth="286.0" spacing="5.0">
+                     <children>
+                        <JFXTextArea fx:id="notes_TA" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <VBox prefHeight="556.0" prefWidth="404.0" style="-fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5); -fx-background-color: #ffffff;" AnchorPane.topAnchor="50.0">
+                     <children>
+                        <Pane prefHeight="45.0" prefWidth="404.0" style="-fx-background-color: #5bc0de;">
+                           <children>
+                              <Label fx:id="weights_label" alignment="CENTER" contentDisplay="CENTER" layoutX="69.0" layoutY="-3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="51.0" prefWidth="274.0" text="بيان الأوزان" textAlignment="CENTER" textFill="WHITE">
+                                 <effect>
+                                    <Reflection />
+                                 </effect>
+                                 <font>
+                                    <Font name="Arial" size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <AnchorPane fx:id="weightTable_loc" prefHeight="510.0" prefWidth="404.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <VBox alignment="TOP_RIGHT" prefHeight="780.0" prefWidth="149.0">
+               <children>
+                  <JFXButton fx:id="generate_btn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="100.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="printInvoice_btn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="34.0" prefWidth="100.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </JFXButton>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

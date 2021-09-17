@@ -902,8 +902,7 @@ private double getPaidAmount(int orderId) {
 private void addEditOrder(int orderId) {
 	
 	
-   // SellerOrderVB orderVB=	(SellerOrderVB) this.sellerOrdersCustomTable.getTable().getSelectionModel().getSelectedItem();
-
+ 
 	this.request=new HashMap<String,Object>();
 	
 	request.put("orderId", orderId);

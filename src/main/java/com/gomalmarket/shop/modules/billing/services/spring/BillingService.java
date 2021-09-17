@@ -64,13 +64,13 @@ public class BillingService implements IBillingService {
 		
 		Map<String,Object> map=new HashMap<String, Object>();
 		if(typeId!=0)
-		map.put("customer.typeId",typeId );
+		map.put("customer.type.id",typeId );
 		if(typeId!=0)
 			map.put("customer.id",customerId );
-		map.put("seasonId", seasonId);
+		map.put("season.id", seasonId);
 		map.put("invoiceStatus",status );
 
-		map.put("fridageId",fridageId );
+		map.put("fridage.id",fridageId );
  		
 	return	this.getBaseService().findAllBeansWithDepthMapping(CustomerOrder.class, map);
 		

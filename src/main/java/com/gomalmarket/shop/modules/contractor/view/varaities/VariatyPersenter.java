@@ -1,12 +1,12 @@
 package com.gomalmarket.shop.modules.contractor.view.varaities;
 
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -15,14 +15,16 @@ import java.util.logging.Logger;
 
 import org.controlsfx.glyphfont.FontAwesome;
 import org.hibernate.criterion.Order;
-import org.springframework.context.ApplicationContext;
 
 import com.gomalmarket.shop.core.Enum.ContractorTypeEnum;
+import com.gomalmarket.shop.core.Enum.NavigationResponseCodeEnum;
 import com.gomalmarket.shop.core.UIComponents.comboBox.ComboBoxItem;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTableActions;
 import com.gomalmarket.shop.core.UIComponents.customTable.PredicatableTable;
+import com.gomalmarket.shop.core.action.navigation.Request;
+import com.gomalmarket.shop.core.action.navigation.Response;
 import com.gomalmarket.shop.core.entities.contractor.Contractor;
 import com.gomalmarket.shop.core.entities.contractor.ContractorAccount;
 import com.gomalmarket.shop.core.entities.contractor.ContractorTransaction;
@@ -38,6 +40,8 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTreeTableView;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -64,7 +68,7 @@ public class VariatyPersenter extends ContractorAction implements Initializable 
 	    private JFXTextField name_TF;
 
 	    @FXML
-	    private Label shopValue_label;
+	    private Label shopAmount_title;
 
 	    @FXML
 	    private Pane shop_coloredPane;
@@ -76,13 +80,17 @@ public class VariatyPersenter extends ContractorAction implements Initializable 
 	    private AnchorPane contractorTable_loc;
 
 	    @FXML
-	    private Label shop_label;
+	    private Label shop_title;
 
 	    @FXML
 	    private AnchorPane transactions_table;
 	
 	
-	
+		private JFXButton deleteTransactionBtn;
+
+		private JFXButton editTransactionBtn;
+
+		private JFXButton addTransactionBtn;
 	
 	private PredicatableTable<ContractorVB> contractorPredicatableTable;
 
@@ -103,8 +111,11 @@ public class VariatyPersenter extends ContractorAction implements Initializable 
 		List contractorColumns=prepareContractorColumns();
 		List transactionsColumns=prepareTransactionsColumns();
 		List contratorHeadNodes=prepareContractorHeaderNodes();
+		List transactionsHeadNodes = prepareTransactionTableHeader();
+
 		contractorPredicatableTable=new PredicatableTable<ContractorVB>(contractorColumns, contratorHeadNodes, null, new ContractorableActionListner(), CustomTable.headTableCard, ContractorVB.class);
-		transactionsCustomeTable=new CustomTable<ContractorTransactionVB>(transactionsColumns, null, null, null, null, CustomTable.tableCard, ContractorTransactionVB.class);
+		transactionsCustomeTable = new CustomTable<ContractorTransactionVB>(transactionsColumns, transactionsHeadNodes,
+				null, null, getTransactionsTablesAction(), CustomTable.headTableCard, ContractorTransactionVB.class);
 
 		//=========================================================================================================================================
 		fitToAnchorePane(contractorPredicatableTable.getCutomTableComponent());
@@ -125,7 +136,7 @@ public class VariatyPersenter extends ContractorAction implements Initializable 
 	});
 		
 //=========================================================================================================================================
-  	shop_label.setText(this.getMessage("label.shop"));
+  	shop_title.setText(this.getMessage("label.shop"));
  	
  
 		  
@@ -134,49 +145,53 @@ public class VariatyPersenter extends ContractorAction implements Initializable 
 	owner_combo.setPromptText(this.getMessage("label.owner"));
 	owner_combo.getStyleClass().add("comboBox");
 	for (Iterator iterator = this.owners.iterator(); iterator.hasNext();) {
-		ComboBoxItem object = (ComboBoxItem) iterator.next();
-	owner_combo.getItems().add(object);}
+		ComboBoxItem<Integer> object = (ComboBoxItem<Integer>) iterator.next();
+		owner_combo.getItems().add(object);
+	}
 	owner_combo.getSelectionModel().selectFirst();
-	LoadLaboursNames(((ComboBoxItem<Integer>)owners.get(0)).getId());
+	LoadContractorsNames(((ComboBoxItem<Integer>) owners.get(0)).getId());
+
+	owner_combo.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+		public void changed(ObservableValue<? extends Number> ov, final Number oldvalue, final Number newvalue) {
+			ComboBoxItem<Integer> item = owner_combo.getSelectionModel().getSelectedItem();
+			LoadContractorsNames(item.getId());
 	
+			calculateTotalShopAmount();
+		}
+	});
 //=========================================================================================================================================
 	calculateTotalShopAmount();
 //=========================================================================================================================================
 
 	}
-private void LoadLaboursNames(int ownerId) {
-	
-	//contractorPredicatableTable.getTable().getRoot().getChildren().clear();
+private void LoadContractorsNames(int ownerId) {
 
+ 
 	try {
-		List contractors=this.getContractorService().getAllContractorsAccounts(this.contractorTypeId, ownerId, this.getAppContext().getSeason().getId());
-	    List tableData=new LinkedList();
-		
-	    
-	    for (Iterator iterator = contractors.iterator(); iterator.hasNext();) {
-		
-	    	ContractorAccount acc = (ContractorAccount) iterator.next();
-		
-	    	ContractorVB  viewBean=new ContractorVB();
-	     	viewBean.setAccountId(acc.getId());
-	     	viewBean.setContractorId(acc.getContractor().getId());
-	    	viewBean.setName((acc.getContractorName()) );
-	    	viewBean.setAmount(acc.getAmount());
-	    	tableData.add(viewBean);
-	    	
-	}
-	
-	
-	
+		List contractors = this.getContractorService().getAllContractorsAccounts(this.contractorTypeId, ownerId,this.getAppContext().getSeason().getId());
+		List tableData = new ArrayList();
+
+		for (Iterator iterator = contractors.iterator(); iterator.hasNext();) {
+
+			ContractorAccount acc = (ContractorAccount) iterator.next();
+
+			ContractorVB viewBean = new ContractorVB();
+			viewBean.setAccountId(acc.getId());
+			viewBean.setContractorId(acc.getContractor().getId());
+			viewBean.setName((acc.getContractorName()));
+			viewBean.setAmount(acc.getAmount());
+			tableData.add(viewBean);
+
+		}
+
 		this.contractorPredicatableTable.loadTableData(tableData);
 
-	
 	} catch (DataBaseException | EmptyResultSetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
+
+}
 
 	private List<Column> prepareContractorColumns(){
     
@@ -242,7 +257,7 @@ private List prepareContractorHeaderNodes(){
  	    addBtn.getStyleClass().setAll("btn","btn-primary");                     //(2)
 	    addBtn.setOnAction(e -> {
 
-	    	addTransaction();
+	    	addEditTransaction(Request.MODE_CREATE_NEW, 0, 0, null);
 	    	
 	    	
 	    	
@@ -254,77 +269,7 @@ private List prepareContractorHeaderNodes(){
 	
 }
 
-	private void addTransaction() {
-	 
-			int ownerId=owner_combo.getSelectionModel().getSelectedItem().getId();
-			AddVaraityView form=new AddVaraityView();
-			URL u=getClass().getClassLoader().getResource("appResources/custom.css");
-			this.request_map=new HashMap<String, Object>();
-			request_map.put("ownerId", ownerId);
-			Scene scene1= new Scene(form.getView(), 350, 420);
-			Stage popupwindow=new Stage();
-			popupwindow.setResizable(false);
-			popupwindow.initStyle(StageStyle.TRANSPARENT);
 
-		    String css =u.toExternalForm();
-			scene1.getStylesheets().addAll(css); 
-			popupwindow.initModality(Modality.APPLICATION_MODAL);
-			      
-			popupwindow.setScene(scene1);
-		popupwindow.setOnHiding( ev -> {
-				
-
-			if(response_map!=null&&response_map.get("valid")!=null) {
-				boolean valid=(boolean) response_map.get("valid");
-				
-				 
-				String contractorName=(String) response_map.get("name");
-				Map<String,Object> map=new HashMap<String, Object>();
-				
-				map.put("name", contractorName);
-				map.put("typeId", contractorTypeId);
-				map.put("ownerId", ownerId);
-				try {
-					Contractor contractor=(Contractor) this.getBaseService().findBean(Contractor.class, map);
-					  LoadLaboursNames(ownerId);
-
-					this.loadContractorTransactions(contractor.getId(),ownerId);
-					//setContractorSeleted(contractor.getId());
-					this.name_TF.setText(contractor.getName());
-					    contractorPredicatableTable.getTable().requestFocus();
-					    contractorPredicatableTable.getTable().getSelectionModel().select(0);
-					    contractorPredicatableTable.getTable().getFocusModel().focus(0);
-				} catch (DataBaseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}catch (EmptyResultSetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
-			}
-		    
-				
-				
-			});
-			      
-			popupwindow.showAndWait();
-			
-	
-	  
-			
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -345,15 +290,14 @@ private List prepareContractorHeaderNodes(){
 	
 	private void loadContractorTransactions(int id,int ownerId) {
 
-		double ownerTotalAmount=0.0;
-		double shopTotalPaidAmount=0.0;
+ 		double shopTotalPaidAmount=0.0;
 		transactionsCustomeTable.getTable().getItems().clear();
 		
  		List tableData=new ArrayList();
 		Map<String,Object> map=new HashMap<String, Object>();
 		map.put("contractor.id", id);
 		map.put("contractor.typeId", contractorTypeId);
-	//	map.put("season.id", getAppContext().getSeason().getId());
+		map.put("season.id", getAppContext().getSeason().getId());
 		map.put("contractor.ownerId", ownerId);
 
 	if(paid>-1)
@@ -370,17 +314,17 @@ private List prepareContractorHeaderNodes(){
 			viewBean.setId(transaction.getId());
 			viewBean.setAmount(transaction.getAmount());
 			viewBean.setNotes(transaction.getReport());
-			viewBean.setPaid((transaction.getPaid()==1)?getAppContext().getMessages().getString("label.contractor.status.paid.no"):getAppContext().getMessages().getString("label.contractor.status.paid.no"));
-			if(transaction.getPaid()==0)
-				ownerTotalAmount+=transaction.getAmount();
-			else
-				shopTotalPaidAmount+=transaction.getAmount();
-		
+			viewBean.setPaid(getAppContext().getMessages().getString("label.contractor.status.paid.yes"));
+			
+			
+			shopTotalPaidAmount+=transaction.getAmount();
 			
 			tableData.add(viewBean);
 		}
 		
 			transactionsCustomeTable.loadTableData(tableData);
+			this.addTransactionBtn.setDisable(false);
+			this.shopAmount_title.setText(String.valueOf(shopTotalPaidAmount));
 			} catch (DataBaseException  e) {
 		    	   alert(AlertType.ERROR, this.getMessage("msg.err"),this.getMessage("msg.err"), this.getMessage("msg.err.general"));
           } catch (EmptyResultSetException e) {
@@ -418,13 +362,15 @@ private List prepareContractorHeaderNodes(){
 		Double amount=0.0;
 		try {
 			 amount=(Double) this.getBaseService().aggregate("ContractorTransaction", "sum", "amount", map);
+			 
 		} catch (DataBaseException | EmptyResultSetException e) {
 			// TODO Auto-generated catch block
 			amount=0.0;
 		}
 		
+ 
 		
-		this.shopValue_label.setText(String.valueOf(amount));
+ 		this.shopAmount_title.setText(String.format("%.0f",amount));
 		
 		
 	}
@@ -514,8 +460,229 @@ private List prepareContractorHeaderNodes(){
 
 	
 	
+	private List prepareTransactionTableHeader() {
+		// button.purchases.confirm button.save
+
+		addTransactionBtn = new JFXButton(this.getMessage("button.add"));
+		addTransactionBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.PLUS));
+		addTransactionBtn.getStyleClass().setAll("btn", "btn-primary", "btn-xs"); // (2)
+		addTransactionBtn.setDisable(true);
+		addTransactionBtn.setOnAction(e -> {
+			JFXTreeTableView<ContractorVB> mytable = (JFXTreeTableView<ContractorVB>) this.contractorPredicatableTable
+					.getTable();
+			ContractorVB contractor = mytable.getSelectionModel().getSelectedItem().getValue();
+			addEditTransaction(Request.MODE_ADD, contractor.getContractorId(), 0, null);
+
+		});
+
+		editTransactionBtn = new JFXButton(this.getMessage("button.edit"));
+		editTransactionBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.EDIT));
+		editTransactionBtn.setDisable(true);
+		editTransactionBtn.getStyleClass().setAll("btn", "btn-primary", "btn-xs");
+		editTransactionBtn.setOnAction(e -> {
+			JFXTreeTableView<ContractorVB> mytable = (JFXTreeTableView<ContractorVB>) this.contractorPredicatableTable
+					.getTable();
+			ContractorVB contractor = mytable.getSelectionModel().getSelectedItem().getValue();
+			ContractorTransactionVB trx = (ContractorTransactionVB) this.transactionsCustomeTable.getTable()
+					.getSelectionModel().getSelectedItem();
+
+			addEditTransaction(Request.MODE_EDIT, contractor.getContractorId(), trx.getId(), trx);
+		});
+
+		deleteTransactionBtn = new JFXButton(this.getMessage("button.delete"));
+		deleteTransactionBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.REMOVE));
+		deleteTransactionBtn.setDisable(true);
+		deleteTransactionBtn.getStyleClass().setAll("btn", "btn-danger", "btn-xs");
+		deleteTransactionBtn.setOnAction(e -> {
+			ContractorTransactionVB trx = (ContractorTransactionVB) this.transactionsCustomeTable.getTable()
+					.getSelectionModel().getSelectedItem();
+
+			deleteTransaction(trx);
+
+		});
+
+		List buttons = new ArrayList<JFXButton>(
+				Arrays.asList(addTransactionBtn, editTransactionBtn, deleteTransactionBtn));
+
+		return buttons;
+
+	}
+
+	private void clearAccouantDetailData() {
+		this.transactionsCustomeTable.getTable().getItems().clear();
+		 
+		addTransactionBtn.setDisable(true);
+		editTransactionBtn.setDisable(true);
+		deleteTransactionBtn.setDisable(true);
+
+	}
+
+
+	private void clearContractorsTable() {
+
+		try {
+			contractorPredicatableTable.getTable().getRoot().getChildren().clear();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		}
+	}
+
+	private Request prepareRequest(int mode, int contractorId, int trxId, ContractorTransactionVB trx) {
+		return new Request() {
+
+			@Override
+			public int getMode() {
+				// TODO Auto-generated method stub
+				return mode;
+			}
+
+			@Override
+			public Map getMap() {
+				// TODO Auto-generated method stub
+				int ownerId = owner_combo.getSelectionModel().getSelectedItem().getId();
+
+				Map<String, Object> m = new HashMap<String, Object>();
+				m.put("ownerId", ownerId);
+				m.put("typeId", contractorTypeId);
+				m.put("contractorId", contractorId);
+				return m;
+			}
+
+			@Override
+			public int getEditedObjectId() {
+				// TODO Auto-generated method stub
+				return trxId;
+			}
+
+			@Override
+			public Object getEditedObject() {
+				// TODO Auto-generated method stub
+				return trx;
+			}
+		};
+
+	}
+
 	
+	
+	
+	private void addEditTransaction(int mode, int contractorId, int trxId, ContractorTransactionVB trx) {
+
+		this.request = prepareRequest(mode, contractorId, trxId, trx);
+
+		AddVaraityView form = new AddVaraityView();
+		URL u = getClass().getClassLoader().getResource("appResources/custom.css");
+
+		Scene scene1 = new Scene(form.getView(), 350, 420);
+		Stage popupwindow = new Stage();
+		popupwindow.setResizable(false);
+		popupwindow.initStyle(StageStyle.TRANSPARENT);
+
+		String css = u.toExternalForm();
+		scene1.getStylesheets().addAll(css);
+		popupwindow.initModality(Modality.APPLICATION_MODAL);
+
+		popupwindow.setScene(scene1);
+		popupwindow.setOnHiding(ev -> {
+
+			handelAddEditRespone(response);
+		});
+
+		popupwindow.showAndWait();
+
+	}
 
 
 
+
+	private void handelAddEditRespone(Response response) {
+
+
+		System.out.println("window closes");
+		if (response.getResponseCode() == NavigationResponseCodeEnum.SUCCESS) {		 
+				
+				int contractorId=(int) response.getResults().get("contractorId");
+				refreshContractorDetails(contractorId); 		 
+
+		}
+
+	
+	}
+	private CustomTableActions getTransactionsTablesAction() {
+
+		CustomTableActions d = new CustomTableActions() {
+
+			@Override
+			public void rowSelected(Object o) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void rowSelected() {
+				editTransactionBtn.setDisable(false);
+				deleteTransactionBtn.setDisable(false);
+
+			}
+		};
+
+		return d;
+
+	}
+	
+	
+	private void refreshContractorDetails(int contractorId) {
+	 
+		
+		
+ 		int ownerId=this.owner_combo.getSelectionModel().getSelectedItem().getId();
+
+		try {
+			Contractor contractor =  (Contractor) this.getBaseService().findBean(Contractor.class, contractorId);
+			LoadContractorsNames(ownerId);
+		//	resfreshContractorAccount(contractorId);
+			this.loadContractorTransactions(contractor.getId(), ownerId);
+			setContractorSeleted(contractor.getId());
+			
+		} catch (DataBaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidReferenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void deleteTransaction(ContractorTransactionVB trx) {
+		// TODO Auto-generated method stub
+		
+		try{
+		getContractorService().deleteContractorTransaction(trx.getId());
+		
+		alert(AlertType.INFORMATION, "", "", getMessage("msg.done.delete"));
+		JFXTreeTableView<ContractorVB> mytable = (JFXTreeTableView<ContractorVB>) this.contractorPredicatableTable.getTable();			
+		ContractorVB contractor = mytable.getSelectionModel().getSelectedItem().getValue();
+		
+		
+		
+		
+		refreshContractorDetails(contractor.getContractorId());
+		}catch (Exception e) {
+			// TODO: handle exception
+			
+			alert(AlertType.ERROR, "", "", getMessage("msg.err.general"));
+		}
+		
+	}
+
+	
+	
+	
+ 	
+	
+	
+	
 }

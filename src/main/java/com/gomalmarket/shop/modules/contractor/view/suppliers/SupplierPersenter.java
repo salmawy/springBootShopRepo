@@ -396,7 +396,7 @@ public class SupplierPersenter extends ContractorAction implements Initializable
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("contractor.typeId =", contractorTypeId);
-		// map.put("season.id =", getAppContext().getSeason().getId());
+		map.put("season.id =", getAppContext().getSeason().getId());
 		map.put("paid=", 1);
 		map.put("contractor.ownerId= ", owner_combo.getSelectionModel().getSelectedItem().getId());
 

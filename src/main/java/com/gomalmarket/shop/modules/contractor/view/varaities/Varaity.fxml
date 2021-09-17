@@ -40,20 +40,20 @@
                <children>
                   <VBox maxHeight="1.7976931348623157E308" prefHeight="598.0" prefWidth="678.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="100.0" prefWidth="200.0" spacing="100.0" VBox.vgrow="SOMETIMES">
+                        <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="60.0" prefWidth="200.0" spacing="100.0">
                            <children>
-                              <Pane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
+                              <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgb(0.0, 0.0, 0.0, 0.15), 6.0, 0.7, 0.0,1.5);">
                                  <children>
-                                    <Pane fx:id="shop_coloredPane" prefHeight="80.0" prefWidth="50.0" style="-fx-background-color: #F39C12;" />
+                                    <Pane fx:id="shop_coloredPane1" prefHeight="40.0" prefWidth="50.0" style="-fx-background-color: #F39C12;" />
                                     <VBox layoutX="67.0" layoutY="29.0" />
-                                    <Label id="totalAmount_label" fx:id="shop_label" layoutX="60.0" layoutY="-2.0" prefHeight="36.0" prefWidth="127.0" style="-fx-font-size: 12;" text="Bookmarks">
+                                    <Label id="totalAmount_label" fx:id="shop_title" layoutX="60.0" prefHeight="36.0" prefWidth="127.0" text="Bookmarks">
                                        <font>
-                                          <Font size="9.0" />
+                                          <Font name="Arial Bold" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Label id="totalAmount_value" fx:id="shopValue_label" layoutX="64.0" layoutY="35.0" prefHeight="30.0" prefWidth="126.0" style="-fx-font-size: 12;" text="410">
+                                    <Label id="totalAmount_value" fx:id="shopAmount_title" layoutX="187.0" layoutY="2.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="126.0" text="410">
                                        <font>
-                                          <Font size="9.0" />
+                                          <Font name="Arial Bold" size="14.0" />
                                        </font>
                                     </Label>
                                  </children>

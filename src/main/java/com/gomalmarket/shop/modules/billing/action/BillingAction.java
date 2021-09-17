@@ -7,7 +7,7 @@ import com.gomalmarket.shop.modules.Customer.service.ICustomerService;
 import com.gomalmarket.shop.modules.billing.services.IBillingService;
 import com.gomalmarket.shop.modules.expanses.services.IExpansesServices;
 
-public class BillingAction extends BaseAction {
+public abstract class BillingAction extends BaseAction {
 
 	private IBillingService billingService;
 	private IExpansesServices expansesService;

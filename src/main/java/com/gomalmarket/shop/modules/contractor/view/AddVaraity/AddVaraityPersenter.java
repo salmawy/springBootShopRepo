@@ -8,16 +8,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.springframework.context.ApplicationContext;
 
+import com.gomalmarket.shop.core.Enum.ContractorOwnerEnum;
 import com.gomalmarket.shop.core.Enum.ContractorTypeEnum;
+import com.gomalmarket.shop.core.Enum.NavigationResponseCodeEnum;
+import com.gomalmarket.shop.core.action.navigation.Request;
+import com.gomalmarket.shop.core.action.navigation.Response;
+import com.gomalmarket.shop.core.entities.contractor.Contractor;
+import com.gomalmarket.shop.core.entities.contractor.ContractorTransaction;
 import com.gomalmarket.shop.core.exception.DataBaseException;
+import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
 import com.gomalmarket.shop.core.validator.Validator;
 import com.gomalmarket.shop.modules.contractor.action.ContractorAction;
@@ -31,6 +38,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -39,258 +48,390 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 public class AddVaraityPersenter extends ContractorAction implements Initializable {
-	
-	
-    Logger logger = Logger.getLogger(this.getClass().getName());	
 
-    @FXML
-    private HBox paid_toogleBtn;
+	Logger logger = Logger.getLogger(this.getClass().getName());
 
-    @FXML
-    private JFXButton cancel_btn;
+	@FXML
+	private HBox paid_toogleBtn;
 
-    @FXML
-    private JFXTextField name_TF;
+	@FXML
+	private JFXButton cancel_btn;
 
- 
+	@FXML
+	private JFXTextField name_TF;
 
-    @FXML
-    private Label name_label;
+	@FXML
+	private Label name_label;
 
-    @FXML
-    private Label amount_label;
+	@FXML
+	private Label amount_label;
 
-    @FXML
-    private JFXTextArea note_TA;
+	@FXML
+	private JFXTextArea note_TA;
 
-    @FXML
-    private JFXTextField amount_TF;
+	@FXML
+	private JFXTextField amount_TF;
 
-    @FXML
-    private Label date_label;
+	@FXML
+	private Label date_label;
 
-    @FXML
-    private AnchorPane root_pane;
+	@FXML
+	private AnchorPane root_pane;
 
-    @FXML
-    private Pane coloredPane;
+	@FXML
+	private Pane coloredPane;
 
-    @FXML
-    private Label title_label;
+	@FXML
+	private Label title_label;
 
-    @FXML
-    private HBox datePicker_loc;
+	@FXML
+	private HBox datePicker_loc;
 
-    @FXML
-    private JFXButton saveBtn;
-	    
-	    
-	    private JFXDatePicker datePicker;
-	    private JFXSnackbar snackBar;
-	    private final int paid=1;
-	    
-	    
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-	  	  logger.log(Level.INFO,"============================================================================================================");
-		init();
-		 
-		 
+	@FXML
+	private JFXButton saveBtn;
+
+	@FXML
+	private Label owner_label;
+
+	@FXML
+	private JFXTextField owner_TF;
+//	============================================================================================================    
+	private JFXDatePicker datePicker;
+	private JFXSnackbar snackBar;
+	private final int paid = 1;
+	private int mode;
+	private ContractorOwnerEnum owner;
+	private int trxId;
+	private int typeId;
+
+	public AddVaraityPersenter() {
+
+		mode = request.getMode();
+		int tempid = (int) request.getMap().get("ownerId");
+		typeId = (int) request.getMap().get("typeId");
+		owner = ContractorOwnerEnum.fromId(tempid);
+		trxId = request.getEditedObjectId();
+
 	}
 
-
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		logger.log(Level.INFO,
+				"============================================================================================================");
+		init();
+		initScreenMode();
+	}
 
 	private void init() {
 
-		  snackBar=new JFXSnackbar(root_pane);
-		//============================================================================================================
+		snackBar = new JFXSnackbar(root_pane);
+		// ============================================================================================================
 
-			  	datePicker=new JFXDatePicker();
-			   	datePicker.getEditor().setAlignment(Pos.CENTER);
-			   	datePicker.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-			   	datePicker.setConverter(new StringConverter<LocalDate>()
-			   	{
-			   	    private DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		datePicker = new JFXDatePicker();
+		datePicker.getEditor().setAlignment(Pos.CENTER);
+		datePicker.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+		datePicker.setConverter(new StringConverter<LocalDate>() {
+			private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-			   	    @Override
-			   	    public String toString(LocalDate localDate)
-			   	    {
-			   	        if(localDate==null)
-			   	            return "";
-			   	        return dateTimeFormatter.format(localDate);
-			   	    }
+			@Override
+			public String toString(LocalDate localDate) {
+				if (localDate == null)
+					return "";
+				return dateTimeFormatter.format(localDate);
+			}
 
-			   	    @Override
-			   	    public LocalDate fromString(String dateString)
-			   	    {
-			   	        if(dateString==null || dateString.trim().isEmpty())
-			   	        {
-			   	            return null;
-			   	        }
-			   	        return LocalDate.parse(dateString,dateTimeFormatter);
-			   	    }
-			   	});    
-			   	datePicker_loc.getChildren().add(datePicker);
-			   	
-		//============================================================================================================
-			   	amount_label.setText(this.getMessage("label.money.amount"));
-			   	name_label.setText(this.getMessage("label.name"));
-			    date_label.setText(this.getMessage("label.date"));
-			    note_TA.setPromptText(this.getMessage("label.notes"));
-			    
-			    saveBtn.setText(this.getMessage("button.save"));
- 				saveBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.SAVE));
-  			    saveBtn.getStyleClass().addAll("btn","btn-primary");  
-			    saveBtn.setOnAction(e -> {
-			    	save();
-			    	
-			    });	 
-			    
-			    
-			    cancel_btn.setText(this.getMessage("button.cancel"));
-			    cancel_btn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.APPLE));
-			    cancel_btn.getStyleClass().addAll("btn","btn-danger");  
-			       
-			    
-			    cancel_btn.setOnAction(e -> {
-			    	cancel();
-			    	
-			    });	
-			    
-			    
-			    title_label.setText(getMessage("label.add.transaction"));
-//============================================================================================================
-			  
-			    amount_TF.textProperty().addListener((observable, oldValue, newValue) -> {
-				    System.out.println("grossWeight changed from " + oldValue + " to " + newValue);
-				    Validator    myvaValidator=new Validator();
-				    if(newValue.length()>0) {
-					    myvaValidator.getValidDouble(newValue, 0, Double.MAX_VALUE, "grossWeightValue", true);
-					    if(!myvaValidator.noException()) 
-					    	{newValue=oldValue;
-					    	amount_TF.setText(newValue);
-					    	}
-				    	
-				    }});
-			  
-			   
-			    
+			@Override
+			public LocalDate fromString(String dateString) {
+				if (dateString == null || dateString.trim().isEmpty()) {
+					return null;
+				}
+				return LocalDate.parse(dateString, dateTimeFormatter);
+			}
+		});
+		datePicker_loc.getChildren().add(datePicker);
+
+		// ============================================================================================================
+		amount_label.setText(this.getMessage("label.money.amount"));
+		name_label.setText(this.getMessage("label.name"));
+		date_label.setText(this.getMessage("label.date"));
+		note_TA.setPromptText(this.getMessage("label.notes"));
+		owner_label.setText(getMessage("label.owner"));
+		owner_TF.setText(getMessage(owner.getLabel()));
+		
+		
+		amount_TF.textProperty().addListener((observable, oldValue, newValue) -> {
+ 			Validator myValidator =new Validator();
+			if (newValue.length() > 0) {
+				myValidator.getValidDouble(newValue, 0, Double.MAX_VALUE, "grossWeightValue", true);
+				if (!myValidator.noException()) {
+					newValue = oldValue;
+					amount_TF.setText(newValue);
+				}
+
+			}
+		});
+		saveBtn.setText(this.getMessage("button.save"));
+		saveBtn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.SAVE));
+		saveBtn.getStyleClass().addAll("btn", "btn-primary");
+		saveBtn.setOnAction(e -> {
+			save();
+
+		});
+
+		cancel_btn.setText(this.getMessage("button.cancel"));
+		cancel_btn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.REMOVE));
+		cancel_btn.getStyleClass().addAll("btn", "btn-danger");
+
+		cancel_btn.setOnAction(e -> {
+			cancel();
+
+		});
+
+		title_label.setText(getMessage("label.add.transaction"));
 //============================================================================================================
 
-			    TextFields.bindAutoCompletion(name_TF, t-> {
-					 return autoComplete( t.getUserText());
-			        });
+		amount_TF.textProperty().addListener((observable, oldValue, newValue) -> {
+			System.out.println("grossWeight changed from " + oldValue + " to " + newValue);
+			Validator myvaValidator = new Validator();
+			if (newValue.length() > 0) {
+				myvaValidator.getValidDouble(newValue, 0, Double.MAX_VALUE, "grossWeightValue", true);
+				if (!myvaValidator.noException()) {
+					newValue = oldValue;
+					amount_TF.setText(newValue);
+				}
+
+			}
+		});
+
+//============================================================================================================
+
+		TextFields.bindAutoCompletion(name_TF, t -> {
+			return autoComplete(t.getUserText());
+		});
 //============================================================================================================
 
 	}
 
- private void save() {
-	if (validateForm()) {
-		
-		
-		
-		String name=name_TF.getText();
-		double amount=Double.parseDouble(amount_TF.getText());
-		String notes=note_TA.getText();
-		int ownerId=(Integer)this.request_map.get("ownerId"); 
-		Date date=getValueOfDatePicker();
-//		try {
-//			this.getContractorService().AddContractorTransaction(name, ContractorTypeEnum.LABOUR, amount, getAppContext().getFridage().getId(), notes, paid, ownerId, date, getAppContext().getSeason());
-//				this.response_map=new HashMap<String, Object>();
-//				response_map.put("valid", true);
-//				response_map.put("name", name);
-//
-//		      Stage stage = (Stage) saveBtn.getScene().getWindow();
-//		      stage.close();		
-//		      
-//		} catch (DataBaseException e) {
-//
-//			
-//			
-//			e.printStackTrace();
-//		} catch (InvalidReferenceException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+	private void save() {
+		if (validateForm()) {
 
-	 }		
-}
-
-
-	    boolean validateForm() {
-	    	
-	        double safaBalance=this.getExpansesServices().getSafeBalance(getAppContext().getSeason());
-
-
-	    	
-	        if (name_TF.getText().isEmpty()) {
-	            
-		    	   snackBar.show(this.getMessage("msg.err.required.name"), 1000);
-
-	              return false;
-
-	        } else if (amount_TF.getText().isEmpty()) {
-		    	   snackBar.show(this.getMessage("msg.err.required.amount"), 1000);
-
-		    	   return false;
-	        } else if (safaBalance<Double.parseDouble(amount_TF.getText())) {
-		    	   snackBar.show(this.getMessage("msg.err.notEnough.safeBalance"), 1000);
-                   return false;
-	        } 
-	        
-	        else if (datePicker.getValue()==null) {
-		    	   snackBar.show(this.getMessage("msg.err.required.date"), 1000);
-
-		    	   return false;
-	        }
-	        return true;
-
-	    }
-
-	   
-
-	private void cancel() {
+			String name = name_TF.getText();
+			double amount = Double.parseDouble(amount_TF.getText());
+			String notes = note_TA.getText();
+			//int ownerId = (Integer) this.request.getMap().get("ownerId");
+			Date date = getValueOfDatePicker();
+			switch (mode) {
+			case Request.MODE_CREATE_NEW:
+				ContractorTransaction trx=null;;
+				try {
+					trx = this.getContractorService().AddContractorTransaction
+						(name, typeId, amount, getAppContext().getFridage(), notes, paid, owner.getId(), date, getAppContext().getSeason());
+					this.response = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+					response.getResults().put("contractorId",trx.getContractor().getId());
+					Stage stage = (Stage) cancel_btn.getScene().getWindow();
+					stage.close();
+					alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
+				} catch (DataBaseException e) {
+					alert(AlertType.ERROR, this.getMessage("msg.err"), this.getMessage("msg.err"),
+							this.getMessage("msg.err.general"));
+					e.printStackTrace();
+					 
+				} catch (InvalidReferenceException e) {
+					
+				}				
+				
 			
-		   
+				break;
+			case Request.MODE_ADD:
 
-		      Stage stage = (Stage) cancel_btn.getScene().getWindow();
-		      // do what you have to do
-		      stage.close();
-		   
-		   
+				 trx=null;
+				try {
+					trx = this.getContractorService().AddContractorTransaction
+						(name, typeId, amount, getAppContext().getFridage(), notes, paid,  owner.getId(), date, getAppContext().getSeason());
+								
+				
+				this.response = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+				Map results=response.getResults();
+				results.put("contractorId",trx.getContractor().getId());
+				
+				Stage	 stage = (Stage) cancel_btn.getScene().getWindow();
+				stage.close();
+				alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.save"));
+				} catch (DataBaseException e) {
+					alert(AlertType.ERROR, this.getMessage("msg.err"), this.getMessage("msg.err"),
+							this.getMessage("msg.err.general"));
+					e.printStackTrace();
+					 
+				} catch (InvalidReferenceException e) {
+				 
+				}
+				break;
+			case Request.MODE_EDIT:
+
+				 trx=null;
+					try {
+						trx = this.getContractorService().editContractorTransaction
+								(name, typeId, amount, getAppContext().getFridage(), notes, paid,  owner.getId(), date, getAppContext().getSeason(), trxId);
+								} catch (DataBaseException e) {
+						alert(AlertType.ERROR, this.getMessage("msg.err"), this.getMessage("msg.err"),
+								this.getMessage("msg.err.general"));
+						e.printStackTrace();
+						 
+					} catch (InvalidReferenceException e) {
+					 
+					}				
+					
+					this.response = prepareResponse(NavigationResponseCodeEnum.SUCCESS);
+					response.getResults().put("contractorId",trx.getContractor().getId());
+					Stage stage = (Stage) cancel_btn.getScene().getWindow();
+					stage.close();
+					alert(AlertType.INFORMATION, "", "", this.getMessage("msg.done.edit"));
+					break;
+
+			default:
+				break;
+			}
+
+		}
+	}
+
+	boolean validateForm() {
+
+		double safaBalance = this.getExpansesServices().getSafeBalance(getAppContext().getSeason());
+
+		if (name_TF.getText().isEmpty()) {
+
+			snackBar.show(this.getMessage("msg.err.required.name"), 1000);
+
+			return false;
+
+		} else if (amount_TF.getText().isEmpty()) {
+			snackBar.show(this.getMessage("msg.err.required.amount"), 1000);
+
+			return false;
+		} else if (safaBalance < Double.parseDouble(amount_TF.getText())) {
+			snackBar.show(this.getMessage("msg.err.notEnough.safeBalance"), 1000);
+			return false;
 		}
 
+		else if (datePicker.getValue() == null) {
+			snackBar.show(this.getMessage("msg.err.required.date"), 1000);
+
+			return false;
+		}
+		return true;
+
+	}
+
+	private void cancel() {
+
+		this.response = prepareResponse(NavigationResponseCodeEnum.EXIT);
+		Stage stage = (Stage) cancel_btn.getScene().getWindow();
+		// do what you have to do
+		stage.close();
+
+	}
+
+	private Date getValueOfDatePicker() {
+
+		LocalDate localate = datePicker.getValue();
+		Instant instant = Instant.from(localate.atStartOfDay(ZoneId.systemDefault()));
+
+		return Date.from(instant);
+
+	}
+
+	private List autoComplete(String name) {
+
+		int ownerid = (int) request_map.get("ownerId");
+
+		return this.getContractorService().getSuggestedContractorName(name, ownerid, ContractorTypeEnum.LABOUR);
+	}
 	
+	
+	
+	private void initScreenMode() {
 
-    private Date getValueOfDatePicker() {
-    	
-    	
-        LocalDate localate =datePicker.getValue();
-        Instant instant=Instant.from(localate.atStartOfDay(ZoneId.systemDefault()));
-    	
-    	return Date.from(instant);
-    	
-    }
-    
-    
-    
-    
+		switch (mode) {
+		case Request.MODE_CREATE_NEW:
 
+			this.name_TF.setEditable(true);
 
-    
-    
-    
-  private  List autoComplete(String name) {
-	  
-	  int ownerid=(int) request_map.get("ownerId");
-	  
-	 return this.getContractorService().getSuggestedContractorName(name, ownerid, ContractorTypeEnum.LABOUR);
-  }  
-    
-    
-    
-    
-    
-    
-    
+			break;
+
+		case Request.MODE_ADD:
+			this.name_TF.setEditable(false);
+			Map<String, Object> map = new HashMap<String, Object>();
+			int contractorId = (int) request.getMap().get("contractorId");
+			map.put("id", contractorId);
+			try {
+				Contractor contractor = this.getBaseService().gFindBean(Contractor.class, map);
+				this.name_TF.setText(contractor.getName());
+			} catch (DataBaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (EmptyResultSetException e) {
+
+			}
+
+			break;
+
+		case Request.MODE_EDIT:
+			this.name_TF.setEditable(false);
+			map = new HashMap<String, Object>();
+			map.put("id", this.trxId);
+			try {
+				ContractorTransaction trx = this.getBaseService().gFindBean(ContractorTransaction.class, map);
+				this.name_TF.setText(trx.getContractor().getName());
+				this.amount_TF.setText(String.valueOf(trx.getAmount()));
+				this.datePicker.setValue(getBaseService().convertToLocalDateViaMilisecond(trx.getTransactionDate()));
+				this.note_TA.setText(trx.getReport());
+			} catch (DataBaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (EmptyResultSetException e) {
+
+			}
+
+			break;
+
+		default:
+			break;
+		}
+
+	}
+	public Response prepareResponse(NavigationResponseCodeEnum reponseStatusCode) {
+		return new Response() {
+
+	Map <String,Object> map=new HashMap<String,Object>();
+			
+			
+			@Override
+			public Map getResults() {
+				// TODO Auto-generated method stub
+				return map;
+			}
+
+			@Override
+			public NavigationResponseCodeEnum getResponseCode() {
+				// TODO Auto-generated method stub
+				return reponseStatusCode;
+			}
+
+		};
+
+	}
+	//---------------------------------------------------------------------------------------------------------------
+
+		private void alert(AlertType alertType, String title, String headerText, String message) {
+			Alert a = new Alert(alertType);
+			a.getDialogPane().setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+			a.setTitle(title);
+			a.setHeaderText(headerText);
+			a.setContentText(message);
+			a.show();
+
+		}
+	//---------------------------------------------------------------------------------------------------------------
+
 }
