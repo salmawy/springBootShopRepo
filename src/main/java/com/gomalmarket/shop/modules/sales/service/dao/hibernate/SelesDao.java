@@ -246,25 +246,38 @@ public List getSellersLoanSummary(Date fromDate,Date toDate,int seasonId) throws
 	 
 
 	  try { 
-		 String sql=" select    \r\n" + 
-		 		"                      SLB.PRIOR_LOAN,    \r\n" + 
-		 		"                       \r\n" + 
-		 		"                      nvl(( select sum( SO.TOTAL_COST )from seller_orders  so where SO.SELLER_LOAN_BAG_ID =slb.id \r\n" + 
-		 		"                          and SO.ORDER_DATE between :fromDate and :toDate   ),0)as TOTAL_COST ,  \r\n" + 
-		 		"                   \r\n" + 
-		 		"                      nvl((select sum(INST.AMOUNT )from SHOP2020.INSTALLMENTS inst    where INST.SELLER_LOAN_BAG_ID =slb.id  \r\n" + 
-		 		"                          and INST.INSTALLMENT_DATE between :fromDate and :toDate   ),0)as AMOUNT ,     \r\n" + 
-		 		"                          SLB.CURRENT_LOAN  ,S.NAME   \r\n" + 
-		 		"                      from seller_loan_bagS slb  , sellerS s    \r\n" + 
-		 		"                      where SLB.SEASON_ID=:seasonId "
-		 		+ "	 and slb.CHANGE_DATE between :fromDate and :toDate"
-		 		+ ""
-		 		+ "  \r\n" + 
-		 		"                      and SLB.CURRENT_LOAN>0  and s.id=SLB.SELLER_ID    \r\n" + 
-		 		"                      group by SLB.SELLER_ID,slb.PRIOR_LOAN,slb.id,SLB.CURRENT_LOAN,S.NAME\r\n" + 
-		 		"                        order by CURRENT_LOAN desc ";
+//		 String sql=" select     " + 
+//		 		"                      SLB.PRIOR_LOAN,    " + 
+//		 		 
+//		 		"                      nvl(( select sum( SO.TOTAL_COST )from seller_orders  so where SO.SELLER_LOAN_BAG_ID =slb.id  " + 
+//		 		"                          and SO.ORDER_DATE between :fromDate and :toDate   ),0)as TOTAL_COST ,   " + 
+//		 		"                   " + 
+//		 		"                      nvl((select sum(INST.AMOUNT )from SHOP2020.INSTALLMENTS inst    where INST.SELLER_LOAN_BAG_ID =slb.id   " + 
+//		 		"                          and INST.INSTALLMENT_DATE between :fromDate and :toDate   ),0)as AMOUNT ,     " + 
+//		 		"                          SLB.CURRENT_LOAN  ,S.NAME    " + 
+//		 		"                      from seller_loan_bagS slb  , sellerS s    " + 
+//		 		"                      where SLB.SEASON_ID=:seasonId "
+//		 		//+ "	 and slb.CHANGE_DATE between :fromDate and :toDate"
+//		 		
+//		 		+ "  \r\n" + 
+//		 		"                      and SLB.CURRENT_LOAN>0  and s.id=SLB.SELLER_ID    \r\n" + 
+//		 		"                      group by SLB.SELLER_ID,slb.PRIOR_LOAN,slb.id,SLB.CURRENT_LOAN,S.NAME\r\n" + 
+//		 		"                        order by CURRENT_LOAN desc ";
+//		 
+		 
+		 
+		String s= "select slb from SellerLoanBag slb  "
+				+ "	where 1=1 "
+				+ "	  and ("
+				+ "			slb.id in "
+				+ "				(select so.sellerLoanBagId from SellerOrder so where so.orderDate between :fromDate and :toDate)"
+				+ "			or slb.id in"
+				+ "				(select inst.sellerLoanBagId from Installment inst where inst.instalmentDate between :fromDate and :toDate)"
+				+ "		)"
+				+ "	and slb.currentLoan > 0 and slb.seasonId= :seasonId "
+				+ "	order by slb.currentLoan";
 
-		 Query  query = entityManger.createNativeQuery(sql);
+		 Query  query = entityManger.createQuery(s);
 	  query.setParameter("fromDate", fromDate,TemporalType.DATE);
 	  query.setParameter("toDate", toDate,TemporalType.DATE);
 	  query.setParameter("seasonId", seasonId);

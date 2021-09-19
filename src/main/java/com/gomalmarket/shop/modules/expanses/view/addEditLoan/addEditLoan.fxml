@@ -20,7 +20,7 @@
                   </Label>
                </children>
             </Pane>
-            <VBox layoutX="4.0" layoutY="51.0" prefHeight="355.0" prefWidth="390.0" spacing="3.0">
+            <VBox fx:id="form_Box" layoutX="4.0" layoutY="51.0" prefHeight="355.0" prefWidth="390.0" spacing="3.0">
                <children>
                   <HBox prefHeight="30.0" prefWidth="300.0">
                      <children>
@@ -52,7 +52,7 @@
                      </children>
                   </HBox>
                   <HBox prefHeight="28.0" prefWidth="340.0" />
-                  <HBox alignment="CENTER" prefHeight="49.0" prefWidth="340.0" spacing="30.0">
+                  <HBox fx:id="buttons_box" alignment="CENTER" prefHeight="49.0" prefWidth="340.0" spacing="30.0">
                      <children>
                         <JFXButton fx:id="cancel_btn" text="cancel" />
                         <JFXButton fx:id="saveBtn" alignment="CENTER" onAction="#save" text="Save" />

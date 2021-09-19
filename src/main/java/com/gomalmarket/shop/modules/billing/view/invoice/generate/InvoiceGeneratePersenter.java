@@ -46,7 +46,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.JRException;
@@ -68,16 +67,6 @@ public class InvoiceGeneratePersenter extends BillingAction implements Initializ
 
 	@FXML
 	private JFXButton printInvoice_btn;
-
-	private CustomerOrder invoice;
-
-	private int typeId;
-
-	private int invoiceId;
-
-	private JFXSnackbar snackBar;
-
-	private CustomTable<InvoiceWeight> invoiceWeights;
 
 	@FXML
 	private JFXTextField invoiceId_TF;
@@ -163,15 +152,25 @@ public class InvoiceGeneratePersenter extends BillingAction implements Initializ
 	@FXML
 	private VBox invoiceFields_vbox;
 
+	
+	
+	
 	private Validator myvaValidator;
 
+	private CustomerOrder invoice;
+
+	private int typeId;
+
+	private int invoiceId;
+	private int invoiceStatus;
+	private JFXSnackbar snackBar;
+
+	private CustomTable<InvoiceWeight> invoiceWeights;
 	public InvoiceGeneratePersenter() {
 		invoiceId = (int) this.request.get("invoiceId");
 		typeId = (int) this.request.get("typeId");
-//===============================================================================================================================
-
-//==========================End of constructor ===================================================================================================
-
+		invoiceStatus = (int) this.request.get("invoiceStatus");
+ 
 	}
 
 	@Override
@@ -287,6 +286,11 @@ public class InvoiceGeneratePersenter extends BillingAction implements Initializ
 //===============================================================================================================================
 
 		render();
+		 
+		
+		
+		
+		
 
 	}
 
@@ -328,7 +332,11 @@ public class InvoiceGeneratePersenter extends BillingAction implements Initializ
 
 		printInvoice_btn.setDisable(true);
 
-		generate_btn.setText(getMessage("button.generate"));
+		
+		
+		String temp=(invoiceStatus==InvoiceStatusEnum.UNDER_EDIT)?getMessage("button.generate"):getMessage("button.invoice.give");
+		generate_btn.setText(temp);
+		generate_btn.setVisible(invoiceStatus!=InvoiceStatusEnum.ARCHIVED);		
 		generate_btn.setGraphic(new FontAwesome().create(FontAwesome.Glyph.SAVE));
 		generate_btn.getStyleClass().setAll("btn", "btn-info", "btn-sm"); // (2)
 		generate_btn.setOnMouseClicked((new EventHandler<MouseEvent>() {
@@ -391,6 +399,9 @@ public class InvoiceGeneratePersenter extends BillingAction implements Initializ
 		this.totalAmount_TF.setText(String.valueOf(totalAmount));
 		this.vehicleType_TF.setText(String.valueOf(invoice.getVehicleType().getName()));
 		this.notes_TA.setText(invoice.getNotes());
+		if(invoiceStatus!=InvoiceStatusEnum.UNDER_EDIT)
+			gift_TF.setText(String.valueOf(invoice.getTips()));
+		
 
 		double commision = Math.rint(totalAmount * getAppContext().getCustomerOrderRatio());
 		this.commision_TF.setText(String.valueOf(commision));
@@ -407,6 +418,13 @@ public class InvoiceGeneratePersenter extends BillingAction implements Initializ
 
 		double ration = invoice.getGrossweight() - netWeight;
 		this.lost_TF.setText(String.valueOf(ration));
+		
+		if(invoiceStatus!=InvoiceStatusEnum.ARCHIVED)
+		{	this.printInvoice_btn.setDisable(false);
+		
+		invoiceFields_vbox.setDisable(true);
+		}
+		
 	}
 
 	protected void generate() throws DataBaseException, BusinessLogicViolationException {
@@ -427,9 +445,24 @@ public class InvoiceGeneratePersenter extends BillingAction implements Initializ
 			invoice.setCommision(commision);
 			invoice.setRatio(ratio);
 			invoice.setNotes(notes);
+			
+			
 			invoice.setFinished(1);
-			invoice.setInvoiceStatus(InvoiceStatusEnum.UNDER_DELIVERY);
-			invoice.setEditeDate(new Date());
+			invoice.setInvoiceStatus(invoiceStatus);
+			if(invoiceStatus==InvoiceStatusEnum.UNDER_EDIT)
+			{
+				invoice.setInvoiceStatus(InvoiceStatusEnum.UNDER_DELIVERY);
+				invoice.setEditeDate(new Date());
+				
+			}
+			else if(invoiceStatus==InvoiceStatusEnum.UNDER_DELIVERY)
+			{
+				invoice.setInvoiceStatus(InvoiceStatusEnum.ARCHIVED);
+				invoice.setDueDate(new Date());
+				invoice.setDued(1);
+				
+			}
+			
 			invoice.setTotalPrice(totalPrice);
 
 			try {

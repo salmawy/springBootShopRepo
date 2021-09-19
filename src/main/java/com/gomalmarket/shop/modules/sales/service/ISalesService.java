@@ -20,7 +20,7 @@ public interface ISalesService {
 	public Object  aggregate(String tablename,String operation,String columnName,Map <String,Object>parameters) throws DataBaseException, EmptyResultSetException ;
 	public List<String> getSuggestedSellerName(String searchString) ;
 	public List getSellersOrders(Date orderDate) throws EmptyResultSetException, DataBaseException ;
-	public void saveSellerOrder(Seller seller, SellerOrder sellerOrder,double paidAmount) throws Exception ;
+	public SellerOrder saveSellerOrder(Seller seller, SellerOrder sellerOrder,double paidAmount) throws Exception ;
 	//public void editSellerOrder(Seller seller, SellerOrder sellerOrder,double paidAmount,SellerOrder oldOrder) throws Exception ;
 	 public List getSellersDebts( int seasonId,int active) throws EmptyResultSetException, DataBaseException;
 	 public double getSeasonStartTotalSellersLoan(int seasonId) ;

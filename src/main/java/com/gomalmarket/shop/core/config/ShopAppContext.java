@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,9 @@ public class ShopAppContext {
     private Fridage fridage;
     private User currentUser;
     private Stage AppStage;
+    
+    
+    @Value("${customerOrderRatio}")
     private float customerOrderRatio;
     
     

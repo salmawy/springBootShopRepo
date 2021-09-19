@@ -672,10 +672,11 @@ private List<Column> prepareIncomeTableColumns(){
 			row.setAmount(detail.getAmount());
            
 			String orderTag = (detail.getOrderId()==null||detail.getOrderId()==-1 )? "" :String.valueOf(detail.getOrderId()) ;
-
+			
 			row.setReport(detail.getNotes());
 			row.setOrderTage(orderTag);
 			row.setType(detail.getOutcomeType().getNameAr());
+			row.setTypeId(detail.getOutcomeType().getId());
 			row.setFridageName(detail.getFridage().getName());
 			totalAmount+=detail.getAmount();
 			String name=" ";
@@ -847,7 +848,7 @@ private List<Column> prepareIncomeTableColumns(){
 
 	@Override
 	public void rowSelected() {
-		editOutcome_btn.setDisable(false);
+		editOutcome_btn.setDisable(!validateEditAbillity());
 		
 	}
 
@@ -863,7 +864,21 @@ private List<Column> prepareIncomeTableColumns(){
     
     
   
-    
+    private boolean validateEditAbillity() {
+    	OutcomeVB outcomeVB 	=((OutcomeVB)outcomeCustomTable.getTable().getSelectionModel().getSelectedItem());
+    	try {
+    	return (outcomeVB.getTypeId()==OutcomeTypeEnum.maintaince.getId()||
+    			outcomeVB.getTypeId()==OutcomeTypeEnum.labours.getId()||
+    			outcomeVB.getTypeId()==OutcomeTypeEnum.allah.getId()||
+    			outcomeVB.getTypeId()==OutcomeTypeEnum.forgivness.getId()||
+    			outcomeVB.getTypeId()==OutcomeTypeEnum.varaity.getId());
+    		
+    	}catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    	return false;
+    }
     
     
     

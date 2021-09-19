@@ -93,7 +93,7 @@ public class SalesService implements ISalesService {
 		return this.getSalesDao().getSellersOrders(orderDate);
 	}
 
-	public void saveSellerOrder(Seller seller, SellerOrder sellerOrder, double paidAmount) throws Exception {
+	public SellerOrder saveSellerOrder(Seller seller, SellerOrder sellerOrder, double paidAmount) throws Exception {
 		this.entityDictionary = new HashMap<String, Object>();
 		seller = saveSeller(seller);
 
@@ -132,11 +132,9 @@ public class SalesService implements ISalesService {
 
 		}
 
-		// to update seller order detail by new after saving into database and take new
-		// its new id from database
-		// this.getBaseService().addEditBeans(orderdetail);
+		 
 		log.info("tranasction completed succfully");
-
+		return sellerOrder;
 	}
 
 	@Override

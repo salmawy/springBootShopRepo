@@ -2,7 +2,7 @@ package com.gomalmarket.shop.core.Enum;
  
 public enum NavigationResponseCodeEnum implements EnumClass<String> {
 	
-	 SUCCESS("msg.done.save",100),
+ SUCCESS("msg.done.save",100),
   SAVED("msg.done.save",200),
   EDITED("msg.done.edit",201),
   CANNOT_LOAD_DATA("",504),

@@ -27,6 +27,7 @@ import org.springframework.core.io.Resource;
 import com.gomalmarket.shop.core.UIComponents.customTable.Column;
 import com.gomalmarket.shop.core.UIComponents.customTable.CustomTable;
 import com.gomalmarket.shop.core.config.ShopAppContext;
+import com.gomalmarket.shop.core.entities.sellers.SellerLoanBag;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.modules.billing.view.beans.InvoiceWeight;
@@ -242,21 +243,23 @@ public class PeriodicReportPersenter extends SalesAction implements Initializabl
 			List result=this.getSalesService().getSellersLoanSummary(fromDateValue, toDateValue, seasonId);
 		
 		for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-			Object [] object = (Object []) iterator.next();
-			double priorLoan=((BigDecimal) object[0]).doubleValue();
-			double ordersAmount=((BigDecimal) object[1]).doubleValue();
-			double paidAmount=((BigDecimal) object[2]).doubleValue();
-			double currentLoan=((BigDecimal) object[3]).doubleValue();
-			String name=(String) object[4];
+//			Object [] object = (Object []) iterator.next();
+//			double priorLoan=((BigDecimal) object[0]).doubleValue();
+//			double ordersAmount=((BigDecimal) object[1]).doubleValue();
+//			double paidAmount=((BigDecimal) object[2]).doubleValue();
+//			double currentLoan=((BigDecimal) object[3]).doubleValue();
+//			String name=(String) object[4];
+			
+			SellerLoanBag slb=(SellerLoanBag) iterator.next();
 			
 			
 			SellerLoanVB row=new  SellerLoanVB();
-			row.setDueAmount(currentLoan);
-			row.setPaidAmount(paidAmount);
-			row.setPriorLoan(priorLoan);
-			row.setTotalOrdersAmount(ordersAmount);
+			row.setDueAmount(slb.getCurrentLoan());
+			row.setPaidAmount(slb.getPaidAmount());
+			row.setPriorLoan(slb.getPriorLoan());
+			row.setTotalOrdersAmount(slb.getDueLoan());
 
-			row.setName(name);
+			row.setName(slb.getSeller().getName());
 			data.add(row);
 			
 			

@@ -16,6 +16,8 @@ public abstract class BillingAction extends BaseAction {
     public  static  Map<String, Object> request;
     public  static  Map<String, Object> response;
    
+    
+ 
       
     public BillingAction() {
     	

@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gomalmarket.shop.core.Enum.CustomerTypeEnum;
+import com.gomalmarket.shop.core.Enum.InvoiceStatusEnum;
 import com.gomalmarket.shop.core.Enum.OutcomeTypeEnum;
 import com.gomalmarket.shop.core.config.ShopAppContext;
 import com.gomalmarket.shop.core.entities.customers.CustomerOrder;
 import com.gomalmarket.shop.core.entities.expanses.OutcomeType;
+import com.gomalmarket.shop.core.entities.repos.CustomerOrderRepo;
 import com.gomalmarket.shop.core.exception.DataBaseException;
 import com.gomalmarket.shop.core.exception.EmptyResultSetException;
 import com.gomalmarket.shop.core.exception.InvalidReferenceException;
@@ -27,118 +29,107 @@ import com.gomalmarket.shop.modules.expanses.services.IExpansesServices;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-
-
-
 @Slf4j
 @Repository
 @Transactional
 @Service
 @Getter
 public class BillingService implements IBillingService {
- 
-	
-	
-	
-	
+
 	@Autowired
-	    private ICustomerService customerService;
-	
+	private ICustomerService customerService;
+
 	@Autowired
-	    private IExpansesServices expansesService;
-	
+	private IExpansesServices expansesService;
+
 	@Autowired
-	    private IBaseService baseService;
-	
+	private IBaseService baseService;
+
 	@Autowired
- 	    private IBillingDao billingDao;
-	    
+	private IBillingDao billingDao;
+
 	@Autowired
-	    private ShopAppContext shopAppContext;
-    
-        
- 
- 
-@Override
-	public List getSuggestedOrders(int customerId,int status, int seasonId,int typeId,int fridageId) throws DataBaseException, EmptyResultSetException{
-		
-		Map<String,Object> map=new HashMap<String, Object>();
-		if(typeId!=0)
-		map.put("customer.type.id",typeId );
-		if(typeId!=0)
-			map.put("customer.id",customerId );
+	private ShopAppContext shopAppContext;
+
+	@Override
+	public List getSuggestedOrders(int customerId, int status, int seasonId, int typeId, int fridageId)
+			throws DataBaseException, EmptyResultSetException {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (typeId != 0)
+			map.put("customer.type.id", typeId);
+		if (typeId != 0)
+			map.put("customer.id", customerId);
 		map.put("season.id", seasonId);
-		map.put("invoiceStatus",status );
+		map.put("invoiceStatus", status);
 
-		map.put("fridage.id",fridageId );
- 		
-	return	this.getBaseService().findAllBeansWithDepthMapping(CustomerOrder.class, map);
-		
-	
-		
+		map.put("fridage.id", fridageId);
+
+		return this.getBaseService().findAllBeansWithDepthMapping(CustomerOrder.class, map);
+
 	}
 
+	@Override
+	public List getSuggestedCustomersOrders(int status, int seasonId, int fridageId, int typeId)
+			throws EmptyResultSetException, DataBaseException {
 
-@Override
-public List getSuggestedCustomersOrders(int status, int seasonId, int fridageId, int typeId) throws EmptyResultSetException, DataBaseException {
-	
-	
-	return getBillingDao().getSuggestedCustomersOrders(status, seasonId, fridageId, typeId);
-	
-}
+		return getBillingDao().getSuggestedCustomersOrders(status, seasonId, fridageId, typeId);
 
-
-
-@Override
-public List getCustomersOrderWeights(int orderId) throws EmptyResultSetException, DataBaseException {
-
-	return this.getBillingDao().getCustomersOrderWeights(orderId);
 	}
-@Override
-public List getSuggestedCustomersOrders(int seasonId, int fridageId) throws EmptyResultSetException, DataBaseException {
- 	return getBillingDao().getSuggestedCustomersOrders(seasonId, fridageId);
-}
 
-@Override
-public void generateInvoice(CustomerOrder invoice ) throws DataBaseException, InvalidReferenceException {
+	@Override
+	public List getCustomersOrderWeights(int orderId) throws EmptyResultSetException, DataBaseException {
 
-	 
-	
-	
-	
-	
-	 this.getBaseService().editBean(invoice);  
-	 
- 	 this.getExpansesService().outcomeTransaction(new Date(), invoice.getTips(), invoice.getNotes(),OutcomeTypeEnum.INVOICE_TIPS, invoice.getCustomer().getId(), invoice.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());		 
-	 
+		return this.getBillingDao().getCustomersOrderWeights(orderId);
+	}
+
+	@Override
+	public List getSuggestedCustomersOrders(int seasonId, int fridageId)
+			throws EmptyResultSetException, DataBaseException {
+		return getBillingDao().getSuggestedCustomersOrders(seasonId, fridageId);
+	}
+
+	@Override
+	@Transactional
+	public void generateInvoice(CustomerOrder invoice) throws DataBaseException, InvalidReferenceException {
+
  
-		 
-	
-
-}
-@Override
-public void payInvoice(CustomerOrder invoice) throws DataBaseException, InvalidReferenceException { 
 		
+		CustomerOrderRepo invoiceRepo=this.getShopAppContext().getRepoSupplier().getCustomerOrderRepo();
+		CustomerOrder savedInvoice= invoiceRepo.findById(invoice.getId()).get();
 		
-		
-		
- 
-    
-    if(invoice.getCustomer().getType().getId()==CustomerTypeEnum.purchases||
-    		
-    		invoice.getCustomer().getType().getId()==CustomerTypeEnum.kareem||
-    		invoice.getCustomer().getType().getId()==CustomerTypeEnum.mahmed)
-     {
- 
-    	this.getExpansesService().outcomeTransaction(invoice.getDueDate(), invoice.getNetPrice(), "",OutcomeTypeEnum.ORDER_PAY  , invoice.getCustomer().getId(), invoice.getId(), shopAppContext.getFridage(), shopAppContext.getSeason());
-     }
+		savedInvoice.setNetWeight(invoice.getNetWeight());
+		savedInvoice.setNetPrice(invoice.getNetPrice());
+		savedInvoice.setTips(invoice.getTips());
+		savedInvoice.setCommision(invoice.getCommision());
+		savedInvoice.setRatio(invoice.getRatio());
+		savedInvoice.setNotes(invoice.getNotes());
+		savedInvoice.setFinished(invoice.getFinished());
+		savedInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
+		savedInvoice.setEditeDate(invoice.getEditeDate());
+		savedInvoice.setTotalPrice(invoice.getTotalPrice());
+		invoiceRepo.save(savedInvoice);
+		this.getExpansesService().outcomeTransaction(new Date(), savedInvoice.getTips(), savedInvoice.getNotes(),
+				OutcomeTypeEnum.INVOICE_TIPS, savedInvoice.getCustomer().getId(), savedInvoice.getId(),
+				shopAppContext.getFridage(), shopAppContext.getSeason());
 
- this.getBaseService().addEditBean(invoice);
-	
- 
- 
-	 
+	}
 
-}
+	@Override
+	public void payInvoice(CustomerOrder invoice) throws DataBaseException, InvalidReferenceException {
+
+		if (invoice.getCustomer().getType().getId() == CustomerTypeEnum.purchases ||
+
+				invoice.getCustomer().getType().getId() == CustomerTypeEnum.kareem
+				|| invoice.getCustomer().getType().getId() == CustomerTypeEnum.mahmed) {
+
+			this.getExpansesService().outcomeTransaction(invoice.getDueDate(), invoice.getNetPrice(), "",
+					OutcomeTypeEnum.ORDER_PAY, invoice.getCustomer().getId(), invoice.getId(),
+					shopAppContext.getFridage(), shopAppContext.getSeason());
+		}
+
+		this.getBaseService().addEditBean(invoice);
+
+	}
 
 }
