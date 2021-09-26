@@ -6,11 +6,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import lombok.extern.slf4j.Slf4j;
-
 @SpringBootApplication
 @EnableSpringConfigured
-@Slf4j
 @EnableTransactionManagement 
 public class ShopApplication   {
 	
