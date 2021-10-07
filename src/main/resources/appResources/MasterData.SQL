@@ -338,13 +338,11 @@ TO_NUMBER(TO_CHAR(TRX.TRANSACTION_DAY,'YYYYMMDD'), '99999999') as ID,
  TRX.SEASON_ID;
 
 
-
-create view SEASON_SAFE AS
-
-select sum(S.BALANCE ) as  BALANCE,S.SEASON_ID  as id from SHOP2020.SAFE_OF_DAY s
-group by S.SEASON_ID;
-
-
+      CREATE OR REPLACE FORCE VIEW "SHOP2020"."SEASON_SAFE" ("BALANCE", "SEASON_ID") AS 
+  (  SELECT SUM (balance)+S.INTIAL_SAFE_BALANCE AS balance, SOD.SEASON_ID AS season_id
+        FROM SAFE_OF_DAY sod,SEASONS S
+        WHERE S.ID=sod.SEASON_ID
+    GROUP BY SOD.SEASON_ID);
 
 DROP VIEW SHOP2020.SAFE_OF_DAY;
 
@@ -369,7 +367,7 @@ AS
                       SEASON_ID,
                       'INCOME' AS INCOME_TYPE,
                       '' AS OUTCOME_TtYPE
-                 FROM incomes income
+                 FROM income income
              GROUP BY SEASON_ID, TO_CHAR (INCOME.INCOME_DATE, 'DD/MM/YYYY')
              UNION
                SELECT 0 AS INCOME_AMOUNT,
@@ -378,7 +376,7 @@ AS
                       SEASON_ID,
                       '' AS INCOME_TYPE,
                       'OUTCOME_TtYPE' AS TYPE_
-                 FROM outcomes outcome
+                 FROM outcome outcome
              GROUP BY SEASON_ID, TO_CHAR (OUTCOME.OUTCOME_DATE, 'DD/MM/YYYY'))
    GROUP BY DATE_, SEASON_ID;
 
@@ -550,7 +548,11 @@ AS
     
     
     
-      CREATE OR REPLACE FORCE VIEW "SHOP2020"."CONTRACTOR_ACCOUNTS" ("ID", "AMOUNT", "CONTRACTOR_ID", "CONTRACTOR_NAME", "SEASON_ID", "OWNER_ID") AS 
-  select SEASON_Id||''||c.OWNER_Id||''||CONTRACTOR_ID as ID, sum(amount) as amount ,trx.CONTRACTOR_ID,c.NAME as CONTRACTOR_NAME, trx.SEASON_ID,c.OWNER_ID from CONTRACTOR_TRANSACTIONS trx ,contractors c
+CREATE OR REPLACE FORCE VIEW "SHOP2020"."CONTRACTOR_ACCOUNTS" ("ID", "AMOUNT", "CONTRACTOR_ID", "CONTRACTOR_NAME", "SEASON_ID", "OWNER_ID") AS 
+select SEASON_Id||''||c.OWNER_Id||''||CONTRACTOR_ID as ID, sum(amount) as amount ,trx.CONTRACTOR_ID,c.NAME as CONTRACTOR_NAME, trx.SEASON_ID,c.OWNER_ID from CONTRACTOR_TRANSACTIONS trx ,contractors c
 where c.id=trx.CONTRACTOR_ID
 group by CONTRACTOR_ID,SEASON_ID,c.name,c.OWNER_ID,SEASON_Id||''||c.OWNER_Id||''||CONTRACTOR_ID;
+
+
+INSERT INTO "SHOP2020"."USERS" (ID, PASSWORD, NAME) VALUES ('1', '1', 'h');
+UPDATE "SHOP2020"."SEASONS" SET INTIAL_SAFE_BALANCE = '106005' WHERE id = 6;

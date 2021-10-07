@@ -112,7 +112,7 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
 	Logger logger = Logger.getLogger(this.getClass().getName());
 
 	public InitGenerateInvoicePersenter() {
-		initFormInputes();
+		loadFormInputs();
 	}
 
 	@Override
@@ -464,15 +464,16 @@ public class InitGenerateInvoicePersenter extends BillingAction implements Initi
 
 	private void cancel() {
 		enableInputes(true);
-
+		loadFormInputs();
 		this.invoiceCustomeTable.loadTableData(new ArrayList());
 
 	}
 
+ 
 	/**
 	 * 
 	 */
-	private void initFormInputes() {
+	private void loadFormInputs() {
 		logger.log(Level.INFO,
 				"============================================================================================================");
 

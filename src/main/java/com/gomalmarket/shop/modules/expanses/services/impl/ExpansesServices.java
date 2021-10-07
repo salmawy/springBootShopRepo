@@ -257,7 +257,10 @@ public class ExpansesServices implements IExpansesServices {
 	@Override
 	public double getSafeBalanceOfday(int seasonId, Date date, SafeTypeEnum type) {
 		// TODO Auto-generated method stub
-		return getExpansesDao().getSafeBalanceOfday(seasonId, date, type);
+		double sumOfSafeBalance=getExpansesDao().getSafeBalanceOfday(seasonId, date, type);
+		Season season=this.getRepoSupplier().getSeasonRepo().findById(seasonId).get();
+		return sumOfSafeBalance+season.getInitaBalance();
+		
 	}
 
 	@Override
@@ -927,5 +930,8 @@ private void deleteLoanCreditTransactions(int trxId) throws DataBaseException {
 	// TODO Auto-generated method stub
  }
 
+
+
+ 
 
 }

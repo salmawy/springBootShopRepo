@@ -397,6 +397,7 @@ public class InvoiceGeneratePersenter extends BillingAction implements Initializ
 		this.count_TF.setText(String.valueOf(invoice.getUnits()));
 		this.netWeight_TF.setText(String.valueOf(netWeight));
 		this.totalAmount_TF.setText(String.valueOf(totalAmount));
+		invoice.setTotalPrice(totalAmount);
 		this.vehicleType_TF.setText(String.valueOf(invoice.getVehicleType().getName()));
 		this.notes_TA.setText(invoice.getNotes());
 		if(invoiceStatus!=InvoiceStatusEnum.UNDER_EDIT)
@@ -419,10 +420,16 @@ public class InvoiceGeneratePersenter extends BillingAction implements Initializ
 		double ration = invoice.getGrossweight() - netWeight;
 		this.lost_TF.setText(String.valueOf(ration));
 		
-		if(invoiceStatus!=InvoiceStatusEnum.ARCHIVED)
-		{	this.printInvoice_btn.setDisable(false);
-		
-		invoiceFields_vbox.setDisable(true);
+		if(invoiceStatus==InvoiceStatusEnum.UNDER_EDIT)
+		{	
+			
+			this.printInvoice_btn.setDisable(true);		
+			this.gift_TF.setEditable(true);
+		}
+		else {
+			this.printInvoice_btn.setDisable(false);		
+			this.gift_TF.setEditable(false);
+			
 		}
 		
 	}

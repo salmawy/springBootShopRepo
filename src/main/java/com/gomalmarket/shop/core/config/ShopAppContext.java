@@ -37,6 +37,7 @@ public class ShopAppContext {
     private User currentUser;
     private Stage AppStage;
     
+
     
     @Value("${customerOrderRatio}")
     private float customerOrderRatio;

@@ -36,6 +36,7 @@ import java.util.Date;
 
      @Column(name = "CURRENT_SEASON")
      private int currentSeason;
-
+     @Column(name = "INTIAL_SAFE_BALANCE")
+     private double initaBalance;
  	 
  }
